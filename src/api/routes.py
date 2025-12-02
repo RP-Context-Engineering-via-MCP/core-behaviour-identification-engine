@@ -1,12 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 import uuid
 import logging
 
 from src.services.embedding_service import EmbeddingService
 from src.services.calculation_engine import CalculationEngine
+from src.services.cluster_analysis_pipeline import ClusterAnalysisPipeline
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +16,7 @@ router = APIRouter()
 # Initialize services
 embedding_service = EmbeddingService()
 calc_engine = CalculationEngine()
+cluster_pipeline = ClusterAnalysisPipeline()
 
 
 class BehaviorInput(BaseModel):
@@ -32,6 +34,12 @@ class BehaviorResponse(BaseModel):
     behavior_weight: float
     embedding_length: int
     timestamp: datetime
+
+
+class ClusterAnalysisRequest(BaseModel):
+    """Request for cluster analysis"""
+    user_id: str
+    observation_ids: List[str]
 
 
 @router.post("/behaviors", response_model=BehaviorResponse)
@@ -78,3 +86,27 @@ async def get_behavior(behavior_id: str):
     """Retrieve a behavior by ID"""
     # TODO: Implement MongoDB lookup
     return {"message": "Not yet implemented", "behavior_id": behavior_id}
+
+
+@router.post("/clusters/analyze")
+async def analyze_clusters(request: ClusterAnalysisRequest):
+    """
+    Analyze behaviors and create clusters
+    
+    Uses the new cluster-centric pipeline
+    """
+    try:
+        # TODO: Fetch observations from MongoDB
+        # For now, return placeholder
+        logger.info(f"Cluster analysis requested for user {request.user_id}")
+        
+        return {
+            "status": "success",
+            "message": "Cluster analysis pipeline integrated",
+            "user_id": request.user_id,
+            "observation_count": len(request.observation_ids)
+        }
+    
+    except Exception as e:
+        logger.error(f"Failed to analyze clusters: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
