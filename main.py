@@ -4,6 +4,8 @@ import logging
 
 from src.config import settings
 from src.database.mongodb_service import MongoDBService
+from src.services.embedding_service import EmbeddingService
+from src.services.archetype_service import ArchetypeService
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -15,6 +17,9 @@ mongo_service = MongoDBService(
     database_name=settings.mongodb_database
 )
 
+embedding_service = EmbeddingService()
+archetype_service = ArchetypeService()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -22,6 +27,7 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting Core Behavior Identification Engine...")
     mongo_service.connect()
+    logger.info("All services initialized successfully")
     yield
     # Shutdown
     logger.info("Shutting down...")
@@ -32,7 +38,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Core Behavior Identification Engine",
     description="API for analyzing and clustering user behaviors",
-    version="0.1.0",
+    version="0.2.0",
     lifespan=lifespan
 )
 
@@ -43,7 +49,8 @@ async def root():
     return {
         "status": "healthy",
         "service": "Core Behavior Identification Engine",
-        "version": "0.1.0"
+        "version": "0.2.0",
+        "pipeline": "cluster-centric"
     }
 
 
@@ -53,7 +60,13 @@ async def health_check():
     return {
         "status": "healthy",
         "database": "connected",
-        "timestamp": "2025-10-25T09:00:00Z"
+        "services": {
+            "mongodb": "initialized",
+            "embedding": "initialized",
+            "archetype": "initialized",
+            "clustering": "available"
+        },
+        "timestamp": "2025-12-04T16:20:00Z"
     }
 
 
