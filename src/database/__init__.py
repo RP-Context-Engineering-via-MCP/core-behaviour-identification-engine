@@ -1,1 +1,1 @@
-# Database package
+"""Database services for CBIE system"""

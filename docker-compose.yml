@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # MongoDB for behavior storage
+  mongodb:
+    image: mongo:7.0
+    container_name: cbie-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: behavior_db
+    networks:
+      - cbie-network
+
+  # Qdrant for vector embeddings
+  qdrant:
+    image: qdrant/qdrant:v1.7.0
+    container_name: cbie-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - cbie-network
+
+  # API Service
+  api:
+    build: .
+    container_name: cbie-api
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+      - MONGODB_DATABASE=behavior_db
+      - QDRANT_URL=http://qdrant:6333
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - mongodb
+      - qdrant
+    networks:
+      - cbie-network
+    volumes:
+      - .:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  mongodb_data:
+  qdrant_data:
+
+networks:
+  cbie-network:
+    driver: bridge

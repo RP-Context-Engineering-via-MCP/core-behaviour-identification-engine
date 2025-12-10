@@ -1,1 +1,1 @@
-# Services package
+"""Services for CBIE system"""

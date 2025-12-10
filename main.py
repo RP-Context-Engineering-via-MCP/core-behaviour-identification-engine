@@ -1,75 +1,101 @@
+"""
+FastAPI application for CBIE System
+Main entry point for the API server
+"""
 from fastapi import FastAPI
-from contextlib import asynccontextmanager
+from fastapi.middleware.cors import CORSMiddleware
 import logging
+from contextlib import asynccontextmanager
 
 from src.config import settings
-from src.database.mongodb_service import MongoDBService
-from src.services.embedding_service import EmbeddingService
-from src.services.archetype_service import ArchetypeService
+from src.api.routes import router
+from src.database.mongodb_service import mongodb_service
+from src.database.qdrant_service import qdrant_service
+from src.services.embedding_service import embedding_service
+from src.services.archetype_service import archetype_service
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# Initialize services
-mongo_service = MongoDBService(
-    connection_string=settings.mongodb_url,
-    database_name=settings.mongodb_database
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-
-embedding_service = EmbeddingService()
-archetype_service = ArchetypeService()
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Manage application lifecycle"""
+    """
+    Lifespan context manager for startup and shutdown events
+    """
     # Startup
-    logger.info("Starting Core Behavior Identification Engine...")
-    mongo_service.connect()
-    logger.info("All services initialized successfully")
+    logger.info("Starting CBIE MVP application...")
+    
+    try:
+        # Connect to databases
+        mongodb_service.connect()
+        qdrant_service.connect()
+        
+        # Connect to services
+        embedding_service.connect()
+        archetype_service.connect()
+        
+        logger.info("All services connected successfully")
+        
+    except Exception as e:
+        logger.error(f"Failed to start application: {e}")
+        raise
+    
     yield
+    
     # Shutdown
-    logger.info("Shutting down...")
-    mongo_service.close()
+    logger.info("Shutting down CBIE MVP application...")
+    
+    try:
+        mongodb_service.disconnect()
+        qdrant_service.disconnect()
+        logger.info("All services disconnected")
+    except Exception as e:
+        logger.error(f"Error during shutdown: {e}")
 
 
 # Create FastAPI application
 app = FastAPI(
-    title="Core Behavior Identification Engine",
-    description="API for analyzing and clustering user behaviors",
-    version="0.2.0",
+    title="CBIE MVP - Core Behavior Identification Engine",
+    description="API for analyzing user behaviors and generating core behavior profiles",
+    version="0.1.0",
     lifespan=lifespan
 )
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure appropriately for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include API routes
+app.include_router(router, prefix="/api/v1", tags=["CBIE"])
 
 
 @app.get("/")
 async def root():
-    """Health check endpoint"""
+    """Root endpoint"""
     return {
-        "status": "healthy",
-        "service": "Core Behavior Identification Engine",
-        "version": "0.2.0",
-        "pipeline": "cluster-centric"
-    }
-
-
-@app.get("/health")
-async def health_check():
-    """Detailed health check"""
-    return {
-        "status": "healthy",
-        "database": "connected",
-        "services": {
-            "mongodb": "initialized",
-            "embedding": "initialized",
-            "archetype": "initialized",
-            "clustering": "available"
-        },
-        "timestamp": "2025-12-04T16:20:00Z"
+        "service": "CBIE MVP",
+        "version": "0.1.0",
+        "status": "running"
     }
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+    uvicorn.run(
+        app,
+        host=settings.api_host,
+        port=settings.api_port,
+        reload=False,  # Disabled reload due to Python 3.13 multiprocessing issues
+        log_level="info"
+    )
