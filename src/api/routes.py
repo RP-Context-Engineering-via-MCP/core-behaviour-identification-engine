@@ -16,7 +16,6 @@ from src.models.schemas import (
     ListCoreBehaviorsResponse,
     BehaviorObservation
 )
-from src.services.analysis_pipeline import analysis_pipeline
 from src.services.cluster_analysis_pipeline import cluster_analysis_pipeline
 from src.services.llm_context_service import generate_llm_context
 from src.database.mongodb_service import mongodb_service
@@ -71,60 +70,6 @@ async def analyze_behaviors_from_storage(user_id: str):
         )
     except Exception as e:
         logger.error(f"Error in analyze_behaviors_from_storage: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Analysis failed: {str(e)}"
-        )
-
-
-@router.post(
-    "/analyze-behaviors",
-    response_model=AnalyzeBehaviorsResponse,
-    status_code=status.HTTP_200_OK,
-    summary="Analyze new behaviors and store in databases",
-    description="Import new behaviors and prompts, generate embeddings, store everything, "
-                "then run analysis. Use this for test data or bulk imports."
-)
-async def analyze_behaviors(request: AnalyzeBehaviorsRequest):
-    """
-    Analyze user behaviors with new data (TEST/IMPORT SCENARIO)
-    
-    This endpoint is used for:
-    - Testing with sample data
-    - Bulk importing new behaviors
-    - Initial data setup
-    
-    It will:
-    1. Store prompts in MongoDB
-    2. Generate embeddings for behaviors
-    3. Store behaviors with embeddings in Qdrant
-    4. Store behavior metadata in MongoDB
-    5. Calculate behavior weights (BW, ABW)
-    6. Perform clustering (HDBSCAN)
-    7. Assign tiers (PRIMARY/SECONDARY/NOISE)
-    8. Calculate temporal metrics
-    9. Generate archetype (optional)
-    10. Store and return profile
-    """
-    try:
-        logger.info(
-            f"Received analyze request with new data for user {request.user_id}: "
-            f"{len(request.behaviors)} behaviors, {len(request.prompts)} prompts"
-        )
-        
-        # Run analysis pipeline with storage
-        profile = await analysis_pipeline.analyze_behaviors(
-            user_id=request.user_id,
-            behaviors=request.behaviors,
-            prompts=request.prompts,
-            generate_archetype=True,
-            store_in_dbs=True
-        )
-        
-        return profile
-        
-    except Exception as e:
-        logger.error(f"Error in analyze_behaviors: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Analysis failed: {str(e)}"
@@ -238,110 +183,6 @@ async def list_core_behaviors(user_id: str):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to list behaviors: {str(e)}"
-        )
-
-
-@router.post(
-    "/update-behavior",
-    response_model=BehaviorObservation,
-    status_code=status.HTTP_200_OK,
-    summary="Update behavior metadata",
-    description="Update reinforcement, credibility, or timestamps of a behavior"
-)
-async def update_behavior(request: UpdateBehaviorRequest):
-    """
-    Update behavior document with new values
-    
-    Allowed updates:
-    - reinforcement_count
-    - credibility
-    - clarity_score
-    - extraction_confidence
-    - last_seen
-    - decay_rate
-    """
-    try:
-        logger.info(f"Updating behavior {request.behavior_id}: {request.updates}")
-        
-        # Validate behavior exists
-        behavior_data = mongodb_service.get_behavior(request.behavior_id)
-        if not behavior_data:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Behavior {request.behavior_id} not found"
-            )
-        
-        # Update behavior
-        success = await analysis_pipeline.update_behavior_metrics(
-            request.behavior_id,
-            request.updates
-        )
-        
-        if not success:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to update behavior"
-            )
-        
-        # Fetch updated behavior
-        updated_data = mongodb_service.get_behavior(request.behavior_id)
-        updated_behavior = BehaviorObservation(**updated_data)
-        
-        return updated_behavior
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error updating behavior: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Update failed: {str(e)}"
-        )
-
-
-@router.post(
-    "/assign-archetype",
-    response_model=AssignArchetypeResponse,
-    status_code=status.HTTP_200_OK,
-    summary="Assign behavioral archetype label",
-    description="Use LLM to generate and assign archetype label to user profile"
-)
-async def assign_archetype(request: AssignArchetypeRequest):
-    """
-    Generate behavioral archetype label using LLM
-    
-    Can provide canonical behaviors explicitly, or will fetch from existing profile
-    """
-    try:
-        logger.info(
-            f"Assigning archetype for user {request.user_id} "
-            f"with {len(request.canonical_behaviors)} behaviors"
-        )
-        
-        # Generate and assign archetype
-        archetype = await analysis_pipeline.assign_archetype_to_profile(
-            user_id=request.user_id,
-            canonical_behaviors=request.canonical_behaviors if request.canonical_behaviors else None
-        )
-        
-        if not archetype:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Failed to generate archetype"
-            )
-        
-        return AssignArchetypeResponse(
-            user_id=request.user_id,
-            archetype=archetype
-        )
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error assigning archetype: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Archetype assignment failed: {str(e)}"
         )
 
 
