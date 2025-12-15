@@ -85,12 +85,12 @@ class ClusterAnalysisPipeline:
                 observation_id=obs_id,
                 behavior_text=payload["behavior_text"],
                 embedding=qb["vector"],  # Include embedding
-                credibility=payload.get("credibility", 0.8),
-                clarity_score=payload.get("clarity_score", 0.8),
-                extraction_confidence=payload.get("extraction_confidence", 0.8),
+                credibility=payload.get("credibility", 1.0),
+                clarity_score=payload.get("clarity_score", 1.0),
+                extraction_confidence=payload.get("extraction_confidence", 1.0),
                 timestamp=timestamp,
                 prompt_id=prompt_id,
-                decay_rate=payload.get("decay_rate", 0.01),
+                decay_rate=payload.get("decay_rate", 0.0),
                 user_id=payload["user_id"],
                 session_id=payload.get("session_id")
             )
@@ -434,18 +434,17 @@ class ClusterAnalysisPipeline:
     
     def _assign_tier_by_strength(self, cluster_strength: float) -> TierEnum:
         """
-        Assign tier based on cluster_strength (NOT cluster CBI)
+        Assign tier based on cluster_strength with simple thirds approach
         
-        New thresholds (need tuning based on log scaling):
-        - PRIMARY: strength >= 0.8
-        - SECONDARY: 0.4 <= strength < 0.8
-        - NOISE: strength < 0.4
+        Since normalized strength is in [0, 1], use natural thirds:
+        - PRIMARY: top third (>= 0.67)
+        - SECONDARY: middle third (>= 0.33)
+        - NOISE: bottom third (< 0.33)
         """
-        # TODO: These thresholds need empirical tuning
-        # They differ from old CBI thresholds because strength uses log(size)
-        if cluster_strength >= 0.8:
+        # Natural thirds of the [0,1] normalized range
+        if cluster_strength >= 0.67:
             return TierEnum.PRIMARY
-        elif cluster_strength >= 0.4:
+        elif cluster_strength >= 0.33:
             return TierEnum.SECONDARY
         else:
             return TierEnum.NOISE

@@ -133,14 +133,20 @@ class CalculationEngine:
         if not timestamps:
             return 0.0
         
-        # Calculate days since each observation
+        # Calculate recency without arbitrary decay rates
+        # Use inverse of days since (more recent = higher weight)
+        # Normalize by max days to get 0-1 range
         days_since = [(current_timestamp - ts) / 86400 for ts in timestamps]
+        max_days = max(days_since) if days_since else 1
         
-        # Apply exponential decay (stronger for older observations)
-        decay_rate = 0.01  # Same as default decay_rate
-        weights = [math.exp(-decay_rate * days) for days in days_since]
+        # Weight by relative recency: (max_days - days) / max_days
+        # Recent observations get weight closer to 1, old ones closer to 0
+        if max_days > 0:
+            weights = [(max_days - days) / max_days for days in days_since]
+        else:
+            weights = [1.0] * len(timestamps)  # All same time = all weight 1
         
-        # Return average weight (how "recent" the cluster is overall)
+        # Return average weight
         recency_factor = sum(weights) / len(weights)
         
         return recency_factor
@@ -194,13 +200,14 @@ class CalculationEngine:
             # Range: -1 (degrading) to +1 (improving)
             clarity_trend = second_half_avg - first_half_avg
         
-        # --- NEW MULTIPLICATIVE MODEL (No Magic Numbers) ---
-        # Requires BOTH consistency AND reinforcement to be high
+        # Multiplicative model: Requires BOTH consistency AND reinforcement to be high
         confidence = consistency_score * reinforcement_score
         
-        # Optional: Small bonus for positive clarity trend (max 10% boost)
-        if clarity_trend > 0:
-            confidence = confidence * (1.0 + (clarity_trend * 0.1))
+        # Apply clarity trend directly (no arbitrary percentage)
+        # Positive trend increases confidence, negative decreases
+        # Since clarity_trend is in range [-1, 1], this naturally scales confidence
+        if clarity_trend != 0:
+            confidence = confidence * (1.0 + clarity_trend)
         
         # Cap at 1.0
         confidence = min(1.0, confidence)

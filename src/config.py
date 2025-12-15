@@ -25,13 +25,9 @@ class Settings(BaseSettings):
     api_host: str = "0.0.0.0"
     api_port: int = 8000
     
-    # Formula Parameters (from documentation)
-    alpha: float = 0.35  # credibility weight
-    beta: float = 0.40   # clarity weight
-    gamma: float = 0.25  # extraction confidence weight
-    reinforcement_multiplier: float = 0.01
-    primary_threshold: float = 1.0
-    secondary_threshold: float = 0.7
+    # Tier Thresholds
+    primary_threshold: float = 0.67  # Top third
+    secondary_threshold: float = 0.33  # Middle third
     
     # Clustering Parameters
     min_cluster_size: int = 2
