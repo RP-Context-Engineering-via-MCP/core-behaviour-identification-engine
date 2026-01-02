@@ -85,10 +85,17 @@ class ClusteringEngine:
             norms = np.linalg.norm(X, axis=1, keepdims=True)
             X_normalized = X / (norms + 1e-10)  # Add small epsilon to avoid division by zero
             
-            # Adaptive min_cluster_size: max(2, floor(log(N)))
-            # Scales with data size without arbitrary constants
+            # Adaptive min_cluster_size with conservative scaling for small datasets
+            # For small N, use ~20% of samples; for large N, use log-based scaling
+            # This prevents over-clustering in small datasets
             n_samples = len(embeddings)
-            adaptive_min_cluster_size = max(2, int(math.log(n_samples)))
+            if n_samples < 20:
+                # Conservative for small datasets: at least 3, or 20% of samples
+                adaptive_min_cluster_size = max(3, int(n_samples * 0.2))
+            else:
+                # Standard log-based scaling for larger datasets
+                adaptive_min_cluster_size = max(3, int(math.log(n_samples)))
+            
             logger.info(f"Using adaptive min_cluster_size: {adaptive_min_cluster_size} (N={n_samples})")
             
             # Prepare sample weights (credibility as density mass)
