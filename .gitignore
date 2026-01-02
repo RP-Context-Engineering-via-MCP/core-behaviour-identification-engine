@@ -1,6 +1,7 @@
 # Exclude the reference project folder and guide
 project/
 guide.md
+system_guide/
 
 # Python
 __pycache__/
