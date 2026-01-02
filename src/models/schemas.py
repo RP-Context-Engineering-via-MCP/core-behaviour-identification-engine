@@ -14,6 +14,19 @@ class TierEnum(str, Enum):
     NOISE = "NOISE"
 
 
+class EpistemicState(str, Enum):
+    """
+    Epistemic state classification for clusters based on density-first inference
+    
+    CORE: Supported latent preferences with stability >= median
+    INSUFFICIENT_EVIDENCE: High credibility but unstable - retained for future reinforcement
+    NOISE: Low credibility and isolated - discarded from analysis
+    """
+    CORE = "CORE"
+    INSUFFICIENT_EVIDENCE = "INSUFFICIENT_EVIDENCE"
+    NOISE = "NOISE"
+
+
 class BehaviorObservation(BaseModel):
     """
     Single observation of a behavior (was BehaviorModel)
@@ -115,6 +128,10 @@ class BehaviorCluster(BaseModel):
     # Cluster-level metrics (the REAL scores)
     cluster_strength: float  # Normalized: log(size+1) * mean(ABW) * recency_factor / (1 + raw)
     confidence: float  # Multiplicative: consistency * reinforcement
+    cluster_stability: Optional[float] = None  # HDBSCAN stability score (density-first approach)
+    
+    # Epistemic state classification
+    epistemic_state: Optional[EpistemicState] = EpistemicState.CORE  # CORE, INSUFFICIENT_EVIDENCE, or NOISE
     
     # Aggregated evidence
     all_prompt_ids: List[str]  # All prompts that triggered observations

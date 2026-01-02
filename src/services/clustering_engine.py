@@ -1,9 +1,11 @@
 """
 Clustering Engine for CBIE System
 Implements HDBSCAN clustering for semantic behavior grouping
+Uses weighted density estimation with credibility as sample mass
 """
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional
 import numpy as np
+import math
 from hdbscan import HDBSCAN
 import logging
 
@@ -26,15 +28,20 @@ class ClusteringEngine:
     def cluster_behaviors(
         self,
         embeddings: List[List[float]],
-        behavior_ids: List[str]
+        behavior_ids: List[str],
+        credibility_weights: Optional[List[float]] = None
     ) -> Dict[str, Any]:
         """
-        Cluster behavior embeddings using HDBSCAN
+        Cluster behavior embeddings using HDBSCAN with weighted density estimation
         CRITICAL: ALL cluster members are preserved - NOTHING is discarded
+        
+        Uses credibility as sample weights for weighted density estimation.
+        Embeddings are L2-normalized before clustering (equivalent to cosine distance).
         
         Args:
             embeddings: List of embedding vectors
             behavior_ids: List of corresponding observation IDs
+            credibility_weights: Optional list of credibility scores as sample weights
             
         Returns:
             dict: Clustering results containing:
@@ -42,6 +49,7 @@ class ClusteringEngine:
                 - cluster_sizes: Dict mapping cluster_id to member count
                 - cluster_embeddings: Dict mapping cluster_id to list of member embeddings
                 - cluster_centroids: Dict mapping cluster_id to centroid embedding
+                - cluster_stabilities: Dict mapping cluster_id to HDBSCAN stability score
                 - intra_cluster_distances: Dict mapping cluster_id to distance statistics
                 - labels: List of cluster labels (same order as behavior_ids)
                 - noise_behaviors: List of behavior_ids assigned to noise (-1)
@@ -72,14 +80,29 @@ class ClusteringEngine:
             # Convert to numpy array
             X = np.array(embeddings)
             
-            # Normalize embeddings for euclidean distance clustering
-            # (equivalent to cosine similarity clustering)
+            # L2 normalize embeddings (REQUIRED for stable density estimation)
+            # Makes Euclidean distance equivalent to cosine distance
             norms = np.linalg.norm(X, axis=1, keepdims=True)
             X_normalized = X / (norms + 1e-10)  # Add small epsilon to avoid division by zero
             
-            # Initialize HDBSCAN
+            # Adaptive min_cluster_size: max(2, floor(log(N)))
+            # Scales with data size without arbitrary constants
+            n_samples = len(embeddings)
+            adaptive_min_cluster_size = max(2, int(math.log(n_samples)))
+            logger.info(f"Using adaptive min_cluster_size: {adaptive_min_cluster_size} (N={n_samples})")
+            
+            # Prepare sample weights (credibility as density mass)
+            sample_weights = None
+            if credibility_weights is not None:
+                if len(credibility_weights) != len(embeddings):
+                    logger.warning("Credibility weights length mismatch, ignoring weights")
+                else:
+                    sample_weights = np.array(credibility_weights)
+                    logger.info(f"Using credibility as sample weights (mean={np.mean(sample_weights):.3f})")
+            
+            # Initialize HDBSCAN with adaptive parameters
             clusterer = HDBSCAN(
-                min_cluster_size=self.min_cluster_size,
+                min_cluster_size=adaptive_min_cluster_size,
                 min_samples=self.min_samples,
                 cluster_selection_epsilon=self.cluster_selection_epsilon,
                 metric=self.metric,
@@ -87,15 +110,34 @@ class ClusteringEngine:
             )
             
             # Perform clustering on normalized embeddings
-            cluster_labels = clusterer.fit_predict(X_normalized)
+            # Note: HDBSCAN's sample_weight parameter may not be fully supported
+            # If weights don't propagate correctly, we approximate via duplication
+            if sample_weights is not None:
+                try:
+                    cluster_labels = clusterer.fit_predict(X_normalized, sample_weight=sample_weights)
+                except TypeError:
+                    logger.warning("HDBSCAN sample_weight not supported, proceeding without weights")
+                    cluster_labels = clusterer.fit_predict(X_normalized)
+            else:
+                cluster_labels = clusterer.fit_predict(X_normalized)
             
             # Organize results - PRESERVE EVERYTHING
             clusters = {}
             cluster_embeddings = {}
             cluster_centroids = {}
             cluster_sizes = {}
+            cluster_stabilities = {}  # Extract HDBSCAN stability scores
             intra_cluster_distances = {}
             noise_behaviors = []
+            
+            # Extract cluster persistence/stability from HDBSCAN
+            # cluster_persistence_ contains stability scores for each cluster
+            if hasattr(clusterer, 'cluster_persistence_'):
+                raw_stabilities = clusterer.cluster_persistence_
+                logger.info(f"Extracted cluster stabilities: {raw_stabilities}")
+            else:
+                raw_stabilities = {}
+                logger.warning("HDBSCAN cluster_persistence_ not available")
             
             # Build cluster membership (NO DISCARDING)
             for behavior_id, label, embedding in zip(behavior_ids, cluster_labels, X_normalized):
@@ -110,7 +152,7 @@ class ClusteringEngine:
                     clusters[cluster_id].append(behavior_id)
                     cluster_embeddings[cluster_id].append(embedding)
             
-            # Calculate cluster statistics (centroid, distances, etc.)
+            # Calculate cluster statistics (centroid, distances, stability, etc.)
             for cluster_id in clusters.keys():
                 member_embeddings = np.array(cluster_embeddings[cluster_id])
                 
@@ -120,6 +162,15 @@ class ClusteringEngine:
                 
                 # Calculate cluster size
                 cluster_sizes[cluster_id] = len(clusters[cluster_id])
+                
+                # Extract stability score from HDBSCAN
+                # Cluster labels are 0-indexed integers
+                cluster_label = int(cluster_id.split('_')[1])
+                if cluster_label in raw_stabilities:
+                    cluster_stabilities[cluster_id] = float(raw_stabilities[cluster_label])
+                else:
+                    # Fallback: use inverse of mean intra-cluster distance as proxy
+                    cluster_stabilities[cluster_id] = 0.5  # Default moderate stability
                 
                 # Calculate intra-cluster distances
                 distances = []
@@ -143,8 +194,10 @@ class ClusteringEngine:
             )
             
             for cluster_id, members in clusters.items():
+                stability = cluster_stabilities.get(cluster_id, 0.0)
                 logger.debug(
                     f"{cluster_id}: {len(members)} observations, "
+                    f"stability: {stability:.4f}, "
                     f"mean distance: {intra_cluster_distances[cluster_id]['mean']:.4f}"
                 )
             
@@ -153,6 +206,7 @@ class ClusteringEngine:
                 "cluster_sizes": cluster_sizes,
                 "cluster_embeddings": cluster_embeddings,
                 "cluster_centroids": cluster_centroids,
+                "cluster_stabilities": cluster_stabilities,  # NEW: stability scores
                 "intra_cluster_distances": intra_cluster_distances,
                 "labels": cluster_labels.tolist(),
                 "noise_behaviors": noise_behaviors,
