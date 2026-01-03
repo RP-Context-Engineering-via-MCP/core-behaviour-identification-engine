@@ -95,13 +95,13 @@ class ClusteringEngine:
             logger.info(f"{'='*60}")
             
             if n_samples < 20:
-                # Conservative for small datasets: at least 4, or 25% of samples
-                # This encourages noise detection for weak/singleton observations
-                percent_calc = int(n_samples * 0.25)
-                adaptive_min_cluster_size = max(4, percent_calc)
+                # Conservative for small datasets: at least 3, or 20% of samples
+                # Allows clustering while encouraging noise detection for weak observations
+                percent_calc = int(n_samples * 0.20)
+                adaptive_min_cluster_size = max(3, percent_calc)
                 logger.info(f"Small dataset branch (N < 20):")
-                logger.info(f"  - 25% of {n_samples} = {percent_calc}")
-                logger.info(f"  - max(4, {percent_calc}) = {adaptive_min_cluster_size}")
+                logger.info(f"  - 20% of {n_samples} = {percent_calc}")
+                logger.info(f"  - max(3, {percent_calc}) = {adaptive_min_cluster_size}")
             else:
                 # Standard log-based scaling for larger datasets
                 log_calc = int(math.log(n_samples))
