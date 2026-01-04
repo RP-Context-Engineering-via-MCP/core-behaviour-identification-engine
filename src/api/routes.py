@@ -386,26 +386,26 @@ async def get_test_users():
     "/profile/{user_id}/analysis-summary",
     status_code=status.HTTP_200_OK,
     summary="Get complete analysis summary with 2D projections",
-    description="Returns behaviors, clusters, and metrics with 2D UMAP projections for visualization"
+    description="Returns ALL behaviors (CORE, INSUFFICIENT, NOISE) with 2D UMAP projections for visualization"
 )
 async def get_analysis_summary(user_id: str):
     """
     Get comprehensive analysis data for dashboard visualization
     
-    Returns:
-    - behaviors: All observations with 2D coordinates
-    - clusters: Cluster metadata with stability scores
-    - metrics: Dashboard statistics
+    Returns ALL behavior embeddings including:
+    - CORE: Behaviors in stable clusters
+    - INSUFFICIENT_EVIDENCE: Behaviors in unstable clusters
+    - NOISE: Isolated behaviors (cluster_id = -1)
     
-    This endpoint is optimized for frontend visualization needs.
+    The embedding space visualization shows conservatism by displaying what was accepted AND rejected.
     """
     try:
         from src.services.projection_service import project_embeddings_to_2d, normalize_2d_coordinates
-        from src.models.schemas import EpistemicState
+        import numpy as np
         
         logger.info(f"Fetching analysis summary for user {user_id}")
         
-        # Get user profile
+        # Get user profile to map cluster epistemic states
         profile_data = mongodb_service.get_profile(user_id)
         
         if not profile_data:
@@ -414,54 +414,81 @@ async def get_analysis_summary(user_id: str):
                 detail=f"No profile found for user {user_id}"
             )
         
-        # Collect all embeddings and observations
-        all_embeddings = []
-        all_observations = []
-        embedding_to_obs_map = []  # Track which embedding belongs to which observation
-        
+        # Build cluster metadata map (cluster_id -> epistemic_state, stability, name)
+        cluster_metadata = {}
         for cluster in profile_data.get("behavior_clusters", []):
             cluster_id = cluster.get("cluster_id")
-            cluster_name = cluster.get("cluster_name", cluster.get("canonical_label", "Unknown"))
-            cluster_stability = cluster.get("cluster_stability", 0.0)
-            epistemic_state = cluster.get("epistemic_state", "CORE")
-            
-            for obs in cluster.get("observations", []):
-                embedding = obs.get("embedding")
-                if embedding and len(embedding) > 0:
-                    all_embeddings.append(embedding)
-                    embedding_to_obs_map.append({
-                        "observation": obs,
-                        "cluster_id": cluster_id,
-                        "cluster_name": cluster_name,
-                        "cluster_stability": cluster_stability,
-                        "epistemic_state": epistemic_state
-                    })
+            cluster_metadata[cluster_id] = {
+                "epistemic_state": cluster.get("epistemic_state", "CORE"),
+                "cluster_name": cluster.get("cluster_name", cluster.get("canonical_label", "Unknown")),
+                "cluster_stability": cluster.get("cluster_stability", 0.0)
+            }
         
-        # Project embeddings to 2D
-        if len(all_embeddings) == 0:
-            logger.warning(f"No embeddings found for user {user_id}")
-            projections_2d = []
-        else:
-            logger.info(f"Projecting {len(all_embeddings)} embeddings to 2D")
-            projections_2d = project_embeddings_to_2d(all_embeddings)
-            # Normalize to range [-10, 10] for consistent visualization
-            projections_2d = normalize_2d_coordinates(projections_2d, target_range=(-10.0, 10.0))
+        # Fetch ALL behaviors from behaviors collection (includes NOISE)
+        all_behaviors = list(mongodb_service.db.behaviors.find({
+            "user_id": user_id,
+            "embedding": {"$exists": True, "$ne": None}
+        }))
         
-        # Build behaviors array with 2D coordinates
+        if not all_behaviors:
+            logger.warning(f"No behaviors with embeddings found for user {user_id}")
+            return {
+                "user_id": user_id,
+                "behaviors": [],
+                "clusters": [],
+                "metrics": {
+                    "totalObservations": 0,
+                    "coreClusters": 0,
+                    "insufficientEvidence": 0,
+                    "noiseObservations": 0,
+                    "totalClusters": 0
+                },
+                "projection_method": "UMAP-2D"
+            }
+        
+        # Extract embeddings for projection
+        embeddings = [b["embedding"] for b in all_behaviors]
+        
+        logger.info(f"Projecting {len(embeddings)} embeddings to 2D (includes ALL: CORE, INSUFFICIENT, NOISE)")
+        projections_2d = project_embeddings_to_2d(embeddings)
+        projections_2d = normalize_2d_coordinates(projections_2d, target_range=(-10.0, 10.0))
+        
+        logger.info(f"Projecting {len(embeddings)} embeddings to 2D (includes ALL: CORE, INSUFFICIENT, NOISE)")
+        projections_2d = project_embeddings_to_2d(embeddings)
+        projections_2d = normalize_2d_coordinates(projections_2d, target_range=(-10.0, 10.0))
+        
+        # Build behaviors array with 2D coordinates and epistemic states
         behaviors = []
-        for i, (projection, mapping) in enumerate(zip(projections_2d, embedding_to_obs_map)):
-            obs = mapping["observation"]
+        for i, behavior in enumerate(all_behaviors):
+            cluster_id = behavior.get("cluster_id", -1)
+            
+            # Determine epistemic state
+            if cluster_id == -1:
+                # NOISE: Not part of any cluster
+                epistemic_state = "NOISE"
+                cluster_name = "Noise"
+                cluster_stability = 0.0
+            else:
+                # Get from cluster metadata
+                metadata = cluster_metadata.get(cluster_id, {})
+                epistemic_state = metadata.get("epistemic_state", "UNKNOWN")
+                cluster_name = metadata.get("cluster_name", f"Cluster {cluster_id}")
+                cluster_stability = metadata.get("cluster_stability", 0.0)
+            
             behaviors.append({
-                "id": obs.get("observation_id", f"obs_{i}"),
-                "text": obs.get("behavior_text", ""),
-                "credibility": obs.get("credibility", 0.0),
-                "timestamp": obs.get("timestamp", 0),
+                "id": behavior.get("observation_id", str(behavior.get("_id", f"obs_{i}"))),
+                "text": behavior.get("behavior_text", ""),
+                "credibility": behavior.get("credibility", 0.0),
+                "timestamp": behavior.get("timestamp", 0),
                 "source": "system",
-                "embedding": projection,  # 2D coordinates {x, y}
-                "clusterId": mapping["cluster_id"],
-                "clusterName": mapping["cluster_name"],
-                "clusterStability": mapping["cluster_stability"],
-                "epistemicState": mapping["epistemic_state"]
+                "embedding": {
+                    "x": float(projections_2d[i][0]),
+                    "y": float(projections_2d[i][1])
+                },
+                "clusterId": cluster_id,
+                "clusterName": cluster_name,
+                "clusterStability": cluster_stability,
+                "epistemicState": epistemic_state  # Explicit state for frontend
             })
         
         # Build clusters array
@@ -481,29 +508,23 @@ async def get_analysis_summary(user_id: str):
                 "clusterStrength": cluster.get("cluster_strength", 0.0)
             })
         
-        # Calculate metrics
-        total_observations = sum(c["size"] for c in clusters)
-        core_clusters = sum(1 for c in clusters if c["isCore"])
-        insufficient_clusters = sum(1 for c in clusters if c.get("epistemicState") == "INSUFFICIENT_EVIDENCE")
-        noise_clusters = sum(1 for c in clusters if c.get("epistemicState") == "NOISE")
+        # Calculate metrics from actual behaviors
+        core_behaviors = [b for b in behaviors if b["epistemicState"] == "CORE"]
+        insufficient_behaviors = [b for b in behaviors if b["epistemicState"] == "INSUFFICIENT_EVIDENCE"]
+        noise_behaviors = [b for b in behaviors if b["epistemicState"] == "NOISE"]
         
-        # Count observations by epistemic state
-        insufficient_obs = sum(
-            c["size"] for c in clusters 
-            if c.get("epistemicState") == "INSUFFICIENT_EVIDENCE"
-        )
-        noise_obs = sum(
-            c["size"] for c in clusters 
-            if c.get("epistemicState") == "NOISE"
-        )
+        core_clusters = sum(1 for c in clusters if c["epistemicState"] == "CORE")
+        insufficient_clusters = sum(1 for c in clusters if c["epistemicState"] == "INSUFFICIENT_EVIDENCE")
         
         metrics = {
-            "totalObservations": total_observations,
+            "totalObservations": len(behaviors),
             "coreClusters": core_clusters,
-            "insufficientEvidence": insufficient_obs,
-            "noiseObservations": noise_obs,
+            "insufficientEvidence": len(insufficient_behaviors),
+            "noiseObservations": len(noise_behaviors),
             "totalClusters": len(clusters)
         }
+        
+        logger.info(f"Analysis summary: {len(behaviors)} total behaviors ({len(core_behaviors)} CORE, {len(insufficient_behaviors)} INSUFFICIENT, {len(noise_behaviors)} NOISE)")
         
         response = {
             "user_id": user_id,

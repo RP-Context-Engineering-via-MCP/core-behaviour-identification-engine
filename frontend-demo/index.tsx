@@ -192,21 +192,28 @@ const EmbeddingChart = ({ behaviors, stabilityThreshold }: { behaviors: Behavior
         <line x1={width/2} y1={padding} x2={width/2} y2={height-padding} stroke="#E5E7EB" />
         
         {behaviors.map(b => {
-          let fill = '#9CA3AF'; // Noise
+          // Color by epistemic state (not by threshold calculation)
+          let fill = '#9CA3AF'; // Default: gray for NOISE
           let r = 4;
           let opacity = 0.5;
           let stroke = 'none';
 
-          if (b.clusterId) {
-             const isStable = b.clusterStability >= stabilityThreshold;
-             if (isStable) {
-               fill = '#059669'; // CORE
-               r = 6;
-               opacity = 0.9;
-             } else {
-               fill = '#D97706'; // Insufficient
-               opacity = 0.7;
-             }
+          // Use explicit epistemicState field from backend
+          const state = (b as any).epistemicState || 'NOISE';
+          
+          if (state === 'CORE') {
+            fill = '#059669'; // Green: CORE
+            r = 6;
+            opacity = 0.9;
+          } else if (state === 'INSUFFICIENT_EVIDENCE') {
+            fill = '#D97706'; // Orange: INSUFFICIENT
+            r = 5;
+            opacity = 0.7;
+          } else {
+            // NOISE
+            fill = '#9CA3AF'; // Gray
+            r = 3;
+            opacity = 0.4;
           }
           
           const isHovered = hovered === b.id;
@@ -240,6 +247,8 @@ const EmbeddingChart = ({ behaviors, stabilityThreshold }: { behaviors: Behavior
           padding: '0.5rem', borderRadius: '4px', fontSize: '0.75rem',
           maxWidth: '200px', pointerEvents: 'none', zIndex: 10
         }}>
+          <strong>{(behaviors.find(b => b.id === hovered) as any)?.epistemicState || 'UNKNOWN'}</strong>
+          <br />
           {behaviors.find(b => b.id === hovered)?.text}
         </div>
       )}
@@ -768,21 +777,24 @@ const App = () => {
                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, fontSize: '0.875rem', lineHeight: '1.6' }}>
                      <li style={{display:'flex', alignItems:'center', gap:'0.5rem'}}>
                        <span style={{width:10, height:10, borderRadius:'50%', background:'var(--color-core)'}}></span> 
-                       <strong>Dense Cluster</strong> → CORE Candidate
+                       <strong>CORE</strong> → Stable, accepted patterns
                      </li>
                      <li style={{display:'flex', alignItems:'center', gap:'0.5rem'}}>
                        <span style={{width:10, height:10, borderRadius:'50%', background:'var(--color-insufficient)'}}></span> 
-                       <strong>Sparse Cloud</strong> → Abstention
+                       <strong>INSUFFICIENT</strong> → Emerging, not yet stable
                      </li>
                      <li style={{display:'flex', alignItems:'center', gap:'0.5rem'}}>
                        <span style={{width:10, height:10, borderRadius:'50%', background:'var(--color-noise)'}}></span> 
-                       <strong>Isolated Points</strong> → Noise
+                       <strong>NOISE</strong> → Isolated, rejected
                      </li>
                    </ul>
                 </div>
                 <div className="card" style={{ padding: '1rem', background: '#F8FAFC' }}>
-                   <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-                     <strong>Key Insight:</strong> The system does not force points into groups. It identifies organic density. Notice how noise points remain uncolored (gray).
+                   <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.875rem' }}>What This Shows</h4>
+                   <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+                     This is a <strong>diagnostic view</strong> showing all behavior embeddings in 2D space. 
+                     Projection happens <em>after</em> clustering—it doesn't influence classification. 
+                     The system's conservatism is visible: you see what was accepted (dense clusters) and rejected (scattered points).
                    </p>
                 </div>
               </div>
