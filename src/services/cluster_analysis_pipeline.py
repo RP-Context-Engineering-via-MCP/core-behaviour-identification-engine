@@ -267,6 +267,26 @@ class ClusterAnalysisPipeline:
                     self.mongodb.insert_cluster(cluster)
             elif skip_observation_storage:
                 logger.info("Step 6: Skipping observation storage (already in Qdrant)")
+                logger.info("Step 6.1: Updating MongoDB behaviors with cluster assignments")
+                # Update MongoDB behaviors collection with cluster_id and epistemic_state
+                for obs in observations:
+                    self.mongodb.db.behaviors.update_one(
+                        {"observation_id": obs.observation_id},
+                        {
+                            "$set": {
+                                "user_id": user_id,
+                                "observation_id": obs.observation_id,
+                                "behavior_text": obs.behavior_text,
+                                "embedding": obs.embedding,
+                                "cluster_id": obs.cluster_id,
+                                "credibility": obs.credibility,
+                                "timestamp": obs.timestamp,
+                                "prompt_id": obs.prompt_id
+                            }
+                        },
+                        upsert=True
+                    )
+                logger.info(f"Updated {len(observations)} behaviors in MongoDB with cluster assignments")
             
             # Step 7: Generate archetype (optional)
             archetype = None
