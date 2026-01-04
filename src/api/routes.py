@@ -475,6 +475,9 @@ async def get_analysis_summary(user_id: str):
                 cluster_name = metadata.get("cluster_name", f"Cluster {cluster_id}")
                 cluster_stability = metadata.get("cluster_stability", 0.0)
             
+            # Get 2D coordinates (projections_2d is List[Dict[str, float]])
+            coords_2d = projections_2d[i]
+            
             behaviors.append({
                 "id": behavior.get("observation_id", str(behavior.get("_id", f"obs_{i}"))),
                 "text": behavior.get("behavior_text", ""),
@@ -482,8 +485,8 @@ async def get_analysis_summary(user_id: str):
                 "timestamp": behavior.get("timestamp", 0),
                 "source": "system",
                 "embedding": {
-                    "x": float(projections_2d[i][0]),
-                    "y": float(projections_2d[i][1])
+                    "x": coords_2d["x"],
+                    "y": coords_2d["y"]
                 },
                 "clusterId": cluster_id,
                 "clusterName": cluster_name,
