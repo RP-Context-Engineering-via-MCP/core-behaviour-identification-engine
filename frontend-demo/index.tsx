@@ -18,6 +18,7 @@ interface Behavior {
   clusterId: string | null;
   clusterName?: string;
   clusterStability: number;
+  epistemicState?: string; // CORE, INSUFFICIENT_EVIDENCE, or NOISE from backend
 }
 
 interface UserProfile {
@@ -199,7 +200,7 @@ const EmbeddingChart = ({ behaviors, stabilityThreshold }: { behaviors: Behavior
           let stroke = 'none';
 
           // Use explicit epistemicState field from backend
-          const state = (b as any).epistemicState || 'NOISE';
+          const state = b.epistemicState || 'NOISE';
           
           if (state === 'CORE') {
             fill = '#059669'; // Green: CORE
@@ -247,7 +248,7 @@ const EmbeddingChart = ({ behaviors, stabilityThreshold }: { behaviors: Behavior
           padding: '0.5rem', borderRadius: '4px', fontSize: '0.75rem',
           maxWidth: '200px', pointerEvents: 'none', zIndex: 10
         }}>
-          <strong>{(behaviors.find(b => b.id === hovered) as any)?.epistemicState || 'UNKNOWN'}</strong>
+          <strong>{behaviors.find(b => b.id === hovered)?.epistemicState || 'UNKNOWN'}</strong>
           <br />
           {behaviors.find(b => b.id === hovered)?.text}
         </div>
@@ -619,7 +620,14 @@ const App = () => {
   }, [stabilityThreshold, selectedUser.id]);
 
   const getStatus = (b: Behavior): BehaviorStatus => {
-    if (!b.clusterId) return 'NOISE';
+    // Use epistemicState from backend (CORE, INSUFFICIENT_EVIDENCE, NOISE)
+    const state = b.epistemicState;
+    if (state === 'CORE') return 'CORE';
+    if (state === 'INSUFFICIENT_EVIDENCE') return 'INSUFFICIENT';
+    if (state === 'NOISE') return 'NOISE';
+    
+    // Fallback to clusterId logic if epistemicState is missing
+    if (b.clusterId === -1 || b.clusterId === null || b.clusterId === undefined) return 'NOISE';
     const cluster = analysisResult?.clusters.find(c => c.id === b.clusterId);
     return cluster?.isCore ? 'CORE' : 'INSUFFICIENT';
   };
