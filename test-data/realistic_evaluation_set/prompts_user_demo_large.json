@@ -1,0 +1,1694 @@
+[
+  {
+    "prompt_id": "prompt_09fba7",
+    "prompt_text": "Show me code examples for breadth-first search",
+    "timestamp": 1762330935,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_000"
+  },
+  {
+    "prompt_id": "prompt_0d0973",
+    "prompt_text": "I need help with bundling",
+    "timestamp": 1762331958,
+    "tokens": 6.5,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_000"
+  },
+  {
+    "prompt_id": "prompt_0dce9b",
+    "prompt_text": "Show me a diagram of logging",
+    "timestamp": 1762332074,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_000"
+  },
+  {
+    "prompt_id": "prompt_0a882d",
+    "prompt_text": "I need a step-by-step tutorial on tracing",
+    "timestamp": 1762332095,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_000"
+  },
+  {
+    "prompt_id": "prompt_02c73f",
+    "prompt_text": "Short version of dependency injection",
+    "timestamp": 1762332353,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_041dc0",
+    "prompt_text": "Detailed breakdown of Next.js routing",
+    "timestamp": 1762333188,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_000"
+  },
+  {
+    "prompt_id": "prompt_0eaacb",
+    "prompt_text": "Why isn't hash tables working?",
+    "timestamp": 1762333626,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_03785f",
+    "prompt_text": "Troubleshoot stacks",
+    "timestamp": 1762334397,
+    "tokens": 2.6,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_0dfa90",
+    "prompt_text": "Deep dive into test-driven development",
+    "timestamp": 1762334951,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_000"
+  },
+  {
+    "prompt_id": "prompt_071f9c",
+    "prompt_text": "Information about database indexing",
+    "timestamp": 1762335016,
+    "tokens": 5.2,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_000"
+  },
+  {
+    "prompt_id": "prompt_05c56c",
+    "prompt_text": "Walk me through red-black trees",
+    "timestamp": 1762335242,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_000"
+  },
+  {
+    "prompt_id": "prompt_062bfb",
+    "prompt_text": "Quick answer: integration testing",
+    "timestamp": 1762335634,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_06a1e0",
+    "prompt_text": "Can you provide sample code for depth-first search?",
+    "timestamp": 1762336130,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_000"
+  },
+  {
+    "prompt_id": "prompt_078da6",
+    "prompt_text": "Diagram showing auto-scaling",
+    "timestamp": 1762336973,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_000"
+  },
+  {
+    "prompt_id": "prompt_0723f9",
+    "prompt_text": "Info on minification",
+    "timestamp": 1762337853,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_000"
+  },
+  {
+    "prompt_id": "prompt_02a73c",
+    "prompt_text": "Visual breakdown of serverless functions",
+    "timestamp": 1762337923,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_000"
+  },
+  {
+    "prompt_id": "prompt_0ce5ff",
+    "prompt_text": "Error with integration testing",
+    "timestamp": 1762338769,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_05d2a0",
+    "prompt_text": "Full explanation of React hooks",
+    "timestamp": 1762339043,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_000"
+  },
+  {
+    "prompt_id": "prompt_0d7c3e",
+    "prompt_text": "Walk me through design patterns",
+    "timestamp": 1762339615,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_000"
+  },
+  {
+    "prompt_id": "prompt_0daab2",
+    "prompt_text": "In brief: JWT authentication",
+    "timestamp": 1762339859,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_06b4d7",
+    "prompt_text": "Working code for test-driven development",
+    "timestamp": 1762341298,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_000"
+  },
+  {
+    "prompt_id": "prompt_0f2cac",
+    "prompt_text": "About sorting algorithms",
+    "timestamp": 1762343436,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_000"
+  },
+  {
+    "prompt_id": "prompt_05355f",
+    "prompt_text": "Can you create a diagram explaining compression?",
+    "timestamp": 1762343543,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_000"
+  },
+  {
+    "prompt_id": "prompt_01cee9",
+    "prompt_text": "Provide a working example of mocking",
+    "timestamp": 1762344086,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_000"
+  },
+  {
+    "prompt_id": "prompt_0a2aea",
+    "prompt_text": "Quick explanation of MongoDB aggregation",
+    "timestamp": 1762344098,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_07e8d0",
+    "prompt_text": "Show me the steps to set up code reviews",
+    "timestamp": 1762344265,
+    "tokens": 11.7,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_000"
+  },
+  {
+    "prompt_id": "prompt_073f69",
+    "prompt_text": "Comprehensive guide to greedy algorithms",
+    "timestamp": 1762344503,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_000"
+  },
+  {
+    "prompt_id": "prompt_07b7ec",
+    "prompt_text": "What's wrong with my XSS prevention?",
+    "timestamp": 1762344594,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_0cf90f",
+    "prompt_text": "About code reviews",
+    "timestamp": 1762345078,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_000"
+  },
+  {
+    "prompt_id": "prompt_0ba316",
+    "prompt_text": "Flowchart for B-trees",
+    "timestamp": 1762345632,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_000"
+  },
+  {
+    "prompt_id": "prompt_032058",
+    "prompt_text": "Working code for stacks",
+    "timestamp": 1762346227,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_000"
+  },
+  {
+    "prompt_id": "prompt_09a247",
+    "prompt_text": "Short explanation of pub/sub patterns",
+    "timestamp": 1762346901,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_049e07",
+    "prompt_text": "Everything about encryption",
+    "timestamp": 1762347692,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_000"
+  },
+  {
+    "prompt_id": "prompt_01c049",
+    "prompt_text": "How to fix binary trees errors",
+    "timestamp": 1762348331,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_029395",
+    "prompt_text": "Step-by-step guide for breadth-first search",
+    "timestamp": 1762348331,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_000"
+  },
+  {
+    "prompt_id": "prompt_04edb7",
+    "prompt_text": "OAuth2",
+    "timestamp": 1762349561,
+    "tokens": 1.3,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_001"
+  },
+  {
+    "prompt_id": "prompt_03be14",
+    "prompt_text": "Full explanation of test-driven development",
+    "timestamp": 1762350021,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_001"
+  },
+  {
+    "prompt_id": "prompt_06d46a",
+    "prompt_text": "Short explanation of heaps",
+    "timestamp": 1762350578,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_001"
+  },
+  {
+    "prompt_id": "prompt_093919",
+    "prompt_text": "Can you explain ACID properties step-by-step?",
+    "timestamp": 1762350787,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_001"
+  },
+  {
+    "prompt_id": "prompt_05fb54",
+    "prompt_text": "Show me a visual guide for gRPC",
+    "timestamp": 1762351035,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_02b08a",
+    "prompt_text": "Troubleshoot mocking",
+    "timestamp": 1762351310,
+    "tokens": 2.6,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_001"
+  },
+  {
+    "prompt_id": "prompt_060b95",
+    "prompt_text": "Code example: message queues",
+    "timestamp": 1762351609,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_0beb12",
+    "prompt_text": "Show me how to code microservices",
+    "timestamp": 1762352559,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_038f57",
+    "prompt_text": "About serverless functions",
+    "timestamp": 1762353556,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_001"
+  },
+  {
+    "prompt_id": "prompt_020848",
+    "prompt_text": "Thorough explanation of microservices",
+    "timestamp": 1762353595,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_001"
+  },
+  {
+    "prompt_id": "prompt_0d721e",
+    "prompt_text": "Short explanation of integration testing",
+    "timestamp": 1762353611,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_001"
+  },
+  {
+    "prompt_id": "prompt_0a79c5",
+    "prompt_text": "Diagram showing connection pooling",
+    "timestamp": 1762354017,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_09ccc7",
+    "prompt_text": "I need a step-by-step tutorial on transactions",
+    "timestamp": 1762354880,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_001"
+  },
+  {
+    "prompt_id": "prompt_0a64ad",
+    "prompt_text": "Help me debug auto-scaling",
+    "timestamp": 1762355221,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_001"
+  },
+  {
+    "prompt_id": "prompt_0c094c",
+    "prompt_text": "Why isn't design patterns working?",
+    "timestamp": 1762356182,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_001"
+  },
+  {
+    "prompt_id": "prompt_0d4de6",
+    "prompt_text": "Comprehensive guide to Google Cloud Run",
+    "timestamp": 1762356388,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_001"
+  },
+  {
+    "prompt_id": "prompt_0afcf3",
+    "prompt_text": "What are the steps involved in CORS?",
+    "timestamp": 1762356684,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_001"
+  },
+  {
+    "prompt_id": "prompt_0b7f11",
+    "prompt_text": "hashing please",
+    "timestamp": 1762357520,
+    "tokens": 2.6,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_001"
+  },
+  {
+    "prompt_id": "prompt_05e500",
+    "prompt_text": "Illustrate connection pooling visually",
+    "timestamp": 1762357788,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_0393d9",
+    "prompt_text": "Brief intro to auto-scaling",
+    "timestamp": 1762358064,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_001"
+  },
+  {
+    "prompt_id": "prompt_0a5dd7",
+    "prompt_text": "Show me code examples for serverless functions",
+    "timestamp": 1762358114,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_071761",
+    "prompt_text": "Quick answer: recursion",
+    "timestamp": 1762359658,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_001"
+  },
+  {
+    "prompt_id": "prompt_07d38a",
+    "prompt_text": "Debugging SQL injection",
+    "timestamp": 1762359785,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_001"
+  },
+  {
+    "prompt_id": "prompt_06377b",
+    "prompt_text": "Can you create a diagram explaining breadth-first search?",
+    "timestamp": 1762359868,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_079988",
+    "prompt_text": "Info on integration testing",
+    "timestamp": 1762360057,
+    "tokens": 5.2,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_001"
+  },
+  {
+    "prompt_id": "prompt_065754",
+    "prompt_text": "How do I implement SQL injection? Step by step",
+    "timestamp": 1762360532,
+    "tokens": 11.7,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_001"
+  },
+  {
+    "prompt_id": "prompt_0c6d88",
+    "prompt_text": "Explain pub/sub patterns in detail",
+    "timestamp": 1762362177,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_001"
+  },
+  {
+    "prompt_id": "prompt_0844c9",
+    "prompt_text": "I need code samples for input validation",
+    "timestamp": 1762362374,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_07685c",
+    "prompt_text": "Everything about database normalization",
+    "timestamp": 1762363377,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_001"
+  },
+  {
+    "prompt_id": "prompt_07606e",
+    "prompt_text": "Explain event sourcing",
+    "timestamp": 1762363924,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_001"
+  },
+  {
+    "prompt_id": "prompt_0dfc4a",
+    "prompt_text": "Short explanation of Next.js routing",
+    "timestamp": 1762364097,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_001"
+  },
+  {
+    "prompt_id": "prompt_06d851",
+    "prompt_text": "Visual breakdown of binary search",
+    "timestamp": 1762364937,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_036bab",
+    "prompt_text": "Can you provide sample code for code reviews?",
+    "timestamp": 1762365331,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_047649",
+    "prompt_text": "Show me the steps to implement CQRS",
+    "timestamp": 1762365959,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_001"
+  },
+  {
+    "prompt_id": "prompt_01990e",
+    "prompt_text": "Debugging PostgreSQL",
+    "timestamp": 1762366319,
+    "tokens": 2.6,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_001"
+  },
+  {
+    "prompt_id": "prompt_0a8c6a",
+    "prompt_text": "Step-by-step guide for gRPC",
+    "timestamp": 1762367209,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_002"
+  },
+  {
+    "prompt_id": "prompt_09c50e",
+    "prompt_text": "Comprehensive guide to end-to-end testing",
+    "timestamp": 1762367580,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_002"
+  },
+  {
+    "prompt_id": "prompt_0dfa37",
+    "prompt_text": "Concise guide to pub/sub patterns",
+    "timestamp": 1762367899,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_002"
+  },
+  {
+    "prompt_id": "prompt_0ad2d6",
+    "prompt_text": "Help me debug FastAPI",
+    "timestamp": 1762368272,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_002"
+  },
+  {
+    "prompt_id": "prompt_0c62d2",
+    "prompt_text": "Show me code examples for Django models",
+    "timestamp": 1762368315,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_002"
+  },
+  {
+    "prompt_id": "prompt_0d3f49",
+    "prompt_text": "What is monolithic architecture?",
+    "timestamp": 1762368425,
+    "tokens": 5.2,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_002"
+  },
+  {
+    "prompt_id": "prompt_0a74b3",
+    "prompt_text": "Flowchart for end-to-end testing",
+    "timestamp": 1762369662,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_002"
+  },
+  {
+    "prompt_id": "prompt_03fef7",
+    "prompt_text": "Brief overview of logging",
+    "timestamp": 1762370766,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_002"
+  },
+  {
+    "prompt_id": "prompt_0bfca8",
+    "prompt_text": "Troubleshooting guide for XSS prevention",
+    "timestamp": 1762371237,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_002"
+  },
+  {
+    "prompt_id": "prompt_061d11",
+    "prompt_text": "I need code samples for FastAPI",
+    "timestamp": 1762371769,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_002"
+  },
+  {
+    "prompt_id": "prompt_0af560",
+    "prompt_text": "I need a step-by-step tutorial on JWT authentication",
+    "timestamp": 1762372143,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_002"
+  },
+  {
+    "prompt_id": "prompt_08570d",
+    "prompt_text": "Info on OAuth2",
+    "timestamp": 1762372672,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_002"
+  },
+  {
+    "prompt_id": "prompt_0ba989",
+    "prompt_text": "Full explanation of input validation",
+    "timestamp": 1762372768,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_002"
+  },
+  {
+    "prompt_id": "prompt_039656",
+    "prompt_text": "Show me a diagram of SSL/TLS",
+    "timestamp": 1762373113,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_002"
+  },
+  {
+    "prompt_id": "prompt_0d585f",
+    "prompt_text": "How do I implement database indexing? Step by step",
+    "timestamp": 1762374142,
+    "tokens": 11.7,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_002"
+  },
+  {
+    "prompt_id": "prompt_0cb77f",
+    "prompt_text": "Show me a diagram of FastAPI",
+    "timestamp": 1762374334,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_002"
+  },
+  {
+    "prompt_id": "prompt_055dd7",
+    "prompt_text": "Explain Django models in detail",
+    "timestamp": 1762375343,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_002"
+  },
+  {
+    "prompt_id": "prompt_0dcc7d",
+    "prompt_text": "Concise guide to FastAPI",
+    "timestamp": 1762375463,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_002"
+  },
+  {
+    "prompt_id": "prompt_035c05",
+    "prompt_text": "I need help with input validation",
+    "timestamp": 1762375768,
+    "tokens": 7.8,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_002"
+  },
+  {
+    "prompt_id": "prompt_0c7170",
+    "prompt_text": "How to fix SOLID principles errors",
+    "timestamp": 1762376113,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_002"
+  },
+  {
+    "prompt_id": "prompt_0821d3",
+    "prompt_text": "Show me how to code code coverage",
+    "timestamp": 1762376274,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_002"
+  },
+  {
+    "prompt_id": "prompt_06bf77",
+    "prompt_text": "Short explanation of binary search",
+    "timestamp": 1762378725,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_002"
+  },
+  {
+    "prompt_id": "prompt_037d78",
+    "prompt_text": "Can you explain database optimization step-by-step?",
+    "timestamp": 1762378800,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_002"
+  },
+  {
+    "prompt_id": "prompt_0b196d",
+    "prompt_text": "Detailed explanation of heaps",
+    "timestamp": 1762379197,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_002"
+  },
+  {
+    "prompt_id": "prompt_093826",
+    "prompt_text": "Show me how to code pub/sub patterns",
+    "timestamp": 1762379302,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_002"
+  },
+  {
+    "prompt_id": "prompt_06ddb0",
+    "prompt_text": "How to fix JavaScript promises errors",
+    "timestamp": 1762380040,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_002"
+  },
+  {
+    "prompt_id": "prompt_025f1d",
+    "prompt_text": "Can you help with stacks?",
+    "timestamp": 1762380882,
+    "tokens": 6.5,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_002"
+  },
+  {
+    "prompt_id": "prompt_0746c6",
+    "prompt_text": "Illustrate lazy loading visually",
+    "timestamp": 1762380916,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_002"
+  },
+  {
+    "prompt_id": "prompt_081ced",
+    "prompt_text": "Concise guide to FastAPI",
+    "timestamp": 1762381234,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_002"
+  },
+  {
+    "prompt_id": "prompt_039d8b",
+    "prompt_text": "design patterns",
+    "timestamp": 1762381257,
+    "tokens": 2.6,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_002"
+  },
+  {
+    "prompt_id": "prompt_0a2e08",
+    "prompt_text": "Why isn't SOLID principles working?",
+    "timestamp": 1762381735,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_002"
+  },
+  {
+    "prompt_id": "prompt_0d787c",
+    "prompt_text": "Show me the steps to set up backtracking",
+    "timestamp": 1762383322,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_002"
+  },
+  {
+    "prompt_id": "prompt_0c00db",
+    "prompt_text": "Can you provide sample code for Flask blueprints?",
+    "timestamp": 1762383531,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_002"
+  },
+  {
+    "prompt_id": "prompt_073f86",
+    "prompt_text": "Can you visualize GraphQL?",
+    "timestamp": 1762383889,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_002"
+  },
+  {
+    "prompt_id": "prompt_034dc3",
+    "prompt_text": "Everything about minification",
+    "timestamp": 1762384040,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_002"
+  },
+  {
+    "prompt_id": "prompt_07b96f",
+    "prompt_text": "TL;DR for encryption",
+    "timestamp": 1762385060,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_003"
+  },
+  {
+    "prompt_id": "prompt_0d971d",
+    "prompt_text": "Everything about metrics",
+    "timestamp": 1762385624,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_003"
+  },
+  {
+    "prompt_id": "prompt_07442e",
+    "prompt_text": "Fix my Express middleware problem",
+    "timestamp": 1762386055,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_003"
+  },
+  {
+    "prompt_id": "prompt_0c5d23",
+    "prompt_text": "Example implementation of JavaScript promises",
+    "timestamp": 1762386834,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_003"
+  },
+  {
+    "prompt_id": "prompt_070618",
+    "prompt_text": "Flowchart for containers",
+    "timestamp": 1762387114,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_003"
+  },
+  {
+    "prompt_id": "prompt_0658e4",
+    "prompt_text": "Can you explain test fixtures step-by-step?",
+    "timestamp": 1762388021,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_003"
+  },
+  {
+    "prompt_id": "prompt_09243d",
+    "prompt_text": "Info on transactions",
+    "timestamp": 1762388083,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_003"
+  },
+  {
+    "prompt_id": "prompt_098385",
+    "prompt_text": "Short explanation of lazy loading",
+    "timestamp": 1762388342,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_003"
+  },
+  {
+    "prompt_id": "prompt_0c8832",
+    "prompt_text": "Can you provide sample code for MongoDB aggregation?",
+    "timestamp": 1762389019,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_003"
+  },
+  {
+    "prompt_id": "prompt_05b74d",
+    "prompt_text": "Error with code splitting",
+    "timestamp": 1762389133,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_003"
+  },
+  {
+    "prompt_id": "prompt_0b8f06",
+    "prompt_text": "Tell me about message queues",
+    "timestamp": 1762390031,
+    "tokens": 6.5,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_003"
+  },
+  {
+    "prompt_id": "prompt_037f1a",
+    "prompt_text": "Show me the steps to create database indexing",
+    "timestamp": 1762390732,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_003"
+  },
+  {
+    "prompt_id": "prompt_035f0d",
+    "prompt_text": "Everything about metrics",
+    "timestamp": 1762391099,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_003"
+  },
+  {
+    "prompt_id": "prompt_0e874f",
+    "prompt_text": "Visual breakdown of test fixtures",
+    "timestamp": 1762391488,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_003"
+  },
+  {
+    "prompt_id": "prompt_0c7c80",
+    "prompt_text": "Concise guide to Vue composition API",
+    "timestamp": 1762391960,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_003"
+  },
+  {
+    "prompt_id": "prompt_0800c0",
+    "prompt_text": "In-depth analysis of Flask blueprints",
+    "timestamp": 1762392278,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_003"
+  },
+  {
+    "prompt_id": "prompt_0d4db6",
+    "prompt_text": "I need help with breadth-first search",
+    "timestamp": 1762392498,
+    "tokens": 7.8,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_003"
+  },
+  {
+    "prompt_id": "prompt_029f2c",
+    "prompt_text": "What's wrong with my monitoring?",
+    "timestamp": 1762392969,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_003"
+  },
+  {
+    "prompt_id": "prompt_078992",
+    "prompt_text": "Draw a flowchart for message queues",
+    "timestamp": 1762394054,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_003"
+  },
+  {
+    "prompt_id": "prompt_0be3f9",
+    "prompt_text": "What are the steps involved in CI/CD pipelines?",
+    "timestamp": 1762394201,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_003"
+  },
+  {
+    "prompt_id": "prompt_04f594",
+    "prompt_text": "Show me how to code TypeScript generics",
+    "timestamp": 1762394913,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_003"
+  },
+  {
+    "prompt_id": "prompt_0a2f81",
+    "prompt_text": "test fixtures",
+    "timestamp": 1762396281,
+    "tokens": 2.6,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_003"
+  },
+  {
+    "prompt_id": "prompt_02c80a",
+    "prompt_text": "Thorough explanation of graphs",
+    "timestamp": 1762396354,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_003"
+  },
+  {
+    "prompt_id": "prompt_0d8402",
+    "prompt_text": "What are the steps involved in mocking?",
+    "timestamp": 1762396559,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_003"
+  },
+  {
+    "prompt_id": "prompt_0400d4",
+    "prompt_text": "Fix my SQL joins problem",
+    "timestamp": 1762397155,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_003"
+  },
+  {
+    "prompt_id": "prompt_0beaca",
+    "prompt_text": "Quick answer: queues",
+    "timestamp": 1762397537,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_003"
+  },
+  {
+    "prompt_id": "prompt_0c7e9a",
+    "prompt_text": "Show me a diagram of XSS prevention",
+    "timestamp": 1762397596,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_003"
+  },
+  {
+    "prompt_id": "prompt_0406c3",
+    "prompt_text": "Working code for SOLID principles",
+    "timestamp": 1762397825,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_003"
+  },
+  {
+    "prompt_id": "prompt_05b696",
+    "prompt_text": "Illustrate Azure Functions visually",
+    "timestamp": 1762399652,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_003"
+  },
+  {
+    "prompt_id": "prompt_04a008",
+    "prompt_text": "Guide me through Git workflows one step at a time",
+    "timestamp": 1762400579,
+    "tokens": 13.0,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_003"
+  },
+  {
+    "prompt_id": "prompt_0a9668",
+    "prompt_text": "Can you provide sample code for B-trees?",
+    "timestamp": 1762400975,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_003"
+  },
+  {
+    "prompt_id": "prompt_0a4f6f",
+    "prompt_text": "Quick summary of database optimization",
+    "timestamp": 1762401067,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_003"
+  },
+  {
+    "prompt_id": "prompt_067612",
+    "prompt_text": "Deep dive into Django models",
+    "timestamp": 1762401419,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_deep_003"
+  },
+  {
+    "prompt_id": "prompt_061def",
+    "prompt_text": "Information about PostgreSQL",
+    "timestamp": 1762402463,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_003"
+  },
+  {
+    "prompt_id": "prompt_041657",
+    "prompt_text": "Fix my MongoDB aggregation problem",
+    "timestamp": 1762402480,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_003"
+  },
+  {
+    "prompt_id": "prompt_0f1410",
+    "prompt_text": "Draw a flowchart for red-black trees",
+    "timestamp": 1762403071,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_004"
+  },
+  {
+    "prompt_id": "prompt_033b8b",
+    "prompt_text": "What are the steps involved in message queues?",
+    "timestamp": 1762403151,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_0876e3",
+    "prompt_text": "What is Flask blueprints?",
+    "timestamp": 1762404112,
+    "tokens": 5.2,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_004"
+  },
+  {
+    "prompt_id": "prompt_0f2ae4",
+    "prompt_text": "Brief overview of mocking",
+    "timestamp": 1762404123,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_004"
+  },
+  {
+    "prompt_id": "prompt_0d3192",
+    "prompt_text": "Troubleshooting guide for database optimization",
+    "timestamp": 1762404386,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_004"
+  },
+  {
+    "prompt_id": "prompt_051d84",
+    "prompt_text": "Example implementation of integration testing",
+    "timestamp": 1762405181,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_004"
+  },
+  {
+    "prompt_id": "prompt_0d559e",
+    "prompt_text": "Brief overview of CORS",
+    "timestamp": 1762406230,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_concise_004"
+  },
+  {
+    "prompt_id": "prompt_0e7b94",
+    "prompt_text": "I need help with JWT authentication",
+    "timestamp": 1762406991,
+    "tokens": 7.8,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_004"
+  },
+  {
+    "prompt_id": "prompt_07556e",
+    "prompt_text": "Code example: red-black trees",
+    "timestamp": 1762407777,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_004"
+  },
+  {
+    "prompt_id": "prompt_043354",
+    "prompt_text": "Can you visualize binary search?",
+    "timestamp": 1762408387,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_004"
+  },
+  {
+    "prompt_id": "prompt_0bf402",
+    "prompt_text": "Guide me through greedy algorithms one step at a time",
+    "timestamp": 1762408594,
+    "tokens": 13.0,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_03fb80",
+    "prompt_text": "How to fix Next.js routing errors",
+    "timestamp": 1762409221,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_004"
+  },
+  {
+    "prompt_id": "prompt_0cf7e5",
+    "prompt_text": "Why isn't microservices working?",
+    "timestamp": 1762410060,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_004"
+  },
+  {
+    "prompt_id": "prompt_0d215b",
+    "prompt_text": "I need code samples for WebSockets",
+    "timestamp": 1762410067,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_004"
+  },
+  {
+    "prompt_id": "prompt_0b75e8",
+    "prompt_text": "What are the steps involved in encryption?",
+    "timestamp": 1762410343,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_04605d",
+    "prompt_text": "Can you visualize auto-scaling?",
+    "timestamp": 1762410547,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_004"
+  },
+  {
+    "prompt_id": "prompt_09f0c1",
+    "prompt_text": "About test fixtures",
+    "timestamp": 1762411808,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_004"
+  },
+  {
+    "prompt_id": "prompt_09ddc7",
+    "prompt_text": "Troubleshooting guide for TypeScript generics",
+    "timestamp": 1762413901,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_004"
+  },
+  {
+    "prompt_id": "prompt_030b5c",
+    "prompt_text": "Illustrate compression visually",
+    "timestamp": 1762414049,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_004"
+  },
+  {
+    "prompt_id": "prompt_04de00",
+    "prompt_text": "Step-by-step guide for dynamic programming",
+    "timestamp": 1762414279,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_04710a",
+    "prompt_text": "Show me how to code CSRF protection",
+    "timestamp": 1762414953,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_004"
+  },
+  {
+    "prompt_id": "prompt_0e3265",
+    "prompt_text": "What is logging?",
+    "timestamp": 1762416346,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_004"
+  },
+  {
+    "prompt_id": "prompt_044a6e",
+    "prompt_text": "I need code samples for MongoDB aggregation",
+    "timestamp": 1762417031,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_004"
+  },
+  {
+    "prompt_id": "prompt_023f65",
+    "prompt_text": "Can you help with Redis caching?",
+    "timestamp": 1762418131,
+    "tokens": 7.8,
+    "is_noise": true,
+    "user_id": "user_demo_large",
+    "session_id": "sess_noise_004"
+  },
+  {
+    "prompt_id": "prompt_0ee246",
+    "prompt_text": "Sequential instructions for encryption",
+    "timestamp": 1762419033,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_03a112",
+    "prompt_text": "How to fix design patterns errors",
+    "timestamp": 1762419834,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_004"
+  },
+  {
+    "prompt_id": "prompt_0ce5f7",
+    "prompt_text": "Visual representation of SQL joins",
+    "timestamp": 1762420448,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_004"
+  },
+  {
+    "prompt_id": "prompt_070a22",
+    "prompt_text": "Troubleshoot dynamic programming",
+    "timestamp": 1762421062,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_debug_005"
+  },
+  {
+    "prompt_id": "prompt_0d65b8",
+    "prompt_text": "Diagram showing backtracking",
+    "timestamp": 1762423151,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_005"
+  },
+  {
+    "prompt_id": "prompt_03cb6b",
+    "prompt_text": "Break down code splitting into steps",
+    "timestamp": 1762423202,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_005"
+  },
+  {
+    "prompt_id": "prompt_0d283e",
+    "prompt_text": "Example implementation of Google Cloud Run",
+    "timestamp": 1762423577,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_005"
+  },
+  {
+    "prompt_id": "prompt_0bd091",
+    "prompt_text": "Diagram showing JWT authentication",
+    "timestamp": 1762425037,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_005"
+  },
+  {
+    "prompt_id": "prompt_06c9c8",
+    "prompt_text": "Example implementation of code coverage",
+    "timestamp": 1762425835,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_005"
+  },
+  {
+    "prompt_id": "prompt_0a517d",
+    "prompt_text": "How do I implement OAuth2? Step by step",
+    "timestamp": 1762425996,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_005"
+  },
+  {
+    "prompt_id": "prompt_0cfe78",
+    "prompt_text": "Step-by-step guide for API rate limiting",
+    "timestamp": 1762428539,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_005"
+  },
+  {
+    "prompt_id": "prompt_07af9c",
+    "prompt_text": "Example implementation of SQL injection",
+    "timestamp": 1762428947,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_005"
+  },
+  {
+    "prompt_id": "prompt_0d3216",
+    "prompt_text": "Flowchart for caching strategies",
+    "timestamp": 1762429689,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_visual_005"
+  },
+  {
+    "prompt_id": "prompt_032dbe",
+    "prompt_text": "What are the steps involved in CORS?",
+    "timestamp": 1762432199,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_005"
+  },
+  {
+    "prompt_id": "prompt_0aa26d",
+    "prompt_text": "Show me how to code JWT authentication",
+    "timestamp": 1762432927,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_005"
+  },
+  {
+    "prompt_id": "prompt_0af0ea",
+    "prompt_text": "Show me the steps to create compression",
+    "timestamp": 1762436069,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_005"
+  },
+  {
+    "prompt_id": "prompt_0e7e87",
+    "prompt_text": "Give me a Rust code snippet for code reviews",
+    "timestamp": 1762436585,
+    "tokens": 11.7,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_005"
+  },
+  {
+    "prompt_id": "prompt_07b62a",
+    "prompt_text": "I need a step-by-step tutorial on React hooks",
+    "timestamp": 1762439897,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_006"
+  },
+  {
+    "prompt_id": "prompt_04373b",
+    "prompt_text": "I need code samples for TypeScript generics",
+    "timestamp": 1762440761,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_006"
+  },
+  {
+    "prompt_id": "prompt_0509a9",
+    "prompt_text": "What are the steps involved in Kubernetes?",
+    "timestamp": 1762444352,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_006"
+  },
+  {
+    "prompt_id": "prompt_0860ce",
+    "prompt_text": "Example implementation of stacks",
+    "timestamp": 1762444628,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_code_006"
+  },
+  {
+    "prompt_id": "prompt_023fd6",
+    "prompt_text": "What are the steps involved in CQRS?",
+    "timestamp": 1762448773,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_006"
+  },
+  {
+    "prompt_id": "prompt_095c2b",
+    "prompt_text": "How do I implement end-to-end testing? Step by step",
+    "timestamp": 1762450522,
+    "tokens": 11.7,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_006"
+  },
+  {
+    "prompt_id": "prompt_065110",
+    "prompt_text": "How do I implement graphs? Step by step",
+    "timestamp": 1762456285,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_demo_large",
+    "session_id": "sess_step_006"
+  }
+]

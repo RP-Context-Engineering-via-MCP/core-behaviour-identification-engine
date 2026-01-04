@@ -1,0 +1,2558 @@
+[
+  {
+    "prompt_id": "prompt_7e7cc0",
+    "prompt_text": "Troubleshoot Git workflows",
+    "timestamp": 1759769448,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_2a86e9",
+    "prompt_text": "Fix my Depth-first search problem",
+    "timestamp": 1759770426,
+    "tokens": 12.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_e19b6b",
+    "prompt_text": "How to fix XSS prevention errors",
+    "timestamp": 1759772335,
+    "tokens": 12.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_8d6b8a",
+    "prompt_text": "Fix my Heaps problem",
+    "timestamp": 1759781810,
+    "tokens": 7.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_a4d551",
+    "prompt_text": "Fix my Encryption problem",
+    "timestamp": 1759786365,
+    "tokens": 5.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_8b4158",
+    "prompt_text": "Troubleshoot Kubernetes pods",
+    "timestamp": 1759788507,
+    "tokens": 6.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_810c86",
+    "prompt_text": "I'm getting an error with Docker containers",
+    "timestamp": 1759792012,
+    "tokens": 7.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_a340d4",
+    "prompt_text": "Why isn't Dynamic programming working?",
+    "timestamp": 1759801687,
+    "tokens": 8.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_d8eed9",
+    "prompt_text": "Fix my CSRF protection problem",
+    "timestamp": 1759807103,
+    "tokens": 9.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_1a4e59",
+    "prompt_text": "Why isn't REST APIs working?",
+    "timestamp": 1759808400,
+    "tokens": 12.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_1abc33",
+    "prompt_text": "Why isn't Design patterns working?",
+    "timestamp": 1759808787,
+    "tokens": 1.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_d5f3f4",
+    "prompt_text": "About Heaps",
+    "timestamp": 1759814689,
+    "tokens": 5.0,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_010"
+  },
+  {
+    "prompt_id": "prompt_3edb88",
+    "prompt_text": "Fix my OWASP Top 10 problem",
+    "timestamp": 1759817764,
+    "tokens": 4.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_0a8c7a",
+    "prompt_text": "I'm getting an error with TDD",
+    "timestamp": 1759822317,
+    "tokens": 4.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_35b0fc",
+    "prompt_text": "How to fix Dijkstra's algorithm errors",
+    "timestamp": 1759830296,
+    "tokens": 5.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_dad165",
+    "prompt_text": "Why isn't Google Cloud Run working?",
+    "timestamp": 1759840508,
+    "tokens": 2.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_8cba16",
+    "prompt_text": "How to fix Azure Functions errors",
+    "timestamp": 1759841804,
+    "tokens": 11.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_04f679",
+    "prompt_text": "Troubleshooting guide for Flask blueprints",
+    "timestamp": 1759850819,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_3330dd",
+    "prompt_text": "I'm getting an error with Django models",
+    "timestamp": 1759860080,
+    "tokens": 8.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_50b19b",
+    "prompt_text": "What's wrong with my ACID properties?",
+    "timestamp": 1759862890,
+    "tokens": 4.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_e6045c",
+    "prompt_text": "What's wrong with my Kubernetes pods?",
+    "timestamp": 1759869743,
+    "tokens": 10.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_341e4a",
+    "prompt_text": "Fix my Dijkstra's algorithm problem",
+    "timestamp": 1759876772,
+    "tokens": 4.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_3cd67b",
+    "prompt_text": "Troubleshooting guide for OWASP Top 10",
+    "timestamp": 1759885987,
+    "tokens": 8.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_0df1b8",
+    "prompt_text": "Help me debug Flask blueprints",
+    "timestamp": 1759890439,
+    "tokens": 3.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_b8d0c2",
+    "prompt_text": "I'm getting an error with Graphs",
+    "timestamp": 1759897131,
+    "tokens": 1.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_e91904",
+    "prompt_text": "What is CQRS?",
+    "timestamp": 1759903275,
+    "tokens": 5.7,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_004"
+  },
+  {
+    "prompt_id": "prompt_78f114",
+    "prompt_text": "How to fix Django models errors",
+    "timestamp": 1759905368,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_7d14f3",
+    "prompt_text": "Troubleshoot Flask blueprints",
+    "timestamp": 1759911366,
+    "tokens": 8.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_ad2f45",
+    "prompt_text": "Troubleshoot Python decorators",
+    "timestamp": 1759913736,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_a6274a",
+    "prompt_text": "Fix my Clean Architecture problem",
+    "timestamp": 1759921948,
+    "tokens": 7.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_ffd0ba",
+    "prompt_text": "What's wrong with my Hash tables?",
+    "timestamp": 1759929419,
+    "tokens": 3.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_a56c31",
+    "prompt_text": "Fix my Django models problem",
+    "timestamp": 1759934671,
+    "tokens": 10.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_d6f3e8",
+    "prompt_text": "How to fix Docker containers errors",
+    "timestamp": 1759939136,
+    "tokens": 12.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_e2fd8f",
+    "prompt_text": "What is Event sourcing?",
+    "timestamp": 1759943943,
+    "tokens": 3.0,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_012"
+  },
+  {
+    "prompt_id": "prompt_41ab18",
+    "prompt_text": "What's wrong with my Depth-first search?",
+    "timestamp": 1759946379,
+    "tokens": 11.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_7da98c",
+    "prompt_text": "What's wrong with my TDD?",
+    "timestamp": 1759949696,
+    "tokens": 4.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_58dc53",
+    "prompt_text": "Troubleshoot Monoliths",
+    "timestamp": 1759951692,
+    "tokens": 12.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_1ebd02",
+    "prompt_text": "Why isn't Google Cloud Run working?",
+    "timestamp": 1759953059,
+    "tokens": 4.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_0027ba",
+    "prompt_text": "Fix my Next.js routing problem",
+    "timestamp": 1759957557,
+    "tokens": 5.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_cf67ae",
+    "prompt_text": "Why isn't Replication working?",
+    "timestamp": 1759964598,
+    "tokens": 8.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_becaa0",
+    "prompt_text": "Why isn't Greedy algorithms working?",
+    "timestamp": 1759965694,
+    "tokens": 1.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_5e66d8",
+    "prompt_text": "Design patterns please",
+    "timestamp": 1759966417,
+    "tokens": 2.1,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_003"
+  },
+  {
+    "prompt_id": "prompt_b18fd4",
+    "prompt_text": "What's wrong with my OAuth2?",
+    "timestamp": 1759974016,
+    "tokens": 6.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_35548d",
+    "prompt_text": "Troubleshoot End-to-end testing",
+    "timestamp": 1759975820,
+    "tokens": 9.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_390b03",
+    "prompt_text": "What's wrong with my Graphs?",
+    "timestamp": 1759986246,
+    "tokens": 10.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_e350a3",
+    "prompt_text": "Why isn't Trees working?",
+    "timestamp": 1759989633,
+    "tokens": 9.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_2bc6c3",
+    "prompt_text": "Why isn't Load balancing working?",
+    "timestamp": 1759996131,
+    "tokens": 7.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_181578",
+    "prompt_text": "Fix my XSS prevention problem",
+    "timestamp": 1759997219,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_25f0e5",
+    "prompt_text": "Troubleshoot React hooks",
+    "timestamp": 1759999817,
+    "tokens": 4.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_8beb73",
+    "prompt_text": "Help me debug Clean Architecture",
+    "timestamp": 1760005487,
+    "tokens": 3.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_b34a13",
+    "prompt_text": "Help me debug Stacks",
+    "timestamp": 1760013074,
+    "tokens": 5.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_948b79",
+    "prompt_text": "Fix my MongoDB aggregation problem",
+    "timestamp": 1760015891,
+    "tokens": 2.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_f2db4c",
+    "prompt_text": "Fix my SQL injection problem",
+    "timestamp": 1760025119,
+    "tokens": 11.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_34b907",
+    "prompt_text": "I'm getting an error with Heaps",
+    "timestamp": 1760033062,
+    "tokens": 2.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_abd697",
+    "prompt_text": "Fix my Microservices problem",
+    "timestamp": 1760038197,
+    "tokens": 2.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_ea7840",
+    "prompt_text": "Troubleshooting guide for GraphQL",
+    "timestamp": 1760047547,
+    "tokens": 8.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_aef53e",
+    "prompt_text": "About Angular signals",
+    "timestamp": 1760052311,
+    "tokens": 3.4,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_007"
+  },
+  {
+    "prompt_id": "prompt_a87f9a",
+    "prompt_text": "I'm getting an error with Code coverage",
+    "timestamp": 1760052836,
+    "tokens": 11.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_350f89",
+    "prompt_text": "Fix my OWASP Top 10 problem",
+    "timestamp": 1760057740,
+    "tokens": 10.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_1221f8",
+    "prompt_text": "Why isn't Dijkstra's algorithm working?",
+    "timestamp": 1760065045,
+    "tokens": 2.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_97f787",
+    "prompt_text": "Troubleshoot CI/CD pipelines",
+    "timestamp": 1760065631,
+    "tokens": 9.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_8f3913",
+    "prompt_text": "How to fix CQRS errors",
+    "timestamp": 1760069483,
+    "tokens": 5.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_b429ad",
+    "prompt_text": "I'm getting an error with CSRF protection",
+    "timestamp": 1760076305,
+    "tokens": 1.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_85bb1c",
+    "prompt_text": "Troubleshooting guide for SOLID principles",
+    "timestamp": 1760083975,
+    "tokens": 11.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_cd3f1f",
+    "prompt_text": "Troubleshooting guide for Python decorators",
+    "timestamp": 1760089796,
+    "tokens": 11.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_48aa89",
+    "prompt_text": "How to fix Dynamic programming errors",
+    "timestamp": 1760098770,
+    "tokens": 2.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_116494",
+    "prompt_text": "How to fix JavaScript promises errors",
+    "timestamp": 1760106175,
+    "tokens": 2.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_40b589",
+    "prompt_text": "I need help with Backtracking",
+    "timestamp": 1760113154,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_008"
+  },
+  {
+    "prompt_id": "prompt_dc9d20",
+    "prompt_text": "Fix my Event-driven architecture problem",
+    "timestamp": 1760115495,
+    "tokens": 8.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_ba963d",
+    "prompt_text": "Help me debug Event sourcing",
+    "timestamp": 1760120199,
+    "tokens": 9.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_3f70d4",
+    "prompt_text": "Why isn't Code coverage working?",
+    "timestamp": 1760129816,
+    "tokens": 9.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_1d3091",
+    "prompt_text": "Fix my Monoliths problem",
+    "timestamp": 1760138889,
+    "tokens": 1.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_005964",
+    "prompt_text": "Troubleshoot MongoDB aggregation",
+    "timestamp": 1760148901,
+    "tokens": 7.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_e394bc",
+    "prompt_text": "Troubleshooting guide for Depth-first search",
+    "timestamp": 1760159428,
+    "tokens": 3.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_7b601c",
+    "prompt_text": "What's wrong with my System design?",
+    "timestamp": 1760165105,
+    "tokens": 7.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_eb9449",
+    "prompt_text": "How to fix Vue composition API errors",
+    "timestamp": 1760168989,
+    "tokens": 12.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_e05b65",
+    "prompt_text": "Troubleshoot XSS prevention",
+    "timestamp": 1760179187,
+    "tokens": 11.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_5cc3bd",
+    "prompt_text": "What's wrong with my SSL/TLS?",
+    "timestamp": 1760184177,
+    "tokens": 10.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_aa96e6",
+    "prompt_text": "How to fix SQL injection errors",
+    "timestamp": 1760185591,
+    "tokens": 4.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_8895b9",
+    "prompt_text": "What's wrong with my Graphs?",
+    "timestamp": 1760185906,
+    "tokens": 3.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_debug_000"
+  },
+  {
+    "prompt_id": "prompt_2ad837",
+    "prompt_text": "Write a function to handle CSRF protection",
+    "timestamp": 1760191282,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_7b4e7d",
+    "prompt_text": "Show me code examples for Big O notation",
+    "timestamp": 1760201400,
+    "tokens": 3.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_e9ad43",
+    "prompt_text": "Show me code examples for Code coverage",
+    "timestamp": 1760212187,
+    "tokens": 3.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_c04b6a",
+    "prompt_text": "Can you provide sample code for ACID properties?",
+    "timestamp": 1760212912,
+    "tokens": 7.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_50aeb1",
+    "prompt_text": "I need code samples for Backtracking",
+    "timestamp": 1760216847,
+    "tokens": 10.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_8d60ca",
+    "prompt_text": "Working code for Backtracking",
+    "timestamp": 1760225985,
+    "tokens": 9.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_f70e4d",
+    "prompt_text": "Example implementation of Backtracking",
+    "timestamp": 1760230514,
+    "tokens": 2.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_003cf5",
+    "prompt_text": "Working code for Stacks",
+    "timestamp": 1760241086,
+    "tokens": 11.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_d54899",
+    "prompt_text": "Write a function to handle Serverless",
+    "timestamp": 1760242544,
+    "tokens": 10.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_dd89fc",
+    "prompt_text": "Write a function to handle Redis caching",
+    "timestamp": 1760251406,
+    "tokens": 3.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_33de1c",
+    "prompt_text": "Write a function to handle Quick sort",
+    "timestamp": 1760257544,
+    "tokens": 2.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_8bbbaa",
+    "prompt_text": "Example implementation of Next.js routing",
+    "timestamp": 1760264527,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_3a18dc",
+    "prompt_text": "I need code samples for JWT authentication",
+    "timestamp": 1760271170,
+    "tokens": 12.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_f0ae13",
+    "prompt_text": "Write a function to handle Microservices",
+    "timestamp": 1760272888,
+    "tokens": 9.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_6c651e",
+    "prompt_text": "I need code samples for ACID properties",
+    "timestamp": 1760282875,
+    "tokens": 3.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_8418e2",
+    "prompt_text": "Working code for ACID properties",
+    "timestamp": 1760285508,
+    "tokens": 4.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_b3e550",
+    "prompt_text": "Show me how to code Code coverage",
+    "timestamp": 1760294630,
+    "tokens": 8.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_0209f3",
+    "prompt_text": "Write a function to handle Clean Architecture",
+    "timestamp": 1760296647,
+    "tokens": 6.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_8b82f7",
+    "prompt_text": "Show me how to code OAuth2",
+    "timestamp": 1760300762,
+    "tokens": 8.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_644514",
+    "prompt_text": "Write a function to handle TDD",
+    "timestamp": 1760306053,
+    "tokens": 2.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_2e3502",
+    "prompt_text": "Can you provide sample code for SQL injection?",
+    "timestamp": 1760309360,
+    "tokens": 4.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_ec7415",
+    "prompt_text": "Write a function to handle Linting",
+    "timestamp": 1760319686,
+    "tokens": 11.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_a93779",
+    "prompt_text": "I need code samples for Next.js routing",
+    "timestamp": 1760319865,
+    "tokens": 6.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_737008",
+    "prompt_text": "Working code for System design",
+    "timestamp": 1760328092,
+    "tokens": 7.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_b1a7f5",
+    "prompt_text": "I need code samples for CI/CD pipelines",
+    "timestamp": 1760338482,
+    "tokens": 4.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_a93da1",
+    "prompt_text": "Show me code examples for Google Cloud Run",
+    "timestamp": 1760340178,
+    "tokens": 2.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_ed37be",
+    "prompt_text": "Show me code examples for Dynamic programming",
+    "timestamp": 1760350530,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_005446",
+    "prompt_text": "I need code samples for GraphQL",
+    "timestamp": 1760355237,
+    "tokens": 5.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_5f4f9f",
+    "prompt_text": "Show me code examples for JWT authentication",
+    "timestamp": 1760355732,
+    "tokens": 5.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_c797d9",
+    "prompt_text": "Example implementation of Redis caching",
+    "timestamp": 1760366421,
+    "tokens": 9.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_de0767",
+    "prompt_text": "I need code samples for SSL/TLS",
+    "timestamp": 1760371127,
+    "tokens": 12.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_13c213",
+    "prompt_text": "I need code samples for Redis caching",
+    "timestamp": 1760378638,
+    "tokens": 7.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_81bf02",
+    "prompt_text": "Can you provide sample code for Load balancing?",
+    "timestamp": 1760379718,
+    "tokens": 10.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_2a288e",
+    "prompt_text": "I need code samples for JWT authentication",
+    "timestamp": 1760389539,
+    "tokens": 7.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_bc24a2",
+    "prompt_text": "Write a function to handle PostgreSQL",
+    "timestamp": 1760395822,
+    "tokens": 8.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_7d4475",
+    "prompt_text": "Working code for FastAPI",
+    "timestamp": 1760396770,
+    "tokens": 1.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_51aa1c",
+    "prompt_text": "Example implementation of Serverless",
+    "timestamp": 1760406882,
+    "tokens": 2.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_181ec6",
+    "prompt_text": "Give me a code snippet for Queues",
+    "timestamp": 1760408151,
+    "tokens": 12.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_fdcfcb",
+    "prompt_text": "Show me how to code Binary search",
+    "timestamp": 1760410646,
+    "tokens": 5.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_3ae70e",
+    "prompt_text": "Give me a code snippet for Code coverage",
+    "timestamp": 1760421174,
+    "tokens": 4.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_a1abfe",
+    "prompt_text": "Write a function to handle Merge sort",
+    "timestamp": 1760428767,
+    "tokens": 3.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_867ca2",
+    "prompt_text": "I need code samples for Design patterns",
+    "timestamp": 1760432771,
+    "tokens": 6.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_574765",
+    "prompt_text": "Write a function to handle Event-driven architecture",
+    "timestamp": 1760436233,
+    "tokens": 8.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_be9eff",
+    "prompt_text": "Show me code examples for CI/CD pipelines",
+    "timestamp": 1760439184,
+    "tokens": 5.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_b5345c",
+    "prompt_text": "Working code for TDD",
+    "timestamp": 1760439986,
+    "tokens": 7.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_a736f3",
+    "prompt_text": "Give me a code snippet for Python decorators",
+    "timestamp": 1760443399,
+    "tokens": 1.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_7da076",
+    "prompt_text": "Write a function to handle React hooks",
+    "timestamp": 1760449111,
+    "tokens": 9.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_87b91b",
+    "prompt_text": "I need code samples for Integration testing",
+    "timestamp": 1760450508,
+    "tokens": 5.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_f5d769",
+    "prompt_text": "Example implementation of Angular signals",
+    "timestamp": 1760460239,
+    "tokens": 3.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_d446b4",
+    "prompt_text": "Write a function to handle Design patterns",
+    "timestamp": 1760466216,
+    "tokens": 3.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_9aea51",
+    "prompt_text": "Write a function to handle CSRF protection",
+    "timestamp": 1760468037,
+    "tokens": 5.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_8141fa",
+    "prompt_text": "Show me code examples for CI/CD pipelines",
+    "timestamp": 1760468917,
+    "tokens": 9.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_a92251",
+    "prompt_text": "Show me how to code Trees",
+    "timestamp": 1760470229,
+    "tokens": 5.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_098464",
+    "prompt_text": "Can you provide sample code for OWASP Top 10?",
+    "timestamp": 1760474542,
+    "tokens": 8.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_b24fb7",
+    "prompt_text": "Show me how to code Google Cloud Run",
+    "timestamp": 1760481148,
+    "tokens": 9.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_1ad7c0",
+    "prompt_text": "Working code for Design patterns",
+    "timestamp": 1760481289,
+    "tokens": 9.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_563e0f",
+    "prompt_text": "Show me how to code Dynamic programming",
+    "timestamp": 1760482840,
+    "tokens": 8.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_74709d",
+    "prompt_text": "Write a function to handle Code coverage",
+    "timestamp": 1760488329,
+    "tokens": 8.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_0b87ff",
+    "prompt_text": "Working code for FastAPI",
+    "timestamp": 1760490429,
+    "tokens": 9.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_2bbda9",
+    "prompt_text": "Write a function to handle Azure Functions",
+    "timestamp": 1760498951,
+    "tokens": 12.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_9749de",
+    "prompt_text": "Give me a code snippet for Hashing",
+    "timestamp": 1760500314,
+    "tokens": 2.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_0a426c",
+    "prompt_text": "Can you provide sample code for Breadth-first search?",
+    "timestamp": 1760501639,
+    "tokens": 8.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_472820",
+    "prompt_text": "Can you provide sample code for Redis caching?",
+    "timestamp": 1760509125,
+    "tokens": 7.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_4372c7",
+    "prompt_text": "Write a function to handle Clean Architecture",
+    "timestamp": 1760519388,
+    "tokens": 5.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_10f150",
+    "prompt_text": "Show me code examples for CAP theorem",
+    "timestamp": 1760527946,
+    "tokens": 8.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_7b7afc",
+    "prompt_text": "Give me a code snippet for Replication",
+    "timestamp": 1760530189,
+    "tokens": 2.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_abb8d1",
+    "prompt_text": "Example implementation of Load balancing",
+    "timestamp": 1760539639,
+    "tokens": 11.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_2ee261",
+    "prompt_text": "Working code for Integration testing",
+    "timestamp": 1760541076,
+    "tokens": 4.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_1f77bb",
+    "prompt_text": "Example implementation of CQRS",
+    "timestamp": 1760542809,
+    "tokens": 1.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_code_001"
+  },
+  {
+    "prompt_id": "prompt_9fc0ca",
+    "prompt_text": "Difference between Load balancing and...",
+    "timestamp": 1760544944,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_f58455",
+    "prompt_text": "Big O notation",
+    "timestamp": 1760553544,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_005"
+  },
+  {
+    "prompt_id": "prompt_290dc6",
+    "prompt_text": "Compare SOLID principles vs alternatives",
+    "timestamp": 1760554569,
+    "tokens": 10.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_718459",
+    "prompt_text": "Difference between Breadth-first search and...",
+    "timestamp": 1760562288,
+    "tokens": 2.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_56d1e7",
+    "prompt_text": "Big O notation vs others",
+    "timestamp": 1760571208,
+    "tokens": 9.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_7204ae",
+    "prompt_text": "Compare CAP theorem vs alternatives",
+    "timestamp": 1760578497,
+    "tokens": 2.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_0c10e7",
+    "prompt_text": "Pros and cons of Clean Architecture",
+    "timestamp": 1760578881,
+    "tokens": 5.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_7633e7",
+    "prompt_text": "When to use CQRS",
+    "timestamp": 1760588635,
+    "tokens": 3.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_d4db14",
+    "prompt_text": "When to use Django models",
+    "timestamp": 1760589217,
+    "tokens": 11.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_fc456b",
+    "prompt_text": "Difference between Clean Architecture and...",
+    "timestamp": 1760598575,
+    "tokens": 6.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_ab7bd1",
+    "prompt_text": "About Backtracking",
+    "timestamp": 1760600216,
+    "tokens": 1.3,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_006"
+  },
+  {
+    "prompt_id": "prompt_a42064",
+    "prompt_text": "When to use CSRF protection",
+    "timestamp": 1760607732,
+    "tokens": 5.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_7f31e9",
+    "prompt_text": "Pros and cons of Stacks",
+    "timestamp": 1760608758,
+    "tokens": 2.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_0c92ef",
+    "prompt_text": "Difference between Dynamic programming and...",
+    "timestamp": 1760616123,
+    "tokens": 12.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_1454de",
+    "prompt_text": "Pros and cons of XSS prevention",
+    "timestamp": 1760622821,
+    "tokens": 11.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_e1bb7a",
+    "prompt_text": "Tell me about Angular signals",
+    "timestamp": 1760623107,
+    "tokens": 1.5,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_011"
+  },
+  {
+    "prompt_id": "prompt_9b9e44",
+    "prompt_text": "Tell me about MongoDB aggregation",
+    "timestamp": 1760627115,
+    "tokens": 3.0,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_009"
+  },
+  {
+    "prompt_id": "prompt_780ef5",
+    "prompt_text": "Compare SOLID principles vs alternatives",
+    "timestamp": 1760630641,
+    "tokens": 8.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_727e09",
+    "prompt_text": "When to use Salting",
+    "timestamp": 1760640104,
+    "tokens": 3.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_bc602f",
+    "prompt_text": "Compare PostgreSQL vs alternatives",
+    "timestamp": 1760641039,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_e63ef5",
+    "prompt_text": "Pros and cons of CSRF protection",
+    "timestamp": 1760645040,
+    "tokens": 5.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_ab4e5f",
+    "prompt_text": "Compare Heaps vs alternatives",
+    "timestamp": 1760655542,
+    "tokens": 5.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_43aa55",
+    "prompt_text": "Compare Quick sort vs alternatives",
+    "timestamp": 1760656958,
+    "tokens": 6.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_8cbec4",
+    "prompt_text": "Compare AWS Lambda vs alternatives",
+    "timestamp": 1760661676,
+    "tokens": 4.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_b0d3a2",
+    "prompt_text": "Big O notation vs others",
+    "timestamp": 1760669335,
+    "tokens": 6.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_353d2c",
+    "prompt_text": "Compare FastAPI vs alternatives",
+    "timestamp": 1760677828,
+    "tokens": 3.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_ddf262",
+    "prompt_text": "Salting vs others",
+    "timestamp": 1760687912,
+    "tokens": 1.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_49056c",
+    "prompt_text": "Difference between Recursion and...",
+    "timestamp": 1760697459,
+    "tokens": 12.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_6958c9",
+    "prompt_text": "Pros and cons of Depth-first search",
+    "timestamp": 1760702588,
+    "tokens": 5.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_157b45",
+    "prompt_text": "CQRS vs others",
+    "timestamp": 1760708817,
+    "tokens": 12.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_5ac78b",
+    "prompt_text": "Difference between Serverless and...",
+    "timestamp": 1760716312,
+    "tokens": 2.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_7826df",
+    "prompt_text": "Compare BASE consistency vs alternatives",
+    "timestamp": 1760716599,
+    "tokens": 5.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_11e8bc",
+    "prompt_text": "Difference between BASE consistency and...",
+    "timestamp": 1760720136,
+    "tokens": 6.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_4ae915",
+    "prompt_text": "When to use Queues",
+    "timestamp": 1760723447,
+    "tokens": 7.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_47bd06",
+    "prompt_text": "When to use Depth-first search",
+    "timestamp": 1760729377,
+    "tokens": 4.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_c1479f",
+    "prompt_text": "Pros and cons of GraphQL",
+    "timestamp": 1760738388,
+    "tokens": 9.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_b7040e",
+    "prompt_text": "When to use Angular signals",
+    "timestamp": 1760744692,
+    "tokens": 3.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_047969",
+    "prompt_text": "Compare Redis caching vs alternatives",
+    "timestamp": 1760746589,
+    "tokens": 11.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_a38c29",
+    "prompt_text": "Best practices for Event-driven architecture",
+    "timestamp": 1760754800,
+    "tokens": 6.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_b75094",
+    "prompt_text": "Industry standards for gRPC",
+    "timestamp": 1760762703,
+    "tokens": 6.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_aed3bd",
+    "prompt_text": "Clean way to do AWS Lambda",
+    "timestamp": 1760772435,
+    "tokens": 12.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_355af6",
+    "prompt_text": "Best practices for BASE consistency",
+    "timestamp": 1760773782,
+    "tokens": 4.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_461695",
+    "prompt_text": "Proper convention for Azure Functions",
+    "timestamp": 1760775183,
+    "tokens": 5.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_310d75",
+    "prompt_text": "Clean way to do Hash tables",
+    "timestamp": 1760783056,
+    "tokens": 5.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_fcd343",
+    "prompt_text": "Clean way to do Git workflows",
+    "timestamp": 1760784177,
+    "tokens": 2.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_4e535e",
+    "prompt_text": "Proper convention for OWASP Top 10",
+    "timestamp": 1760791585,
+    "tokens": 5.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_081f42",
+    "prompt_text": "Proper convention for Heaps",
+    "timestamp": 1760797326,
+    "tokens": 2.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_c782f0",
+    "prompt_text": "Proper convention for Caching strategies",
+    "timestamp": 1760805119,
+    "tokens": 5.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_5a448b",
+    "prompt_text": "Industry standards for Flask blueprints",
+    "timestamp": 1760814143,
+    "tokens": 9.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_601cd9",
+    "prompt_text": "Clean way to do Microservices",
+    "timestamp": 1760824901,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_d0856e",
+    "prompt_text": "Clean way to do AWS Lambda",
+    "timestamp": 1760828399,
+    "tokens": 7.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_65dd85",
+    "prompt_text": "Clean way to do Serverless",
+    "timestamp": 1760836216,
+    "tokens": 11.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_db3d9c",
+    "prompt_text": "Proper convention for GraphQL",
+    "timestamp": 1760845511,
+    "tokens": 8.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_4d2b31",
+    "prompt_text": "SOLID principles please",
+    "timestamp": 1760851914,
+    "tokens": 4.0,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_002"
+  },
+  {
+    "prompt_id": "prompt_e57703",
+    "prompt_text": "Industry standards for Redis caching",
+    "timestamp": 1760853129,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_b8810c",
+    "prompt_text": "Best practices for FastAPI",
+    "timestamp": 1760853571,
+    "tokens": 1.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_72ebac",
+    "prompt_text": "Clean way to do Replication",
+    "timestamp": 1760858351,
+    "tokens": 3.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_b3906a",
+    "prompt_text": "Clean way to do Angular signals",
+    "timestamp": 1760859826,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_bdd0a3",
+    "prompt_text": "Proper convention for Breadth-first search",
+    "timestamp": 1760863259,
+    "tokens": 4.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_c4474c",
+    "prompt_text": "Clean way to do Encryption",
+    "timestamp": 1760868960,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_461ba4",
+    "prompt_text": "Best practices for Microservices",
+    "timestamp": 1760878932,
+    "tokens": 7.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_4eb177",
+    "prompt_text": "Best practices for Binary search",
+    "timestamp": 1760879158,
+    "tokens": 5.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_76e1a6",
+    "prompt_text": "Clean way to do FastAPI",
+    "timestamp": 1760885464,
+    "tokens": 6.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_d0fbad",
+    "prompt_text": "Clean way to do JWT authentication",
+    "timestamp": 1760892588,
+    "tokens": 5.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_11c188",
+    "prompt_text": "Industry standards for Quick sort",
+    "timestamp": 1760895037,
+    "tokens": 11.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_cae580",
+    "prompt_text": "Proper convention for Binary search",
+    "timestamp": 1760899402,
+    "tokens": 2.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_4a7060",
+    "prompt_text": "Greedy algorithms please",
+    "timestamp": 1760903806,
+    "tokens": 5.0,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_001"
+  },
+  {
+    "prompt_id": "prompt_8fd7c5",
+    "prompt_text": "Proper convention for FastAPI",
+    "timestamp": 1760910109,
+    "tokens": 3.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_a361c2",
+    "prompt_text": "Proper convention for Load balancing",
+    "timestamp": 1760911516,
+    "tokens": 7.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_f4a9f7",
+    "prompt_text": "Clean way to do System design",
+    "timestamp": 1760916908,
+    "tokens": 4.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_2af38e",
+    "prompt_text": "Proper convention for Recursion",
+    "timestamp": 1760926331,
+    "tokens": 10.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_3e8c54",
+    "prompt_text": "Best practices for CSRF protection",
+    "timestamp": 1760936590,
+    "tokens": 3.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_4793e2",
+    "prompt_text": "Proper convention for Flask blueprints",
+    "timestamp": 1760943281,
+    "tokens": 12.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_bda12e",
+    "prompt_text": "Clean way to do gRPC",
+    "timestamp": 1760953140,
+    "tokens": 10.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_2f8cca",
+    "prompt_text": "Clean way to do React hooks",
+    "timestamp": 1760955916,
+    "tokens": 11.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_3b1745",
+    "prompt_text": "Clean way to do CI/CD pipelines",
+    "timestamp": 1760958177,
+    "tokens": 6.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_4d269a",
+    "prompt_text": "Proper convention for Kubernetes pods",
+    "timestamp": 1760962403,
+    "tokens": 6.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_16b77b",
+    "prompt_text": "Best practices for WebSockets",
+    "timestamp": 1760971458,
+    "tokens": 4.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_e8f653",
+    "prompt_text": "Best practices for MongoDB aggregation",
+    "timestamp": 1760977206,
+    "tokens": 5.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_d84b0d",
+    "prompt_text": "Industry standards for Caching strategies",
+    "timestamp": 1760979674,
+    "tokens": 1.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_fe85cb",
+    "prompt_text": "Industry standards for React hooks",
+    "timestamp": 1760981851,
+    "tokens": 3.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_94d0f5",
+    "prompt_text": "Proper convention for OAuth2",
+    "timestamp": 1760986191,
+    "tokens": 2.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_a9cd4f",
+    "prompt_text": "Best practices for Database sharding",
+    "timestamp": 1760988519,
+    "tokens": 9.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_f6006a",
+    "prompt_text": "Best practices for FastAPI",
+    "timestamp": 1760990840,
+    "tokens": 11.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_5947ec",
+    "prompt_text": "Proper convention for Graphs",
+    "timestamp": 1760999175,
+    "tokens": 4.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_369adb",
+    "prompt_text": "Proper convention for Monoliths",
+    "timestamp": 1761008506,
+    "tokens": 8.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_106223",
+    "prompt_text": "Industry standards for Stacks",
+    "timestamp": 1761011517,
+    "tokens": 4.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_8c089c",
+    "prompt_text": "Clean way to do Hash tables",
+    "timestamp": 1761021848,
+    "tokens": 4.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_d22c20",
+    "prompt_text": "Best practices for Angular signals",
+    "timestamp": 1761031168,
+    "tokens": 11.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_a45c60",
+    "prompt_text": "Clean way to do Depth-first search",
+    "timestamp": 1761039993,
+    "tokens": 4.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_c7075e",
+    "prompt_text": "Clean way to do Event sourcing",
+    "timestamp": 1761045863,
+    "tokens": 8.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_881d6f",
+    "prompt_text": "Proper convention for Replication",
+    "timestamp": 1761046778,
+    "tokens": 6.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_7efaa6",
+    "prompt_text": "Best practices for REST APIs",
+    "timestamp": 1761052495,
+    "tokens": 11.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_45b415",
+    "prompt_text": "Industry standards for SQL injection",
+    "timestamp": 1761052640,
+    "tokens": 2.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_a914a0",
+    "prompt_text": "Proper convention for Monoliths",
+    "timestamp": 1761053538,
+    "tokens": 10.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_87c98c",
+    "prompt_text": "Clean way to do Code coverage",
+    "timestamp": 1761060857,
+    "tokens": 11.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_1cb51b",
+    "prompt_text": "Best practices for ACID properties",
+    "timestamp": 1761064794,
+    "tokens": 7.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_01cdf0",
+    "prompt_text": "Clean way to do AWS Lambda",
+    "timestamp": 1761069148,
+    "tokens": 9.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_529570",
+    "prompt_text": "Proper convention for Queues",
+    "timestamp": 1761079343,
+    "tokens": 8.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_36bbfd",
+    "prompt_text": "Industry standards for FastAPI",
+    "timestamp": 1761088469,
+    "tokens": 9.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_5c3c4c",
+    "prompt_text": "Best practices for Next.js routing",
+    "timestamp": 1761090959,
+    "tokens": 5.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_6aa023",
+    "prompt_text": "Proper convention for Monoliths",
+    "timestamp": 1761094797,
+    "tokens": 12.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_best_practice_003"
+  },
+  {
+    "prompt_id": "prompt_9afc46",
+    "prompt_text": "Deep dive into Greedy algorithms",
+    "timestamp": 1761098903,
+    "tokens": 2.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_a117c4",
+    "prompt_text": "Thorough explanation of Vue composition API",
+    "timestamp": 1761108876,
+    "tokens": 9.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_1a15ec",
+    "prompt_text": "Merge sort",
+    "timestamp": 1761117273,
+    "tokens": 2.2,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_000"
+  },
+  {
+    "prompt_id": "prompt_fda734",
+    "prompt_text": "Full explanation of Stacks",
+    "timestamp": 1761119402,
+    "tokens": 10.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_d0eea3",
+    "prompt_text": "Everything about Linked lists",
+    "timestamp": 1761126723,
+    "tokens": 6.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_adae23",
+    "prompt_text": "Detailed breakdown of OAuth2",
+    "timestamp": 1761137365,
+    "tokens": 7.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_9d36f7",
+    "prompt_text": "Detailed breakdown of Python decorators",
+    "timestamp": 1761137875,
+    "tokens": 10.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_81aa1a",
+    "prompt_text": "Everything about Microservices",
+    "timestamp": 1761141719,
+    "tokens": 3.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_432421",
+    "prompt_text": "Full explanation of Hashing",
+    "timestamp": 1761144917,
+    "tokens": 12.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_4e37ff",
+    "prompt_text": "Thorough explanation of Angular signals",
+    "timestamp": 1761155323,
+    "tokens": 8.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_33366d",
+    "prompt_text": "Comprehensive guide to Event-driven architecture",
+    "timestamp": 1761161875,
+    "tokens": 4.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_68844b",
+    "prompt_text": "Everything about Hash tables",
+    "timestamp": 1761171536,
+    "tokens": 3.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_9f1877",
+    "prompt_text": "Explain End-to-end testing in detail",
+    "timestamp": 1761181805,
+    "tokens": 9.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_312d06",
+    "prompt_text": "Deep dive into FastAPI",
+    "timestamp": 1761183737,
+    "tokens": 8.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_30c3e7",
+    "prompt_text": "Full explanation of Big O notation",
+    "timestamp": 1761188750,
+    "tokens": 3.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_09a8fe",
+    "prompt_text": "Full explanation of Redis caching",
+    "timestamp": 1761194188,
+    "tokens": 12.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_f28051",
+    "prompt_text": "Thorough explanation of Caching strategies",
+    "timestamp": 1761198418,
+    "tokens": 7.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_9d7db5",
+    "prompt_text": "Everything about PostgreSQL",
+    "timestamp": 1761202379,
+    "tokens": 9.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_e8e101",
+    "prompt_text": "Full explanation of Event-driven architecture",
+    "timestamp": 1761207932,
+    "tokens": 8.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_8848f6",
+    "prompt_text": "Everything about REST APIs",
+    "timestamp": 1761210848,
+    "tokens": 3.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_49dce8",
+    "prompt_text": "Full explanation of End-to-end testing",
+    "timestamp": 1761221301,
+    "tokens": 6.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_7ae8f1",
+    "prompt_text": "Deep dive into CQRS",
+    "timestamp": 1761231035,
+    "tokens": 2.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_99b4e5",
+    "prompt_text": "Deep dive into WebSockets",
+    "timestamp": 1761241187,
+    "tokens": 2.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_42d7f9",
+    "prompt_text": "Comprehensive guide to Stacks",
+    "timestamp": 1761250303,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_788a51",
+    "prompt_text": "In-depth analysis of Depth-first search",
+    "timestamp": 1761252566,
+    "tokens": 12.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_e2a880",
+    "prompt_text": "Explain Event sourcing in detail",
+    "timestamp": 1761259120,
+    "tokens": 2.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_8d2ada",
+    "prompt_text": "Full explanation of Queues",
+    "timestamp": 1761263178,
+    "tokens": 4.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_1b0d05",
+    "prompt_text": "Deep dive into Microservices",
+    "timestamp": 1761273649,
+    "tokens": 11.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_b8fa7c",
+    "prompt_text": "Everything about JWT authentication",
+    "timestamp": 1761274152,
+    "tokens": 5.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_64f02a",
+    "prompt_text": "Thorough explanation of JavaScript promises",
+    "timestamp": 1761282952,
+    "tokens": 6.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_c98a7e",
+    "prompt_text": "Deep dive into System design",
+    "timestamp": 1761285205,
+    "tokens": 7.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_f05bf8",
+    "prompt_text": "Full explanation of SQL injection",
+    "timestamp": 1761289448,
+    "tokens": 9.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  },
+  {
+    "prompt_id": "prompt_c26135",
+    "prompt_text": "Thorough explanation of Google Cloud Run",
+    "timestamp": 1761296097,
+    "tokens": 3.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_deep_004"
+  }
+]

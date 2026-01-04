@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-01-04T21:16:38.744458",
+  "total_users": 5,
+  "users": {
+    "user_small_dataset": {
+      "description": "Small dataset - few behaviors, low activity",
+      "behaviors_count": 8,
+      "prompts_count": 79,
+      "noise_ratio": 0.1,
+      "time_span_days": 15,
+      "files": {
+        "behaviors": "behaviors_user_small_dataset.json",
+        "prompts": "prompts_user_small_dataset.json"
+      }
+    },
+    "user_medium_clear": {
+      "description": "Medium dataset - clear patterns, low noise",
+      "behaviors_count": 12,
+      "prompts_count": 320,
+      "noise_ratio": 0.08,
+      "time_span_days": 30,
+      "files": {
+        "behaviors": "behaviors_user_medium_clear.json",
+        "prompts": "prompts_user_medium_clear.json"
+      }
+    },
+    "user_large_diverse": {
+      "description": "Large dataset - diverse behaviors, higher noise",
+      "behaviors_count": 18,
+      "prompts_count": 637,
+      "noise_ratio": 0.2,
+      "time_span_days": 60,
+      "files": {
+        "behaviors": "behaviors_user_large_diverse.json",
+        "prompts": "prompts_user_large_diverse.json"
+      }
+    },
+    "user_noisy_explorer": {
+      "description": "Exploratory user - many unrelated queries",
+      "behaviors_count": 10,
+      "prompts_count": 187,
+      "noise_ratio": 0.35,
+      "time_span_days": 45,
+      "files": {
+        "behaviors": "behaviors_user_noisy_explorer.json",
+        "prompts": "prompts_user_noisy_explorer.json"
+      }
+    },
+    "user_focused_specialist": {
+      "description": "Focused specialist - few but very strong behaviors",
+      "behaviors_count": 5,
+      "prompts_count": 284,
+      "noise_ratio": 0.05,
+      "time_span_days": 90,
+      "files": {
+        "behaviors": "behaviors_user_focused_specialist.json",
+        "prompts": "prompts_user_focused_specialist.json"
+      }
+    }
+  }
+}
