@@ -116,6 +116,18 @@ export async function fetchLLMContext(
   return await response.json();
 }
 
+// Run cluster-centric analysis pipeline on stored behaviors
+export async function runAnalysis(userId: string): Promise<any> {
+  const response = await fetch(
+    `${API_BASE_URL}/analyze-behaviors-from-storage?user_id=${userId}`,
+    { method: 'POST' }
+  );
+  if (!response.ok) {
+    throw new Error(`Failed to run analysis: ${response.statusText}`);
+  }
+  return await response.json();
+}
+
 // Health check
 export async function checkHealth(): Promise<{ status: string; service: string }> {
   const response = await fetch(`${API_BASE_URL}/health`);

@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { GoogleGenAI } from "@google/genai";
-import { fetchAnalysisData, fetchTestUsers, simulateThreshold, fetchLLMContext, type UserInfo } from './api';
+import { fetchAnalysisData, fetchTestUsers, simulateThreshold, fetchLLMContext, runAnalysis as triggerAnalysis, type UserInfo } from './api.ts';
 
 // --- Types & Constants ---
 
@@ -567,6 +567,12 @@ const App = () => {
     setError(null);
     
     try {
+      // First, trigger the cluster-centric analysis pipeline
+      console.log(`Triggering analysis pipeline for user ${selectedUser.id}...`);
+      await triggerAnalysis(selectedUser.id);
+      
+      // Then fetch the analysis results
+      console.log(`Fetching analysis results for user ${selectedUser.id}...`);
       const result = await fetchAnalysisData(selectedUser.id);
       setAnalysisResult(result);
       setIsAnalyzing(false);

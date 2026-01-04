@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     # Clustering Parameters
     min_cluster_size: int = 2
     min_samples: int = 1
-    cluster_selection_epsilon: float = 0.15
+    cluster_selection_epsilon: float = 0.0  # 0.0 = pure density clustering (more lenient)
     
     class Config:
         # Use absolute path to .env file (project root)

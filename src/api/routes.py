@@ -359,12 +359,12 @@ async def get_test_users():
     """
     try:
         # Get all unique user IDs from prompts collection
-        user_ids = mongodb_service.prompts.distinct("user_id")
+        user_ids = mongodb_service.db.prompts.distinct("user_id")
         
         users = []
         for user_id in user_ids:
-            prompt_count = mongodb_service.prompts.count_documents({"user_id": user_id})
-            behavior_count = mongodb_service.behaviors.count_documents({"user_id": user_id})
+            prompt_count = mongodb_service.db.prompts.count_documents({"user_id": user_id})
+            behavior_count = mongodb_service.db.behaviors.count_documents({"user_id": user_id})
             
             users.append({
                 "user_id": user_id,
