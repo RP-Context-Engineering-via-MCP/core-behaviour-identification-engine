@@ -695,7 +695,7 @@ const App = () => {
                   <MetricCard 
                     label="Insufficient Ev." 
                     value={analysisResult.metrics.insufficientEvidence} 
-                    sub="Uncertainty Handled"
+                    sub="Uncertain Clusters"
                     colorClass="--color-insufficient"
                   />
                   <MetricCard 
@@ -762,7 +762,7 @@ const App = () => {
                       return (
                         <tr key={b.id}>
                           <td><span className={`badge ${badgeClass}`}>{status}</span></td>
-                          <td>{b.clusterId ? `C-${b.clusterId}` : '-'}</td>
+                          <td>{b.clusterName || (b.clusterId !== undefined && b.clusterId !== -1 ? `C-${b.clusterId}` : '-')}</td>
                           <td>{b.clusterStability > 0 ? b.clusterStability.toFixed(2) : '-'}</td>
                         </tr>
                       );
