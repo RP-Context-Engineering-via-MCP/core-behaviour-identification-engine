@@ -380,3 +380,252 @@ async def get_test_users():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to fetch test users: {str(e)}"
         )
+
+
+@router.get(
+    "/profile/{user_id}/analysis-summary",
+    status_code=status.HTTP_200_OK,
+    summary="Get complete analysis summary with 2D projections",
+    description="Returns behaviors, clusters, and metrics with 2D UMAP projections for visualization"
+)
+async def get_analysis_summary(user_id: str):
+    """
+    Get comprehensive analysis data for dashboard visualization
+    
+    Returns:
+    - behaviors: All observations with 2D coordinates
+    - clusters: Cluster metadata with stability scores
+    - metrics: Dashboard statistics
+    
+    This endpoint is optimized for frontend visualization needs.
+    """
+    try:
+        from src.services.projection_service import project_embeddings_to_2d, normalize_2d_coordinates
+        from src.models.schemas import EpistemicState
+        
+        logger.info(f"Fetching analysis summary for user {user_id}")
+        
+        # Get user profile
+        profile_data = mongodb_service.get_profile(user_id)
+        
+        if not profile_data:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"No profile found for user {user_id}"
+            )
+        
+        # Collect all embeddings and observations
+        all_embeddings = []
+        all_observations = []
+        embedding_to_obs_map = []  # Track which embedding belongs to which observation
+        
+        for cluster in profile_data.get("behavior_clusters", []):
+            cluster_id = cluster.get("cluster_id")
+            cluster_name = cluster.get("cluster_name", cluster.get("canonical_label", "Unknown"))
+            cluster_stability = cluster.get("cluster_stability", 0.0)
+            epistemic_state = cluster.get("epistemic_state", "CORE")
+            
+            for obs in cluster.get("observations", []):
+                embedding = obs.get("embedding")
+                if embedding and len(embedding) > 0:
+                    all_embeddings.append(embedding)
+                    embedding_to_obs_map.append({
+                        "observation": obs,
+                        "cluster_id": cluster_id,
+                        "cluster_name": cluster_name,
+                        "cluster_stability": cluster_stability,
+                        "epistemic_state": epistemic_state
+                    })
+        
+        # Project embeddings to 2D
+        if len(all_embeddings) == 0:
+            logger.warning(f"No embeddings found for user {user_id}")
+            projections_2d = []
+        else:
+            logger.info(f"Projecting {len(all_embeddings)} embeddings to 2D")
+            projections_2d = project_embeddings_to_2d(all_embeddings)
+            # Normalize to range [-10, 10] for consistent visualization
+            projections_2d = normalize_2d_coordinates(projections_2d, target_range=(-10.0, 10.0))
+        
+        # Build behaviors array with 2D coordinates
+        behaviors = []
+        for i, (projection, mapping) in enumerate(zip(projections_2d, embedding_to_obs_map)):
+            obs = mapping["observation"]
+            behaviors.append({
+                "id": obs.get("observation_id", f"obs_{i}"),
+                "text": obs.get("behavior_text", ""),
+                "credibility": obs.get("credibility", 0.0),
+                "timestamp": obs.get("timestamp", 0),
+                "source": "system",
+                "embedding": projection,  # 2D coordinates {x, y}
+                "clusterId": mapping["cluster_id"],
+                "clusterName": mapping["cluster_name"],
+                "clusterStability": mapping["cluster_stability"],
+                "epistemicState": mapping["epistemic_state"]
+            })
+        
+        # Build clusters array
+        clusters = []
+        for cluster in profile_data.get("behavior_clusters", []):
+            epistemic_state = cluster.get("epistemic_state", "CORE")
+            is_core = epistemic_state == "CORE"
+            
+            clusters.append({
+                "id": cluster.get("cluster_id"),
+                "name": cluster.get("cluster_name", cluster.get("canonical_label", "Unknown")),
+                "stability": cluster.get("cluster_stability", 0.0),
+                "size": cluster.get("cluster_size", 0),
+                "isCore": is_core,
+                "epistemicState": epistemic_state,
+                "confidence": cluster.get("confidence", 0.0),
+                "clusterStrength": cluster.get("cluster_strength", 0.0)
+            })
+        
+        # Calculate metrics
+        total_observations = sum(c["size"] for c in clusters)
+        core_clusters = sum(1 for c in clusters if c["isCore"])
+        insufficient_clusters = sum(1 for c in clusters if c.get("epistemicState") == "INSUFFICIENT_EVIDENCE")
+        noise_clusters = sum(1 for c in clusters if c.get("epistemicState") == "NOISE")
+        
+        # Count observations by epistemic state
+        insufficient_obs = sum(
+            c["size"] for c in clusters 
+            if c.get("epistemicState") == "INSUFFICIENT_EVIDENCE"
+        )
+        noise_obs = sum(
+            c["size"] for c in clusters 
+            if c.get("epistemicState") == "NOISE"
+        )
+        
+        metrics = {
+            "totalObservations": total_observations,
+            "coreClusters": core_clusters,
+            "insufficientEvidence": insufficient_obs,
+            "noiseObservations": noise_obs,
+            "totalClusters": len(clusters)
+        }
+        
+        response = {
+            "user_id": user_id,
+            "behaviors": behaviors,
+            "clusters": clusters,
+            "metrics": metrics,
+            "archetype": profile_data.get("archetype"),
+            "generated_at": profile_data.get("generated_at", 0)
+        }
+        
+        logger.info(
+            f"Analysis summary complete: {len(behaviors)} behaviors, "
+            f"{len(clusters)} clusters, {core_clusters} CORE"
+        )
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating analysis summary: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate analysis summary: {str(e)}"
+        )
+
+
+@router.post(
+    "/profile/{user_id}/simulate-threshold",
+    status_code=status.HTTP_200_OK,
+    summary="Simulate cluster classification with different stability threshold",
+    description="Re-classify clusters based on new stability threshold without saving changes"
+)
+async def simulate_threshold(
+    user_id: str,
+    stability_threshold: float = 0.15
+):
+    """
+    Interactive threshold tuning for the "Threshold Lab" feature
+    
+    Args:
+        user_id: User identifier
+        stability_threshold: New threshold to test (0.0 to 1.0)
+        
+    Returns:
+        Updated cluster classifications and core count
+    """
+    try:
+        logger.info(f"Simulating threshold {stability_threshold} for user {user_id}")
+        
+        # Get user profile
+        profile_data = mongodb_service.get_profile(user_id)
+        
+        if not profile_data:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"No profile found for user {user_id}"
+            )
+        
+        # Re-classify clusters based on new threshold
+        updated_clusters = []
+        for cluster in profile_data.get("behavior_clusters", []):
+            stability = cluster.get("cluster_stability", 0.0)
+            
+            # Determine new epistemic state based on threshold
+            # Only clusters with stability >= threshold are considered CORE
+            if stability >= stability_threshold:
+                is_core = True
+                new_state = "CORE"
+            else:
+                is_core = False
+                # Keep original non-CORE state (INSUFFICIENT_EVIDENCE or NOISE)
+                original_state = cluster.get("epistemic_state", "INSUFFICIENT_EVIDENCE")
+                new_state = original_state if original_state != "CORE" else "INSUFFICIENT_EVIDENCE"
+            
+            updated_clusters.append({
+                "id": cluster.get("cluster_id"),
+                "name": cluster.get("cluster_name", cluster.get("canonical_label", "Unknown")),
+                "stability": stability,
+                "size": cluster.get("cluster_size", 0),
+                "isCore": is_core,
+                "epistemicState": new_state,
+                "confidence": cluster.get("confidence", 0.0),
+                "clusterStrength": cluster.get("cluster_strength", 0.0)
+            })
+        
+        # Count new core clusters
+        core_count = sum(1 for c in updated_clusters if c["isCore"])
+        insufficient_count = sum(1 for c in updated_clusters if c["epistemicState"] == "INSUFFICIENT_EVIDENCE")
+        noise_count = sum(1 for c in updated_clusters if c["epistemicState"] == "NOISE")
+        
+        # Calculate observation counts by state
+        insufficient_obs = sum(c["size"] for c in updated_clusters if c["epistemicState"] == "INSUFFICIENT_EVIDENCE")
+        noise_obs = sum(c["size"] for c in updated_clusters if c["epistemicState"] == "NOISE")
+        
+        response = {
+            "user_id": user_id,
+            "stability_threshold": stability_threshold,
+            "coreClusters": core_count,
+            "insufficientClusters": insufficient_count,
+            "noiseClusters": noise_count,
+            "metrics": {
+                "coreClusters": core_count,
+                "insufficientEvidence": insufficient_obs,
+                "noiseObservations": noise_obs
+            },
+            "updated_clusters": updated_clusters
+        }
+        
+        logger.info(
+            f"Threshold simulation complete: {core_count} CORE clusters "
+            f"(threshold={stability_threshold})"
+        )
+        
+        return response
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error simulating threshold: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to simulate threshold: {str(e)}"
+        )
+
