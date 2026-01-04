@@ -45,6 +45,9 @@ class BehaviorObservation(BaseModel):
     timestamp: int  # Unix timestamp - when observed
     prompt_id: str  # Which prompt triggered this observation
     
+    # Clustering result (assigned after HDBSCAN)
+    cluster_id: Optional[int] = None  # Cluster assignment (-1 for NOISE)
+    
     # Legacy fields for backward compatibility
     decay_rate: float = Field(ge=0.0, default=0.01)
     user_id: Optional[str] = None
@@ -64,6 +67,7 @@ class BehaviorObservation(BaseModel):
                 "extraction_confidence": 0.77,
                 "timestamp": 1765741962,
                 "prompt_id": "prompt_1",
+                "cluster_id": 0,
                 "decay_rate": 0.012,
                 "user_id": "user_348",
                 "session_id": "session_7732"
