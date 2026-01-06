@@ -23,6 +23,10 @@ export interface ClusterData {
   epistemicState?: string;
   confidence?: number;
   clusterStrength?: number;
+  consistencyScore?: number;
+  reinforcementScore?: number;
+  clarityTrend?: number;
+  recencyFactor?: number;
 }
 
 export interface AnalysisResult {

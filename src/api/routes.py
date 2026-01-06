@@ -5,6 +5,7 @@ Implements 5 API endpoints as specified in MVP documentation
 from fastapi import APIRouter, HTTPException, status
 from typing import List, Dict, Any
 import logging
+import numpy as np
 
 from src.models.schemas import (
     AnalyzeBehaviorsRequest,
@@ -513,7 +514,11 @@ async def get_analysis_summary(user_id: str):
                 "isCore": is_core,
                 "epistemicState": epistemic_state,
                 "confidence": cluster.get("confidence", 0.0),
-                "clusterStrength": cluster.get("cluster_strength", 0.0)
+                "clusterStrength": cluster.get("cluster_strength", 0.0),
+                "consistencyScore": cluster.get("consistency_score", 0.0),
+                "reinforcementScore": cluster.get("reinforcement_score", 0.0),
+                "clarityTrend": cluster.get("clarity_trend", 0.0),
+                "recencyFactor": cluster.get("recency_factor", 0.0)
             })
         
         # Calculate metrics from actual behaviors
@@ -583,8 +588,8 @@ async def simulate_threshold(
     try:
         logger.info(f"Simulating threshold {stability_threshold} for user {user_id}")
         
-        # Get user profile
-        profile_data = mongodb_service.get_profile(user_id)
+        # Get user profile with full cluster data
+        profile_data = mongodb_service.get_profile_with_clusters(user_id)
         
         if not profile_data:
             raise HTTPException(
@@ -593,19 +598,32 @@ async def simulate_threshold(
             )
         
         # Re-classify clusters based on new threshold
+        # CRITICAL: Use same logic as cluster_analysis_pipeline._assign_epistemic_states
+        # CORE requires BOTH: stability >= median AND >= absolute threshold
+        
+        # Calculate median stability from all clusters
+        all_stabilities = [c.get("cluster_stability", 0.0) for c in profile_data.get("behavior_clusters", [])]
+        median_stability = np.median(all_stabilities) if all_stabilities else 0.0
+        
+        # Calculate credibility median for INSUFFICIENT vs NOISE decision
+        # Note: This is approximate since we don't have full observation data here
+        # For demo consistency, we preserve the original INSUFFICIENT/NOISE state
+        # unless the cluster now qualifies as CORE
+        
         updated_clusters = []
         for cluster in profile_data.get("behavior_clusters", []):
             stability = cluster.get("cluster_stability", 0.0)
+            original_state = cluster.get("epistemic_state", "INSUFFICIENT_EVIDENCE")
             
-            # Determine new epistemic state based on threshold
-            # Only clusters with stability >= threshold are considered CORE
-            if stability >= stability_threshold:
+            # CORE classification: stability >= median AND >= absolute threshold
+            # This matches the pipeline logic exactly
+            if stability >= median_stability and stability >= stability_threshold:
                 is_core = True
                 new_state = "CORE"
             else:
                 is_core = False
-                # Keep original non-CORE state (INSUFFICIENT_EVIDENCE or NOISE)
-                original_state = cluster.get("epistemic_state", "INSUFFICIENT_EVIDENCE")
+                # Preserve original non-CORE classification
+                # (requires full observation data to recalculate INSUFFICIENT vs NOISE)
                 new_state = original_state if original_state != "CORE" else "INSUFFICIENT_EVIDENCE"
             
             updated_clusters.append({

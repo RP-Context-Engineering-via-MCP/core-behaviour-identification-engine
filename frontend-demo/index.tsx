@@ -36,6 +36,12 @@ interface ClusterData {
   stability: number;
   size: number;
   isCore: boolean;
+  confidence?: number;
+  clusterStrength?: number;
+  consistencyScore?: number;
+  reinforcementScore?: number;
+  clarityTrend?: number;
+  recencyFactor?: number;
 }
 
 interface AnalysisResult {
@@ -279,6 +285,7 @@ const ChatInterface = ({
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showNoise, setShowNoise] = useState(false);
+  const [expandedCluster, setExpandedCluster] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -402,11 +409,63 @@ const ChatInterface = ({
             {coreClusters.length > 0 ? (
                coreClusters.map(c => (
                  <div key={c.id} style={{ padding: '0.75rem', background: 'var(--color-core-bg)', border: '1px solid #A7F3D0', borderRadius: '6px', marginBottom: '0.5rem' }}>
-                   <div style={{ fontWeight: 600, color: '#064E3B', fontSize: '0.875rem' }}>{c.name}</div>
-                   <div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem', color: '#065F46', marginTop: '0.25rem' }}>
-                     <span>Stability: {c.stability.toFixed(2)}</span>
-                     <span>N={c.size}</span>
+                   <div 
+                     style={{ fontWeight: 600, color: '#064E3B', fontSize: '0.875rem', marginBottom: '0.5rem', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                     onClick={() => setExpandedCluster(expandedCluster === c.id ? null : c.id)}
+                   >
+                     <span>{c.name}</span>
+                     <span style={{ fontSize: '0.7rem', color: '#10B981' }}>{expandedCluster === c.id ? '▼' : '►'}</span>
                    </div>
+                   
+                   {/* Primary Metrics (Always Visible) */}
+                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.7rem', color: '#065F46' }}>
+                     <div><strong>Stability:</strong> {c.stability.toFixed(3)}</div>
+                     <div><strong>Size:</strong> {c.size}</div>
+                   </div>
+                   
+                   {/* Expanded Metrics (Show on Click) */}
+                   {expandedCluster === c.id && (
+                     <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid #A7F3D0' }}>
+                       <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#047857', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                         📊 Calculated Metrics
+                       </div>
+                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem', fontSize: '0.65rem', color: '#065F46' }}>
+                         {c.confidence !== undefined && (
+                           <div style={{ padding: '0.25rem', background: 'white', borderRadius: '3px' }}>
+                             <strong>Confidence:</strong> {c.confidence.toFixed(3)}
+                           </div>
+                         )}
+                         {c.clusterStrength !== undefined && (
+                           <div style={{ padding: '0.25rem', background: 'white', borderRadius: '3px' }}>
+                             <strong>Strength:</strong> {c.clusterStrength.toFixed(3)}
+                           </div>
+                         )}
+                         {c.consistencyScore !== undefined && (
+                           <div style={{ padding: '0.25rem', background: 'white', borderRadius: '3px' }}>
+                             <strong>Consistency:</strong> {c.consistencyScore.toFixed(3)}
+                           </div>
+                         )}
+                         {c.reinforcementScore !== undefined && (
+                           <div style={{ padding: '0.25rem', background: 'white', borderRadius: '3px' }}>
+                             <strong>Reinforcement:</strong> {c.reinforcementScore.toFixed(3)}
+                           </div>
+                         )}
+                         {c.clarityTrend !== undefined && (
+                           <div style={{ padding: '0.25rem', background: 'white', borderRadius: '3px' }}>
+                             <strong>Clarity Trend:</strong> {c.clarityTrend > 0 ? '+' : ''}{c.clarityTrend.toFixed(3)}
+                           </div>
+                         )}
+                         {c.recencyFactor !== undefined && (
+                           <div style={{ padding: '0.25rem', background: 'white', borderRadius: '3px' }}>
+                             <strong>Recency:</strong> {c.recencyFactor.toFixed(3)}
+                           </div>
+                         )}
+                       </div>
+                       <div style={{ marginTop: '0.5rem', fontSize: '0.6rem', color: '#059669', fontStyle: 'italic' }}>
+                         ℹ️ These metrics are used for LLM context filtering and analytics
+                       </div>
+                     </div>
+                   )}
                  </div>
                ))
             ) : (
