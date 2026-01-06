@@ -63,6 +63,11 @@ class MongoDBService:
             self.db.clusters.create_index("cluster_id", unique=True)
             self.db.clusters.create_index("user_id")
             
+            # Behavior clusters collection indexes (for separated cluster storage)
+            self.db.behavior_clusters.create_index([("user_id", ASCENDING), ("cluster_id", ASCENDING)], unique=True)
+            self.db.behavior_clusters.create_index("user_id")
+            self.db.behavior_clusters.create_index("profile_timestamp")
+            
             logger.info("Database indexes created successfully")
         except PyMongoError as e:
             logger.warning(f"Error creating indexes: {e}")
@@ -173,25 +178,118 @@ class MongoDBService:
     # Core Behavior Profile CRUD operations
     
     def insert_profile(self, profile: CoreBehaviorProfile) -> bool:
-        """Insert or update a core behavior profile"""
+        """
+        Insert or update a core behavior profile
+        For large profiles, stores clusters separately to avoid 16MB document limit
+        """
         try:
+            # First, store all clusters separately if there are many
+            if len(profile.behavior_clusters) > 0:
+                logger.info(f"Storing {len(profile.behavior_clusters)} clusters separately for user {profile.user_id}")
+                
+                # Store each cluster in the clusters collection
+                for cluster in profile.behavior_clusters:
+                    cluster_dict = cluster.model_dump()
+                    cluster_dict["user_id"] = profile.user_id  # Add user_id for filtering
+                    cluster_dict["profile_timestamp"] = profile.generated_at  # Link to profile version
+                    
+                    self.db.behavior_clusters.replace_one(
+                        {
+                            "user_id": profile.user_id,
+                            "cluster_id": cluster.cluster_id
+                        },
+                        cluster_dict,
+                        upsert=True
+                    )
+            
+            # Create a lightweight profile document with only cluster summaries
+            profile_dict = profile.model_dump()
+            
+            # Replace full clusters with lightweight references
+            if len(profile.behavior_clusters) > 0:
+                cluster_summaries = []
+                for cluster in profile.behavior_clusters:
+                    cluster_summaries.append({
+                        "cluster_id": cluster.cluster_id,
+                        "canonical_label": cluster.canonical_label,
+                        "cluster_name": cluster.cluster_name,
+                        "epistemic_state": cluster.epistemic_state,
+                        "tier": cluster.tier,
+                        "observation_count": len(cluster.observation_ids),
+                        "cluster_strength": cluster.cluster_strength,
+                        "confidence": cluster.confidence,
+                        "stability_score": cluster.cluster_stability
+                    })
+                
+                profile_dict["behavior_clusters"] = []  # Clear full clusters
+                profile_dict["cluster_summaries"] = cluster_summaries  # Add lightweight summaries
+                logger.info(f"Replaced {len(cluster_summaries)} full clusters with lightweight summaries")
+            
+            # Store the lightweight profile
             self.db.core_behavior_profiles.replace_one(
                 {"user_id": profile.user_id},
-                profile.model_dump(),
+                profile_dict,
                 upsert=True
             )
+            
+            logger.info(f"Successfully stored profile for user {profile.user_id}")
             return True
         except PyMongoError as e:
             logger.error(f"Error inserting profile: {e}")
             return False
     
     def get_profile(self, user_id: str) -> Optional[Dict]:
-        """Get a core behavior profile by user ID"""
+        """
+        Get a core behavior profile by user ID
+        Returns lightweight profile with cluster summaries (not full clusters)
+        """
         try:
             return self.db.core_behavior_profiles.find_one({"user_id": user_id})
         except PyMongoError as e:
             logger.error(f"Error fetching profile: {e}")
             return None
+    
+    def get_profile_with_clusters(self, user_id: str) -> Optional[Dict]:
+        """
+        Get a complete profile with full cluster details
+        Reconstructs the full profile by fetching clusters separately
+        """
+        try:
+            # Get the lightweight profile
+            profile = self.db.core_behavior_profiles.find_one({"user_id": user_id})
+            if not profile:
+                return None
+            
+            # Fetch all clusters for this user
+            clusters = list(self.db.behavior_clusters.find({"user_id": user_id}))
+            
+            # Remove user_id and profile_timestamp fields from clusters (they were added for indexing)
+            for cluster in clusters:
+                cluster.pop("user_id", None)
+                cluster.pop("profile_timestamp", None)
+            
+            # Replace cluster_summaries with full clusters
+            profile["behavior_clusters"] = clusters
+            profile.pop("cluster_summaries", None)
+            
+            logger.info(f"Retrieved profile with {len(clusters)} full clusters for user {user_id}")
+            return profile
+        except PyMongoError as e:
+            logger.error(f"Error fetching profile with clusters: {e}")
+            return None
+    
+    def get_user_clusters(self, user_id: str) -> List[Dict]:
+        """Get all clusters for a specific user"""
+        try:
+            clusters = list(self.db.behavior_clusters.find({"user_id": user_id}))
+            # Remove indexing fields
+            for cluster in clusters:
+                cluster.pop("user_id", None)
+                cluster.pop("profile_timestamp", None)
+            return clusters
+        except PyMongoError as e:
+            logger.error(f"Error fetching user clusters: {e}")
+            return []
     
     def update_profile_archetype(self, user_id: str, archetype: str) -> bool:
         """Update the archetype field of a profile"""

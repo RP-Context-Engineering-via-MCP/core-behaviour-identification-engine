@@ -1,0 +1,318 @@
+[
+  {
+    "behavior_id": "beh_4f7b7329_000078",
+    "observation_id": "obs_5ed0c208_000079",
+    "behavior_text": "prefers visual explanations for Python concepts",
+    "credibility": 0.88,
+    "reinforcement_count": 6,
+    "last_seen": 1767427336,
+    "prompt_history_ids": [
+      "prompt_51d0f1f1_000080",
+      "prompt_50e6d6d7_000081",
+      "prompt_0f29e75a_000082",
+      "prompt_29c2b0d3_000083",
+      "prompt_8e2655cf_000084",
+      "prompt_c7883a98_000085"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_core_000",
+    "clarity_score": 0.92,
+    "confidence": 0.74
+  },
+  {
+    "behavior_id": "beh_af13c00c_000086",
+    "observation_id": "obs_f2ec0768_000087",
+    "behavior_text": "likes diagrams when learning Python",
+    "credibility": 0.86,
+    "reinforcement_count": 5,
+    "last_seen": 1767605839,
+    "prompt_history_ids": [
+      "prompt_c58707c8_000088",
+      "prompt_6eeaefe5_000089",
+      "prompt_41f4e784_000090",
+      "prompt_319988b9_000091",
+      "prompt_3f909c6c_000092"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_core_001",
+    "clarity_score": 0.86,
+    "confidence": 0.7
+  },
+  {
+    "behavior_id": "beh_ceeb04bf_000093",
+    "observation_id": "obs_3f0c291c_000094",
+    "behavior_text": "prefers visual walkthroughs for Python topics",
+    "credibility": 0.84,
+    "reinforcement_count": 4,
+    "last_seen": 1767557604,
+    "prompt_history_ids": [
+      "prompt_95c13fc7_000095",
+      "prompt_94fe0ee6_000096",
+      "prompt_305f1f88_000097",
+      "prompt_cd722963_000098"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_core_002",
+    "clarity_score": 0.85,
+    "confidence": 0.66
+  },
+  {
+    "behavior_id": "beh_4277db96_000099",
+    "observation_id": "obs_c8d9cf5d_000100",
+    "behavior_text": "asks about testing frameworks occasionally",
+    "credibility": 0.73,
+    "reinforcement_count": 3,
+    "last_seen": 1767259544,
+    "prompt_history_ids": [
+      "prompt_20e2e15a_000101",
+      "prompt_c7fec44f_000102",
+      "prompt_e43ca32a_000103"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_insuff_000",
+    "clarity_score": 0.72,
+    "confidence": 0.59
+  },
+  {
+    "behavior_id": "beh_eeb7ef8b_000104",
+    "observation_id": "obs_c9be23a8_000105",
+    "behavior_text": "inquires about performance optimization",
+    "credibility": 0.75,
+    "reinforcement_count": 3,
+    "last_seen": 1767576684,
+    "prompt_history_ids": [
+      "prompt_93e6a5fe_000106",
+      "prompt_b9a963a3_000107",
+      "prompt_12d80b39_000108"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_insuff_001",
+    "clarity_score": 0.83,
+    "confidence": 0.59
+  },
+  {
+    "behavior_id": "beh_e0506015_000109",
+    "observation_id": "obs_722d24b7_000110",
+    "behavior_text": "random blockchain question",
+    "credibility": 0.49,
+    "reinforcement_count": 1,
+    "last_seen": 1766667773,
+    "prompt_history_ids": [
+      "prompt_6c1c2644_000111"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_000",
+    "clarity_score": 0.52,
+    "confidence": 0.34
+  },
+  {
+    "behavior_id": "beh_2feb9c73_000112",
+    "observation_id": "obs_14f457dd_000113",
+    "behavior_text": "movie recommendation",
+    "credibility": 0.43,
+    "reinforcement_count": 1,
+    "last_seen": 1766508219,
+    "prompt_history_ids": [
+      "prompt_8d841c8a_000114"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_001",
+    "clarity_score": 0.65,
+    "confidence": 0.41
+  },
+  {
+    "behavior_id": "beh_b030dc5e_000115",
+    "observation_id": "obs_71c9d5ed_000116",
+    "behavior_text": "inquires about weather",
+    "credibility": 0.4,
+    "reinforcement_count": 1,
+    "last_seen": 1766529193,
+    "prompt_history_ids": [
+      "prompt_4795ee24_000117"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_002",
+    "clarity_score": 0.45,
+    "confidence": 0.41
+  },
+  {
+    "behavior_id": "beh_883acbee_000118",
+    "observation_id": "obs_40cbb1e5_000119",
+    "behavior_text": "casual greeting",
+    "credibility": 0.28,
+    "reinforcement_count": 1,
+    "last_seen": 1766617458,
+    "prompt_history_ids": [
+      "prompt_2e5203af_000120"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_003",
+    "clarity_score": 0.53,
+    "confidence": 0.34
+  },
+  {
+    "behavior_id": "beh_39a65f1a_000121",
+    "observation_id": "obs_6ca1c41a_000122",
+    "behavior_text": "random math question",
+    "credibility": 0.5,
+    "reinforcement_count": 1,
+    "last_seen": 1766616927,
+    "prompt_history_ids": [
+      "prompt_ceb97949_000123"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_004",
+    "clarity_score": 0.56,
+    "confidence": 0.42
+  },
+  {
+    "behavior_id": "beh_53836dd7_000124",
+    "observation_id": "obs_56913659_000125",
+    "behavior_text": "random trivia",
+    "credibility": 0.33,
+    "reinforcement_count": 1,
+    "last_seen": 1766623409,
+    "prompt_history_ids": [
+      "prompt_4fb9bbeb_000126"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_005",
+    "clarity_score": 0.61,
+    "confidence": 0.49
+  },
+  {
+    "behavior_id": "beh_d1d1cd9a_000127",
+    "observation_id": "obs_7301c5eb_000128",
+    "behavior_text": "music recommendation",
+    "credibility": 0.37,
+    "reinforcement_count": 1,
+    "last_seen": 1766498572,
+    "prompt_history_ids": [
+      "prompt_d819392b_000129"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_006",
+    "clarity_score": 0.57,
+    "confidence": 0.38
+  },
+  {
+    "behavior_id": "beh_10c3dc42_000130",
+    "observation_id": "obs_9a3f58de_000131",
+    "behavior_text": "gaming query",
+    "credibility": 0.39,
+    "reinforcement_count": 1,
+    "last_seen": 1766528543,
+    "prompt_history_ids": [
+      "prompt_9d95c12a_000132"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_007",
+    "clarity_score": 0.54,
+    "confidence": 0.49
+  },
+  {
+    "behavior_id": "beh_3d363a7c_000133",
+    "observation_id": "obs_15bc9a15_000134",
+    "behavior_text": "stock market query",
+    "credibility": 0.46,
+    "reinforcement_count": 1,
+    "last_seen": 1766573125,
+    "prompt_history_ids": [
+      "prompt_2e3c1a94_000135"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_008",
+    "clarity_score": 0.49,
+    "confidence": 0.4
+  },
+  {
+    "behavior_id": "beh_c6525541_000136",
+    "observation_id": "obs_29b9fe05_000137",
+    "behavior_text": "one-time recipe query",
+    "credibility": 0.36,
+    "reinforcement_count": 1,
+    "last_seen": 1767658185,
+    "prompt_history_ids": [
+      "prompt_029d1876_000138"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_009",
+    "clarity_score": 0.42,
+    "confidence": 0.35
+  },
+  {
+    "behavior_id": "beh_c9827ec3_000139",
+    "observation_id": "obs_b9747841_000140",
+    "behavior_text": "asks about football scores",
+    "credibility": 0.34,
+    "reinforcement_count": 1,
+    "last_seen": 1767325079,
+    "prompt_history_ids": [
+      "prompt_42102fb5_000141"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_010",
+    "clarity_score": 0.6,
+    "confidence": 0.31
+  },
+  {
+    "behavior_id": "beh_b0db2a67_000142",
+    "observation_id": "obs_b0a3cca4_000143",
+    "behavior_text": "unrelated book query",
+    "credibility": 0.41,
+    "reinforcement_count": 1,
+    "last_seen": 1767561538,
+    "prompt_history_ids": [
+      "prompt_29a56d29_000144"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_011",
+    "clarity_score": 0.51,
+    "confidence": 0.46
+  },
+  {
+    "behavior_id": "beh_76e12655_000145",
+    "observation_id": "obs_4d6c5804_000146",
+    "behavior_text": "unrelated API syntax",
+    "credibility": 0.42,
+    "reinforcement_count": 1,
+    "last_seen": 1767518918,
+    "prompt_history_ids": [
+      "prompt_f4fdb14c_000147"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_012",
+    "clarity_score": 0.56,
+    "confidence": 0.5
+  },
+  {
+    "behavior_id": "beh_fe9c8882_000148",
+    "observation_id": "obs_f9cd0b20_000149",
+    "behavior_text": "random history fact",
+    "credibility": 0.31,
+    "reinforcement_count": 1,
+    "last_seen": 1767391030,
+    "prompt_history_ids": [
+      "prompt_0cd0caf1_000150"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_013",
+    "clarity_score": 0.46,
+    "confidence": 0.34
+  },
+  {
+    "behavior_id": "beh_f51b0a10_000151",
+    "observation_id": "obs_3794d5d0_000152",
+    "behavior_text": "travel question",
+    "credibility": 0.35,
+    "reinforcement_count": 1,
+    "last_seen": 1767644835,
+    "prompt_history_ids": [
+      "prompt_79e5e4e6_000153"
+    ],
+    "user_id": "user_demo_single_core",
+    "session_id": "sess_noise_014",
+    "clarity_score": 0.49,
+    "confidence": 0.49
+  }
+]

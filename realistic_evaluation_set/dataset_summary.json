@@ -1,39 +1,11 @@
 {
-  "generated_at": "2026-01-06T12:52:02.290602",
-  "total_users": 8,
+  "generated_at": "2026-01-05T07:02:59.078419",
+  "total_users": 6,
   "users": {
-    "user_demo_epistemic": {
-      "description": "DEMO: Controlled dataset showing CORE, INSUFFICIENT_EVIDENCE, and NOISE states",
-      "mode": "controlled_demo",
-      "behaviors_count": 19,
-      "prompts_count": 39,
-      "core_behaviors": 2,
-      "insufficient_behaviors": 2,
-      "noise_behaviors": 15,
-      "time_span_days": 14,
-      "files": {
-        "behaviors": "behaviors_user_demo_epistemic.json",
-        "prompts": "prompts_user_demo_epistemic.json"
-      }
-    },
-    "user_demo_single_core": {
-      "description": "DEMO: Single CORE cluster with 3 paraphrased behaviors (visual Python learning)",
-      "mode": "controlled_demo",
-      "behaviors_count": 20,
-      "prompts_count": 36,
-      "core_behaviors": 3,
-      "insufficient_behaviors": 2,
-      "noise_behaviors": 15,
-      "time_span_days": 14,
-      "files": {
-        "behaviors": "behaviors_user_demo_single_core.json",
-        "prompts": "prompts_user_demo_single_core.json"
-      }
-    },
     "user_small_dataset": {
       "description": "Small dataset - few behaviors, low activity",
       "behaviors_count": 8,
-      "prompts_count": 81,
+      "prompts_count": 77,
       "noise_ratio": 0.1,
       "time_span_days": 15,
       "files": {
@@ -44,7 +16,7 @@
     "user_medium_clear": {
       "description": "Medium dataset - clear patterns, low noise",
       "behaviors_count": 12,
-      "prompts_count": 315,
+      "prompts_count": 367,
       "noise_ratio": 0.08,
       "time_span_days": 30,
       "files": {
@@ -55,7 +27,7 @@
     "user_large_diverse": {
       "description": "Large dataset - diverse behaviors, higher noise",
       "behaviors_count": 18,
-      "prompts_count": 576,
+      "prompts_count": 514,
       "noise_ratio": 0.2,
       "time_span_days": 60,
       "files": {
@@ -66,7 +38,7 @@
     "user_noisy_explorer": {
       "description": "Exploratory user - many unrelated queries",
       "behaviors_count": 10,
-      "prompts_count": 193,
+      "prompts_count": 198,
       "noise_ratio": 0.35,
       "time_span_days": 45,
       "files": {
@@ -77,7 +49,7 @@
     "user_focused_specialist": {
       "description": "Focused specialist - few but very strong behaviors",
       "behaviors_count": 5,
-      "prompts_count": 327,
+      "prompts_count": 222,
       "noise_ratio": 0.05,
       "time_span_days": 90,
       "files": {
@@ -88,7 +60,7 @@
     "user_massive_dataset": {
       "description": "Massive dataset - 1000 behaviors, extensive activity over 1 year",
       "behaviors_count": 1000,
-      "prompts_count": 10101,
+      "prompts_count": 10361,
       "noise_ratio": 0.15,
       "time_span_days": 365,
       "files": {

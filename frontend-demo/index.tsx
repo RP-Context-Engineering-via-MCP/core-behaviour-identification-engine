@@ -572,10 +572,31 @@ const App = () => {
     loadUsers();
   }, []);
 
-  // Effect: Reset analysis and chat when user changes
+  // Effect: Reset analysis and chat when user changes, then try to load existing profile
   useEffect(() => {
     setAnalysisResult(null);
     setChatMessages([]);
+    
+    // Try to load existing profile for the new user
+    const loadExistingProfile = async () => {
+      try {
+        console.log(`Checking for existing profile for user ${selectedUser.id}...`);
+        const result = await fetchAnalysisData(selectedUser.id);
+        
+        // If we got results, it means a profile exists
+        if (result && result.behaviors && result.behaviors.length > 0) {
+          console.log(`Found existing profile with ${result.behaviors.length} behaviors`);
+          setAnalysisResult(result);
+        } else {
+          console.log(`No existing profile found for user ${selectedUser.id}`);
+        }
+      } catch (e) {
+        // Profile doesn't exist yet or error - that's okay
+        console.log(`No existing profile for user ${selectedUser.id} (user needs to run analysis)`);
+      }
+    };
+    
+    loadExistingProfile();
   }, [selectedUser.id]);
 
   const runAnalysis = async () => {

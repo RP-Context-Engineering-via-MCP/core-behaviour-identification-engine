@@ -414,14 +414,17 @@ async def get_analysis_summary(user_id: str):
                 detail=f"No profile found for user {user_id}"
             )
         
+        # Check if we have cluster_summaries (lightweight) or full behavior_clusters
+        cluster_data = profile_data.get("cluster_summaries") or profile_data.get("behavior_clusters", [])
+        
         # Build cluster metadata map (cluster_id -> epistemic_state, stability, name)
         cluster_metadata = {}
-        for cluster in profile_data.get("behavior_clusters", []):
+        for cluster in cluster_data:
             cluster_id = cluster.get("cluster_id")
             cluster_metadata[cluster_id] = {
                 "epistemic_state": cluster.get("epistemic_state", "CORE"),
-                "cluster_name": cluster.get("cluster_name", cluster.get("canonical_label", "Unknown")),
-                "cluster_stability": cluster.get("cluster_stability", 0.0)
+                "cluster_name": cluster.get("cluster_name", cluster.get("canonical_label", cluster.get("concise_label", "Unknown"))),
+                "cluster_stability": cluster.get("cluster_stability", cluster.get("stability_score", 0.0))
             }
         
         # Fetch ALL behaviors from behaviors collection (includes NOISE)
@@ -498,15 +501,15 @@ async def get_analysis_summary(user_id: str):
         
         # Build clusters array
         clusters = []
-        for cluster in profile_data.get("behavior_clusters", []):
+        for cluster in cluster_data:
             epistemic_state = cluster.get("epistemic_state", "CORE")
             is_core = epistemic_state == "CORE"
             
             clusters.append({
                 "id": cluster.get("cluster_id"),
-                "name": cluster.get("cluster_name", cluster.get("canonical_label", "Unknown")),
-                "stability": cluster.get("cluster_stability", 0.0),
-                "size": cluster.get("cluster_size", 0),
+                "name": cluster.get("cluster_name", cluster.get("canonical_label", cluster.get("concise_label", "Unknown"))),
+                "stability": cluster.get("cluster_stability", cluster.get("stability_score", 0.0)),
+                "size": cluster.get("cluster_size", cluster.get("observation_count", 0)),
                 "isCore": is_core,
                 "epistemicState": epistemic_state,
                 "confidence": cluster.get("confidence", 0.0),

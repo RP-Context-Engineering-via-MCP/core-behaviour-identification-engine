@@ -1,0 +1,2000 @@
+[
+  {
+    "prompt_id": "prompt_2e3d2b1a_001255",
+    "prompt_text": "Quick summary of XSS prevention",
+    "timestamp": 1759807866,
+    "tokens": 4.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_2d04df64_001256",
+    "prompt_text": "Brief overview of Kubernetes pods",
+    "timestamp": 1759811115,
+    "tokens": 1.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_bf75bc06_001257",
+    "prompt_text": "Quick summary of Merge sort",
+    "timestamp": 1759811262,
+    "tokens": 4.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_945cab3f_001258",
+    "prompt_text": "Brief overview of Replication",
+    "timestamp": 1759812668,
+    "tokens": 12.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_7deea8b7_001259",
+    "prompt_text": "In brief: Docker containers",
+    "timestamp": 1759823006,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_70bd5e5a_001260",
+    "prompt_text": "Short explanation of Breadth-first search",
+    "timestamp": 1759823972,
+    "tokens": 3.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_2ac66a31_001261",
+    "prompt_text": "In brief: Recursion",
+    "timestamp": 1759827534,
+    "tokens": 5.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_dcb82510_001262",
+    "prompt_text": "In brief: Redis caching",
+    "timestamp": 1759835127,
+    "tokens": 8.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_9ada2a29_001263",
+    "prompt_text": "Brief overview of React hooks",
+    "timestamp": 1759842207,
+    "tokens": 4.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_c9ab5d20_001264",
+    "prompt_text": "Brief overview of SSL/TLS",
+    "timestamp": 1759843989,
+    "tokens": 12.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_17d3af0b_001265",
+    "prompt_text": "Concise guide to Linked lists",
+    "timestamp": 1759849543,
+    "tokens": 12.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_1c75ea3d_001266",
+    "prompt_text": "Short explanation of System design",
+    "timestamp": 1759850035,
+    "tokens": 6.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_a8eae5bc_001267",
+    "prompt_text": "Quick summary of Stacks",
+    "timestamp": 1759858753,
+    "tokens": 9.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_463dd579_001268",
+    "prompt_text": "Quick summary of CSRF protection",
+    "timestamp": 1759865528,
+    "tokens": 3.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_19c550b1_001269",
+    "prompt_text": "Quick summary of Quick sort",
+    "timestamp": 1759865984,
+    "tokens": 1.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_af8196da_001270",
+    "prompt_text": "Short explanation of Design patterns",
+    "timestamp": 1759867948,
+    "tokens": 6.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_a0f91515_001271",
+    "prompt_text": "In brief: Redis caching",
+    "timestamp": 1759869271,
+    "tokens": 8.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_5911d91e_001272",
+    "prompt_text": "Quick answer: SSL/TLS",
+    "timestamp": 1759878264,
+    "tokens": 7.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_d02c611a_001273",
+    "prompt_text": "TL;DR for CAP theorem",
+    "timestamp": 1759882467,
+    "tokens": 10.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_9dd2c96a_001274",
+    "prompt_text": "Quick answer: Dijkstra's algorithm",
+    "timestamp": 1759882799,
+    "tokens": 2.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_f177d941_001275",
+    "prompt_text": "Quick summary of Recursion",
+    "timestamp": 1759887389,
+    "tokens": 8.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_20ee76d3_001276",
+    "prompt_text": "Concise guide to ACID properties",
+    "timestamp": 1759891266,
+    "tokens": 9.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_e733ffb3_001277",
+    "prompt_text": "TL;DR for Greedy algorithms",
+    "timestamp": 1759895673,
+    "tokens": 7.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_b8a0dfa1_001278",
+    "prompt_text": "Quick answer: Integration testing",
+    "timestamp": 1759906155,
+    "tokens": 7.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_e73b2b3f_001479",
+    "prompt_text": "I need help with SOLID principles",
+    "timestamp": 1759912937,
+    "tokens": 2.4,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_004"
+  },
+  {
+    "prompt_id": "prompt_20fe095f_001279",
+    "prompt_text": "Short explanation of Angular signals",
+    "timestamp": 1759916838,
+    "tokens": 3.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_ac6fe2ba_001280",
+    "prompt_text": "Quick summary of gRPC",
+    "timestamp": 1759925246,
+    "tokens": 12.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_fbe8354f_001281",
+    "prompt_text": "Quick answer: OWASP Top 10",
+    "timestamp": 1759928344,
+    "tokens": 2.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_e20afaa6_001482",
+    "prompt_text": "Breadth-first search",
+    "timestamp": 1759935311,
+    "tokens": 1.6,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_007"
+  },
+  {
+    "prompt_id": "prompt_e4a22b28_001282",
+    "prompt_text": "Concise guide to Serverless",
+    "timestamp": 1759937054,
+    "tokens": 3.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_cc54599f_001283",
+    "prompt_text": "Quick answer: End-to-end testing",
+    "timestamp": 1759938409,
+    "tokens": 2.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_ef1cf548_001284",
+    "prompt_text": "TL;DR for OAuth2",
+    "timestamp": 1759943965,
+    "tokens": 9.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_e1ed8431_001285",
+    "prompt_text": "Short explanation of Clean Architecture",
+    "timestamp": 1759945790,
+    "tokens": 12.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_c683be2b_001286",
+    "prompt_text": "Brief intro to Angular signals",
+    "timestamp": 1759948712,
+    "tokens": 1.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_e94a7fe8_001287",
+    "prompt_text": "In brief: JWT authentication",
+    "timestamp": 1759953783,
+    "tokens": 2.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_ca3618bd_001288",
+    "prompt_text": "Quick answer: Merge sort",
+    "timestamp": 1759961695,
+    "tokens": 5.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_fcbf90f6_001289",
+    "prompt_text": "Short explanation of Graphs",
+    "timestamp": 1759971110,
+    "tokens": 9.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_44041ecf_001290",
+    "prompt_text": "Quick answer: Git workflows",
+    "timestamp": 1759974461,
+    "tokens": 11.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_c4e233d7_001291",
+    "prompt_text": "Brief overview of BASE consistency",
+    "timestamp": 1759975870,
+    "tokens": 2.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_f94fb4d9_001484",
+    "prompt_text": "What is GraphQL?",
+    "timestamp": 1759981702,
+    "tokens": 3.8,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_009"
+  },
+  {
+    "prompt_id": "prompt_d5b38954_001292",
+    "prompt_text": "TL;DR for Linked lists",
+    "timestamp": 1759982483,
+    "tokens": 4.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_concise_000"
+  },
+  {
+    "prompt_id": "prompt_9b030d43_001295",
+    "prompt_text": "Can you create a diagram explaining Recursion?",
+    "timestamp": 1759988570,
+    "tokens": 4.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_5b697d13_001296",
+    "prompt_text": "Show me a diagram of OWASP Top 10",
+    "timestamp": 1759998212,
+    "tokens": 4.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_b32a5888_001297",
+    "prompt_text": "I need a visual representation of Caching strategies",
+    "timestamp": 1760001445,
+    "tokens": 3.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_99bf6212_001481",
+    "prompt_text": "About Dynamic programming",
+    "timestamp": 1760001655,
+    "tokens": 5.0,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_006"
+  },
+  {
+    "prompt_id": "prompt_6072f01d_001298",
+    "prompt_text": "Can you create a diagram explaining Google Cloud Run?",
+    "timestamp": 1760005267,
+    "tokens": 2.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_7c2f91c0_001299",
+    "prompt_text": "Draw a flowchart for End-to-end testing",
+    "timestamp": 1760006855,
+    "tokens": 8.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_05c768f9_001300",
+    "prompt_text": "Draw a flowchart for SOLID principles",
+    "timestamp": 1760011781,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_06ac4fed_001301",
+    "prompt_text": "Visual breakdown of Trees",
+    "timestamp": 1760019447,
+    "tokens": 10.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_fdfb70ed_001302",
+    "prompt_text": "Illustrate JavaScript promises visually",
+    "timestamp": 1760020139,
+    "tokens": 4.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_e17e1bb3_001303",
+    "prompt_text": "Illustrate REST APIs visually",
+    "timestamp": 1760020273,
+    "tokens": 1.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_4fe5ed09_001304",
+    "prompt_text": "Show me a diagram of Depth-first search",
+    "timestamp": 1760022700,
+    "tokens": 3.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_1625014f_001305",
+    "prompt_text": "Visual breakdown of Replication",
+    "timestamp": 1760031090,
+    "tokens": 3.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_1e905f1f_001306",
+    "prompt_text": "Can you create a diagram explaining Dynamic programming?",
+    "timestamp": 1760034274,
+    "tokens": 10.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_7a1219dc_001307",
+    "prompt_text": "Illustrate ACID properties visually",
+    "timestamp": 1760041752,
+    "tokens": 6.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_b2f0933a_001308",
+    "prompt_text": "Can you create a diagram explaining WebSockets?",
+    "timestamp": 1760049853,
+    "tokens": 6.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_bdc48313_001309",
+    "prompt_text": "Show me a diagram of Trees",
+    "timestamp": 1760054395,
+    "tokens": 12.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_c73eafb8_001310",
+    "prompt_text": "Illustrate Graphs visually",
+    "timestamp": 1760064226,
+    "tokens": 11.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_323d6c38_001311",
+    "prompt_text": "Illustrate Hashing visually",
+    "timestamp": 1760065735,
+    "tokens": 4.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_273b045c_001312",
+    "prompt_text": "I need a visual representation of Event-driven architecture",
+    "timestamp": 1760071884,
+    "tokens": 7.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_3cc8f461_001313",
+    "prompt_text": "Illustrate CQRS visually",
+    "timestamp": 1760079280,
+    "tokens": 6.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_a3e4f986_001314",
+    "prompt_text": "Visual breakdown of Hashing",
+    "timestamp": 1760087903,
+    "tokens": 6.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_f25bcedb_001315",
+    "prompt_text": "Draw a flowchart for AWS Lambda",
+    "timestamp": 1760092650,
+    "tokens": 1.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_75da9fe0_001316",
+    "prompt_text": "Draw a flowchart for Binary search",
+    "timestamp": 1760092930,
+    "tokens": 3.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_8ad34e20_001317",
+    "prompt_text": "Illustrate AWS Lambda visually",
+    "timestamp": 1760094515,
+    "tokens": 1.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_81d69e61_001318",
+    "prompt_text": "I need a visual representation of ACID properties",
+    "timestamp": 1760095031,
+    "tokens": 9.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_51585c9b_001319",
+    "prompt_text": "Illustrate Quick sort visually",
+    "timestamp": 1760101388,
+    "tokens": 10.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_d820898d_001320",
+    "prompt_text": "Visual breakdown of Redis caching",
+    "timestamp": 1760103728,
+    "tokens": 12.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_d08298ba_001321",
+    "prompt_text": "Draw a flowchart for CAP theorem",
+    "timestamp": 1760112529,
+    "tokens": 5.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_52db852f_001322",
+    "prompt_text": "Illustrate TypeScript generics visually",
+    "timestamp": 1760115129,
+    "tokens": 10.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_aa242d05_001323",
+    "prompt_text": "I need a visual representation of gRPC",
+    "timestamp": 1760120235,
+    "tokens": 1.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_5d67f961_001324",
+    "prompt_text": "Illustrate Dijkstra's algorithm visually",
+    "timestamp": 1760128683,
+    "tokens": 5.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_ef435a2a_001325",
+    "prompt_text": "I need a visual representation of Angular signals",
+    "timestamp": 1760134592,
+    "tokens": 5.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_6f71a9a2_001326",
+    "prompt_text": "Illustrate Caching strategies visually",
+    "timestamp": 1760144016,
+    "tokens": 2.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_visual_001"
+  },
+  {
+    "prompt_id": "prompt_c678b520_001329",
+    "prompt_text": "Compare Merge sort vs alternatives",
+    "timestamp": 1760151223,
+    "tokens": 8.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_023f9ac5_001476",
+    "prompt_text": "Info on SQL injection",
+    "timestamp": 1760155903,
+    "tokens": 3.9,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_001"
+  },
+  {
+    "prompt_id": "prompt_9a696363_001330",
+    "prompt_text": "Difference between Event sourcing and...",
+    "timestamp": 1760160690,
+    "tokens": 11.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_03389db1_001331",
+    "prompt_text": "Stacks vs others",
+    "timestamp": 1760167168,
+    "tokens": 2.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_e2f89f57_001332",
+    "prompt_text": "Difference between Stacks and...",
+    "timestamp": 1760177025,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_2b118f80_001333",
+    "prompt_text": "Difference between Linked lists and...",
+    "timestamp": 1760182971,
+    "tokens": 2.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_3baa68c6_001334",
+    "prompt_text": "Difference between Hash tables and...",
+    "timestamp": 1760191879,
+    "tokens": 9.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_edd750d1_001335",
+    "prompt_text": "Pros and cons of PostgreSQL",
+    "timestamp": 1760194789,
+    "tokens": 3.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_ab810ff5_001336",
+    "prompt_text": "Pros and cons of React hooks",
+    "timestamp": 1760199473,
+    "tokens": 6.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_e3d223d3_001337",
+    "prompt_text": "When to use SSL/TLS",
+    "timestamp": 1760203296,
+    "tokens": 2.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_fc5fe384_001338",
+    "prompt_text": "Difference between Monoliths and...",
+    "timestamp": 1760213606,
+    "tokens": 2.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_35b63092_001339",
+    "prompt_text": "Difference between Dynamic programming and...",
+    "timestamp": 1760221723,
+    "tokens": 4.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_5ff8b975_001477",
+    "prompt_text": "Tell me about Replication",
+    "timestamp": 1760221863,
+    "tokens": 1.1,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_002"
+  },
+  {
+    "prompt_id": "prompt_d1d0bd8b_001340",
+    "prompt_text": "Difference between Trees and...",
+    "timestamp": 1760223121,
+    "tokens": 12.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_15b67537_001341",
+    "prompt_text": "Pros and cons of Breadth-first search",
+    "timestamp": 1760232859,
+    "tokens": 9.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_f76bf7db_001342",
+    "prompt_text": "Queues vs others",
+    "timestamp": 1760236867,
+    "tokens": 6.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_5d73b22f_001343",
+    "prompt_text": "Difference between CAP theorem and...",
+    "timestamp": 1760237786,
+    "tokens": 6.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_d870952f_001475",
+    "prompt_text": "Info on End-to-end testing",
+    "timestamp": 1760241315,
+    "tokens": 1.8,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_000"
+  },
+  {
+    "prompt_id": "prompt_1e2e991c_001344",
+    "prompt_text": "Pros and cons of Recursion",
+    "timestamp": 1760246652,
+    "tokens": 7.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_6e095c02_001345",
+    "prompt_text": "Stacks vs others",
+    "timestamp": 1760256111,
+    "tokens": 8.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_9e0d5e6a_001346",
+    "prompt_text": "Compare Monoliths vs alternatives",
+    "timestamp": 1760262252,
+    "tokens": 5.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_784cbc99_001347",
+    "prompt_text": "Difference between Git workflows and...",
+    "timestamp": 1760272210,
+    "tokens": 5.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_32b39cbd_001348",
+    "prompt_text": "When to use Angular signals",
+    "timestamp": 1760281187,
+    "tokens": 4.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_684f4672_001349",
+    "prompt_text": "When to use Breadth-first search",
+    "timestamp": 1760283020,
+    "tokens": 2.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_e823f832_001350",
+    "prompt_text": "CI/CD pipelines vs others",
+    "timestamp": 1760283227,
+    "tokens": 1.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_c55c051c_001351",
+    "prompt_text": "Pros and cons of AWS Lambda",
+    "timestamp": 1760293323,
+    "tokens": 1.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_8941f9be_001352",
+    "prompt_text": "When to use OAuth2",
+    "timestamp": 1760293975,
+    "tokens": 7.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_ff2c431c_001353",
+    "prompt_text": "Compare FastAPI vs alternatives",
+    "timestamp": 1760300562,
+    "tokens": 8.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_45aaa06d_001354",
+    "prompt_text": "Vue composition API vs others",
+    "timestamp": 1760303806,
+    "tokens": 13.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_291352a3_001355",
+    "prompt_text": "Difference between Trees and...",
+    "timestamp": 1760307742,
+    "tokens": 12.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_5169831f_001356",
+    "prompt_text": "Pros and cons of Google Cloud Run",
+    "timestamp": 1760316440,
+    "tokens": 3.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_6349cd94_001357",
+    "prompt_text": "System design vs others",
+    "timestamp": 1760319085,
+    "tokens": 3.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_b55991fe_001358",
+    "prompt_text": "When to use SQL injection",
+    "timestamp": 1760327711,
+    "tokens": 3.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_ab4bf79e_001359",
+    "prompt_text": "Compare Code coverage vs alternatives",
+    "timestamp": 1760330588,
+    "tokens": 11.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_291fb469_001360",
+    "prompt_text": "Difference between BASE consistency and...",
+    "timestamp": 1760340142,
+    "tokens": 5.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_6cde0520_001361",
+    "prompt_text": "When to use gRPC",
+    "timestamp": 1760340765,
+    "tokens": 4.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_0ab6f5ff_001362",
+    "prompt_text": "Compare Django models vs alternatives",
+    "timestamp": 1760351037,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_compare_002"
+  },
+  {
+    "prompt_id": "prompt_33129574_001365",
+    "prompt_text": "Why use CSRF protection?",
+    "timestamp": 1760354887,
+    "tokens": 9.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_2fdca0e6_001366",
+    "prompt_text": "Why use Dijkstra's algorithm?",
+    "timestamp": 1760360589,
+    "tokens": 9.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_06a94c71_001367",
+    "prompt_text": "Why use Salting?",
+    "timestamp": 1760366526,
+    "tokens": 11.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_c9c0e281_001368",
+    "prompt_text": "Concept of TypeScript generics",
+    "timestamp": 1760369129,
+    "tokens": 1.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_a15b5908_001369",
+    "prompt_text": "Why use System design?",
+    "timestamp": 1760377012,
+    "tokens": 3.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_be557706_001370",
+    "prompt_text": "History of Load balancing",
+    "timestamp": 1760385040,
+    "tokens": 10.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_29487d30_001371",
+    "prompt_text": "Why use Event-driven architecture?",
+    "timestamp": 1760386578,
+    "tokens": 1.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_eb2c27f2_001372",
+    "prompt_text": "Concept of Replication",
+    "timestamp": 1760393205,
+    "tokens": 11.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_b3182236_001373",
+    "prompt_text": "Why use Clean Architecture?",
+    "timestamp": 1760394715,
+    "tokens": 10.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_e9ddbbe9_001374",
+    "prompt_text": "What is the theory behind Hashing?",
+    "timestamp": 1760397926,
+    "tokens": 11.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_a36c41de_001375",
+    "prompt_text": "What is the theory behind Next.js routing?",
+    "timestamp": 1760408449,
+    "tokens": 3.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_c6258e21_001376",
+    "prompt_text": "Define Linked lists",
+    "timestamp": 1760415954,
+    "tokens": 6.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_a3733533_001377",
+    "prompt_text": "Why use Recursion?",
+    "timestamp": 1760416828,
+    "tokens": 5.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_f20b37ef_001378",
+    "prompt_text": "Why use React hooks?",
+    "timestamp": 1760426932,
+    "tokens": 1.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_ff3fcc86_001379",
+    "prompt_text": "History of JWT authentication",
+    "timestamp": 1760437181,
+    "tokens": 6.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_95be9245_001380",
+    "prompt_text": "History of Hashing",
+    "timestamp": 1760443645,
+    "tokens": 11.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_ada03a7a_001381",
+    "prompt_text": "Concept of Backtracking",
+    "timestamp": 1760444856,
+    "tokens": 10.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_68a036cd_001382",
+    "prompt_text": "What is the theory behind Trees?",
+    "timestamp": 1760449602,
+    "tokens": 7.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_b0e6c02b_001383",
+    "prompt_text": "Define Recursion",
+    "timestamp": 1760458378,
+    "tokens": 6.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_e4d02c63_001384",
+    "prompt_text": "Concept of Monoliths",
+    "timestamp": 1760463899,
+    "tokens": 12.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_e4653912_001385",
+    "prompt_text": "Define Quick sort",
+    "timestamp": 1760466459,
+    "tokens": 3.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_091ac6dc_001386",
+    "prompt_text": "Define Trees",
+    "timestamp": 1760474571,
+    "tokens": 9.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_a8891087_001387",
+    "prompt_text": "What is the theory behind Docker containers?",
+    "timestamp": 1760478977,
+    "tokens": 5.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_acd8276e_001388",
+    "prompt_text": "Concept of Python decorators",
+    "timestamp": 1760479372,
+    "tokens": 9.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_eea212ae_001389",
+    "prompt_text": "History of Integration testing",
+    "timestamp": 1760480835,
+    "tokens": 11.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_929570d1_001390",
+    "prompt_text": "Why use Queues?",
+    "timestamp": 1760484447,
+    "tokens": 5.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_68202602_001391",
+    "prompt_text": "Define Vue composition API",
+    "timestamp": 1760484807,
+    "tokens": 3.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_a0b2781e_001392",
+    "prompt_text": "Define CAP theorem",
+    "timestamp": 1760494180,
+    "tokens": 3.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_5501cd09_001393",
+    "prompt_text": "History of Vue composition API",
+    "timestamp": 1760497562,
+    "tokens": 1.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_f377daba_001394",
+    "prompt_text": "What is the theory behind Angular signals?",
+    "timestamp": 1760504132,
+    "tokens": 5.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_7c2ff9ec_001395",
+    "prompt_text": "Concept of Kubernetes pods",
+    "timestamp": 1760511317,
+    "tokens": 8.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_12a2ab47_001396",
+    "prompt_text": "Concept of WebSockets",
+    "timestamp": 1760520869,
+    "tokens": 11.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_55494834_001397",
+    "prompt_text": "History of Binary search",
+    "timestamp": 1760522028,
+    "tokens": 2.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_26f33f2b_001398",
+    "prompt_text": "Why use Integration testing?",
+    "timestamp": 1760528940,
+    "tokens": 12.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_643a1484_001399",
+    "prompt_text": "History of Event-driven architecture",
+    "timestamp": 1760531891,
+    "tokens": 9.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_331dd044_001400",
+    "prompt_text": "Why use Encryption?",
+    "timestamp": 1760536376,
+    "tokens": 10.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_5c1f68d2_001401",
+    "prompt_text": "History of Caching strategies",
+    "timestamp": 1760536975,
+    "tokens": 6.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_97551dd0_001402",
+    "prompt_text": "Concept of Depth-first search",
+    "timestamp": 1760546551,
+    "tokens": 12.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_3f084929_001403",
+    "prompt_text": "Concept of Django models",
+    "timestamp": 1760554718,
+    "tokens": 10.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_34567db2_001404",
+    "prompt_text": "Why use XSS prevention?",
+    "timestamp": 1760556262,
+    "tokens": 4.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_e96d948d_001405",
+    "prompt_text": "Concept of Microservices",
+    "timestamp": 1760557564,
+    "tokens": 3.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_dd744f01_001406",
+    "prompt_text": "Concept of Event sourcing",
+    "timestamp": 1760559031,
+    "tokens": 12.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_df790789_001407",
+    "prompt_text": "Concept of Replication",
+    "timestamp": 1760563550,
+    "tokens": 12.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_4a7ea680_001408",
+    "prompt_text": "Why use Python decorators?",
+    "timestamp": 1760570316,
+    "tokens": 8.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_fdd6f640_001478",
+    "prompt_text": "Info on Microservices",
+    "timestamp": 1760570394,
+    "tokens": 2.6,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_003"
+  },
+  {
+    "prompt_id": "prompt_00eec11c_001409",
+    "prompt_text": "What is the theory behind Hashing?",
+    "timestamp": 1760570483,
+    "tokens": 1.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_7e916840_001410",
+    "prompt_text": "Define FastAPI",
+    "timestamp": 1760571827,
+    "tokens": 3.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_e0b482ee_001411",
+    "prompt_text": "What is the theory behind Integration testing?",
+    "timestamp": 1760575279,
+    "tokens": 10.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_1b32ae1b_001412",
+    "prompt_text": "History of Django models",
+    "timestamp": 1760585183,
+    "tokens": 11.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_60b2f98a_001413",
+    "prompt_text": "Why use CQRS?",
+    "timestamp": 1760589892,
+    "tokens": 7.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_8f1c280d_001414",
+    "prompt_text": "Concept of Hash tables",
+    "timestamp": 1760591293,
+    "tokens": 12.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_a8efad0b_001415",
+    "prompt_text": "What is the theory behind BASE consistency?",
+    "timestamp": 1760598893,
+    "tokens": 4.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_7d465308_001483",
+    "prompt_text": "OWASP Top 10 please",
+    "timestamp": 1760604869,
+    "tokens": 3.2,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_008"
+  },
+  {
+    "prompt_id": "prompt_abf94df6_001416",
+    "prompt_text": "Concept of Depth-first search",
+    "timestamp": 1760609579,
+    "tokens": 7.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_67ad3468_001417",
+    "prompt_text": "Why use Git workflows?",
+    "timestamp": 1760619535,
+    "tokens": 3.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_7c6ed88a_001480",
+    "prompt_text": "About Redis caching",
+    "timestamp": 1760620046,
+    "tokens": 1.4,
+    "is_noise": true,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_noise_005"
+  },
+  {
+    "prompt_id": "prompt_d3d16767_001418",
+    "prompt_text": "Define Trees",
+    "timestamp": 1760624612,
+    "tokens": 1.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_1527f69c_001419",
+    "prompt_text": "Concept of Trees",
+    "timestamp": 1760624905,
+    "tokens": 11.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_38f6473f_001420",
+    "prompt_text": "What is the theory behind Angular signals?",
+    "timestamp": 1760635049,
+    "tokens": 5.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_00ef51e5_001421",
+    "prompt_text": "What is the theory behind PostgreSQL?",
+    "timestamp": 1760645459,
+    "tokens": 3.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_cbb542cf_001422",
+    "prompt_text": "What is the theory behind Event-driven architecture?",
+    "timestamp": 1760653563,
+    "tokens": 9.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_565e46dd_001423",
+    "prompt_text": "Concept of Stacks",
+    "timestamp": 1760656570,
+    "tokens": 9.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_820aee84_001424",
+    "prompt_text": "What is the theory behind Greedy algorithms?",
+    "timestamp": 1760662484,
+    "tokens": 4.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_60ac5de2_001425",
+    "prompt_text": "What is the theory behind Kubernetes pods?",
+    "timestamp": 1760666096,
+    "tokens": 12.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_6055051f_001426",
+    "prompt_text": "Why use CQRS?",
+    "timestamp": 1760666433,
+    "tokens": 7.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_5a01b5de_001427",
+    "prompt_text": "Concept of Microservices",
+    "timestamp": 1760670787,
+    "tokens": 9.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_6a2233c4_001428",
+    "prompt_text": "Concept of FastAPI",
+    "timestamp": 1760673390,
+    "tokens": 1.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_fbc10eb3_001429",
+    "prompt_text": "History of Vue composition API",
+    "timestamp": 1760678816,
+    "tokens": 9.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_f13939b9_001430",
+    "prompt_text": "Define Heaps",
+    "timestamp": 1760685278,
+    "tokens": 1.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_0e35e650_001431",
+    "prompt_text": "History of Angular signals",
+    "timestamp": 1760691619,
+    "tokens": 2.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_8a3d4e4e_001432",
+    "prompt_text": "Why use Python decorators?",
+    "timestamp": 1760699530,
+    "tokens": 2.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_ab9f35e9_001433",
+    "prompt_text": "Concept of Flask blueprints",
+    "timestamp": 1760704864,
+    "tokens": 12.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_066eb0bd_001434",
+    "prompt_text": "What is the theory behind Replication?",
+    "timestamp": 1760712506,
+    "tokens": 11.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_3d853c8e_001435",
+    "prompt_text": "Concept of Database sharding",
+    "timestamp": 1760713864,
+    "tokens": 10.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_afde1a30_001436",
+    "prompt_text": "Define Code coverage",
+    "timestamp": 1760724523,
+    "tokens": 1.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_theory_003"
+  },
+  {
+    "prompt_id": "prompt_0a6454a7_001439",
+    "prompt_text": "I need a step-by-step tutorial on Merge sort",
+    "timestamp": 1760729618,
+    "tokens": 6.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_33751da6_001440",
+    "prompt_text": "I need a step-by-step tutorial on Merge sort",
+    "timestamp": 1760734151,
+    "tokens": 11.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_7bda4a9e_001441",
+    "prompt_text": "Sequential instructions for Docker containers",
+    "timestamp": 1760743421,
+    "tokens": 9.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_4d804c18_001442",
+    "prompt_text": "How do I implement OWASP Top 10? Step by step",
+    "timestamp": 1760753192,
+    "tokens": 7.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_b4796d41_001443",
+    "prompt_text": "How do I implement gRPC? Step by step",
+    "timestamp": 1760757798,
+    "tokens": 3.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_7b4b9da2_001444",
+    "prompt_text": "Can you explain Azure Functions step-by-step?",
+    "timestamp": 1760766141,
+    "tokens": 4.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_b10bee53_001445",
+    "prompt_text": "Guide me through Dynamic programming one step at a time",
+    "timestamp": 1760775641,
+    "tokens": 10.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_73b3a70f_001446",
+    "prompt_text": "Walk me through Git workflows",
+    "timestamp": 1760782090,
+    "tokens": 5.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_cebb60b1_001447",
+    "prompt_text": "Can you explain Trees step-by-step?",
+    "timestamp": 1760788909,
+    "tokens": 6.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_aec14f10_001448",
+    "prompt_text": "How do I implement JWT authentication? Step by step",
+    "timestamp": 1760797202,
+    "tokens": 6.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_bf293cd0_001449",
+    "prompt_text": "Sequential instructions for Big O notation",
+    "timestamp": 1760804719,
+    "tokens": 6.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_2af9144f_001450",
+    "prompt_text": "Can you explain Merge sort step-by-step?",
+    "timestamp": 1760811415,
+    "tokens": 8.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_0f50df9d_001451",
+    "prompt_text": "Can you explain Quick sort step-by-step?",
+    "timestamp": 1760817763,
+    "tokens": 8.0,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_27b3ae8e_001452",
+    "prompt_text": "Guide me through Quick sort one step at a time",
+    "timestamp": 1760819152,
+    "tokens": 6.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_315edd09_001453",
+    "prompt_text": "Guide me through Code coverage one step at a time",
+    "timestamp": 1760826827,
+    "tokens": 4.1,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_74e34fed_001454",
+    "prompt_text": "How do I implement React hooks? Step by step",
+    "timestamp": 1760828925,
+    "tokens": 10.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_3e20cc3f_001455",
+    "prompt_text": "I need a step-by-step tutorial on Django models",
+    "timestamp": 1760836748,
+    "tokens": 7.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_9fb87e7f_001456",
+    "prompt_text": "How do I implement Big O notation? Step by step",
+    "timestamp": 1760846414,
+    "tokens": 3.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_0b3afba3_001457",
+    "prompt_text": "Show me the steps to set up CI/CD pipelines",
+    "timestamp": 1760851834,
+    "tokens": 9.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_b67f7079_001458",
+    "prompt_text": "How do I implement Heaps? Step by step",
+    "timestamp": 1760861674,
+    "tokens": 11.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_3f151c2e_001459",
+    "prompt_text": "Sequential instructions for JWT authentication",
+    "timestamp": 1760869625,
+    "tokens": 10.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_1a8c5aba_001460",
+    "prompt_text": "Show me the steps to set up SQL injection",
+    "timestamp": 1760876368,
+    "tokens": 10.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_53715ce0_001461",
+    "prompt_text": "Show me the steps to set up Hash tables",
+    "timestamp": 1760886825,
+    "tokens": 11.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_cabf2daa_001462",
+    "prompt_text": "How do I implement Merge sort? Step by step",
+    "timestamp": 1760893881,
+    "tokens": 8.2,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_567dd7b8_001463",
+    "prompt_text": "How do I implement MongoDB aggregation? Step by step",
+    "timestamp": 1760894874,
+    "tokens": 8.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_d7c9a04e_001464",
+    "prompt_text": "Guide me through Queues one step at a time",
+    "timestamp": 1760898515,
+    "tokens": 7.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_be5e0260_001465",
+    "prompt_text": "Show me the steps to set up Design patterns",
+    "timestamp": 1760898801,
+    "tokens": 5.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_4002b81b_001466",
+    "prompt_text": "I need a step-by-step tutorial on Serverless",
+    "timestamp": 1760907691,
+    "tokens": 12.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_f5e4aa43_001467",
+    "prompt_text": "Guide me through Caching strategies one step at a time",
+    "timestamp": 1760914135,
+    "tokens": 6.9,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_39ceac6d_001468",
+    "prompt_text": "Sequential instructions for MongoDB aggregation",
+    "timestamp": 1760922215,
+    "tokens": 9.7,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_0d6f8cf2_001469",
+    "prompt_text": "Show me the steps to set up Linting",
+    "timestamp": 1760930323,
+    "tokens": 3.3,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_6951f672_001470",
+    "prompt_text": "What are the steps involved in Encryption?",
+    "timestamp": 1760934223,
+    "tokens": 8.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_0787cff9_001471",
+    "prompt_text": "Walk me through Docker containers",
+    "timestamp": 1760941689,
+    "tokens": 10.4,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_d7e37a0f_001472",
+    "prompt_text": "Guide me through End-to-end testing one step at a time",
+    "timestamp": 1760949586,
+    "tokens": 3.5,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_2b17ca53_001473",
+    "prompt_text": "How do I implement Quick sort? Step by step",
+    "timestamp": 1760958224,
+    "tokens": 2.8,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  },
+  {
+    "prompt_id": "prompt_1636e0c7_001474",
+    "prompt_text": "I need a step-by-step tutorial on AWS Lambda",
+    "timestamp": 1760968784,
+    "tokens": 4.6,
+    "is_noise": false,
+    "user_id": "user_focused_specialist",
+    "session_id": "sess_step_004"
+  }
+]

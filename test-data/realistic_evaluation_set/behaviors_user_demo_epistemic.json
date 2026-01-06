@@ -1,0 +1,307 @@
+[
+  {
+    "behavior_id": "beh_494f0108_000001",
+    "observation_id": "obs_a785769d_000002",
+    "behavior_text": "prefers visual explanations for Python concepts",
+    "credibility": 0.88,
+    "reinforcement_count": 8,
+    "last_seen": 1767468056,
+    "prompt_history_ids": [
+      "prompt_0aea22d4_000003",
+      "prompt_2a66ee69_000004",
+      "prompt_83795078_000005",
+      "prompt_86bd2205_000006",
+      "prompt_4d5527d0_000007",
+      "prompt_af8441fa_000008",
+      "prompt_4c3c595f_000009",
+      "prompt_6f25e91c_000010"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_core_000",
+    "clarity_score": 0.9,
+    "confidence": 0.82
+  },
+  {
+    "behavior_id": "beh_0567d1b1_000011",
+    "observation_id": "obs_bbec3c58_000012",
+    "behavior_text": "focuses on debugging and error resolution",
+    "credibility": 0.85,
+    "reinforcement_count": 9,
+    "last_seen": 1767665005,
+    "prompt_history_ids": [
+      "prompt_a1e0148e_000013",
+      "prompt_eb98c769_000014",
+      "prompt_22f2b362_000015",
+      "prompt_4b9025d4_000016",
+      "prompt_54dc35fa_000017",
+      "prompt_c991f327_000018",
+      "prompt_381b5ea2_000019",
+      "prompt_c7b194bc_000020",
+      "prompt_1987ec83_000021"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_core_001",
+    "clarity_score": 0.87,
+    "confidence": 0.86
+  },
+  {
+    "behavior_id": "beh_032c916b_000022",
+    "observation_id": "obs_a6a3c6fa_000023",
+    "behavior_text": "interested in system design patterns",
+    "credibility": 0.76,
+    "reinforcement_count": 4,
+    "last_seen": 1767371375,
+    "prompt_history_ids": [
+      "prompt_cdf7c9a4_000024",
+      "prompt_ad0c6a11_000025",
+      "prompt_ce6c5af2_000026",
+      "prompt_0450992b_000027"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_insuff_000",
+    "clarity_score": 0.77,
+    "confidence": 0.62
+  },
+  {
+    "behavior_id": "beh_b1a2584b_000028",
+    "observation_id": "obs_6bdee076_000029",
+    "behavior_text": "asks about security best practices",
+    "credibility": 0.77,
+    "reinforcement_count": 3,
+    "last_seen": 1767431822,
+    "prompt_history_ids": [
+      "prompt_4c6c1ff2_000030",
+      "prompt_30984a5d_000031",
+      "prompt_6a7dbb54_000032"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_insuff_001",
+    "clarity_score": 0.76,
+    "confidence": 0.59
+  },
+  {
+    "behavior_id": "beh_734a2016_000033",
+    "observation_id": "obs_34bff43d_000034",
+    "behavior_text": "gaming query",
+    "credibility": 0.41,
+    "reinforcement_count": 1,
+    "last_seen": 1766522990,
+    "prompt_history_ids": [
+      "prompt_9079bb94_000035"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_000",
+    "clarity_score": 0.49,
+    "confidence": 0.34
+  },
+  {
+    "behavior_id": "beh_ec72b6fe_000036",
+    "observation_id": "obs_b0a65dae_000037",
+    "behavior_text": "music recommendation",
+    "credibility": 0.39,
+    "reinforcement_count": 1,
+    "last_seen": 1766636697,
+    "prompt_history_ids": [
+      "prompt_17b68e8c_000038"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_001",
+    "clarity_score": 0.64,
+    "confidence": 0.42
+  },
+  {
+    "behavior_id": "beh_5d33661d_000039",
+    "observation_id": "obs_d0648b10_000040",
+    "behavior_text": "random history fact",
+    "credibility": 0.33,
+    "reinforcement_count": 1,
+    "last_seen": 1766485727,
+    "prompt_history_ids": [
+      "prompt_4687f6cd_000041"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_002",
+    "clarity_score": 0.41,
+    "confidence": 0.47
+  },
+  {
+    "behavior_id": "beh_4a0af7f9_000042",
+    "observation_id": "obs_4f049fb1_000043",
+    "behavior_text": "movie recommendation",
+    "credibility": 0.45,
+    "reinforcement_count": 1,
+    "last_seen": 1766644671,
+    "prompt_history_ids": [
+      "prompt_bcb52df5_000044"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_003",
+    "clarity_score": 0.42,
+    "confidence": 0.46
+  },
+  {
+    "behavior_id": "beh_6b502f58_000045",
+    "observation_id": "obs_ecd6c865_000046",
+    "behavior_text": "stock market query",
+    "credibility": 0.48,
+    "reinforcement_count": 1,
+    "last_seen": 1766516358,
+    "prompt_history_ids": [
+      "prompt_5d7f88d4_000047"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_004",
+    "clarity_score": 0.59,
+    "confidence": 0.46
+  },
+  {
+    "behavior_id": "beh_9ecb7644_000048",
+    "observation_id": "obs_1fed50c3_000049",
+    "behavior_text": "casual greeting",
+    "credibility": 0.29,
+    "reinforcement_count": 1,
+    "last_seen": 1766545871,
+    "prompt_history_ids": [
+      "prompt_1a8955fa_000050"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_005",
+    "clarity_score": 0.48,
+    "confidence": 0.48
+  },
+  {
+    "behavior_id": "beh_ad5a2796_000051",
+    "observation_id": "obs_54ae0218_000052",
+    "behavior_text": "asks about football scores",
+    "credibility": 0.35,
+    "reinforcement_count": 1,
+    "last_seen": 1766589452,
+    "prompt_history_ids": [
+      "prompt_b5033add_000053"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_006",
+    "clarity_score": 0.46,
+    "confidence": 0.49
+  },
+  {
+    "behavior_id": "beh_e8261886_000054",
+    "observation_id": "obs_7b1ddfa5_000055",
+    "behavior_text": "random trivia",
+    "credibility": 0.36,
+    "reinforcement_count": 1,
+    "last_seen": 1766486653,
+    "prompt_history_ids": [
+      "prompt_65217c34_000056"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_007",
+    "clarity_score": 0.45,
+    "confidence": 0.44
+  },
+  {
+    "behavior_id": "beh_55b761b1_000057",
+    "observation_id": "obs_fb97b922_000058",
+    "behavior_text": "inquires about weather",
+    "credibility": 0.42,
+    "reinforcement_count": 1,
+    "last_seen": 1766621288,
+    "prompt_history_ids": [
+      "prompt_4f6a637c_000059"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_008",
+    "clarity_score": 0.47,
+    "confidence": 0.31
+  },
+  {
+    "behavior_id": "beh_483eef6c_000060",
+    "observation_id": "obs_f467841d_000061",
+    "behavior_text": "one-time recipe query",
+    "credibility": 0.38,
+    "reinforcement_count": 1,
+    "last_seen": 1767475385,
+    "prompt_history_ids": [
+      "prompt_ced70e2a_000062"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_009",
+    "clarity_score": 0.43,
+    "confidence": 0.36
+  },
+  {
+    "behavior_id": "beh_0b3ef3dd_000063",
+    "observation_id": "obs_7d90a5f6_000064",
+    "behavior_text": "random blockchain question",
+    "credibility": 0.51,
+    "reinforcement_count": 1,
+    "last_seen": 1767596021,
+    "prompt_history_ids": [
+      "prompt_d7dccf19_000065"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_010",
+    "clarity_score": 0.58,
+    "confidence": 0.45
+  },
+  {
+    "behavior_id": "beh_4fb85ae9_000066",
+    "observation_id": "obs_d93586ad_000067",
+    "behavior_text": "travel question",
+    "credibility": 0.37,
+    "reinforcement_count": 1,
+    "last_seen": 1767527411,
+    "prompt_history_ids": [
+      "prompt_728e7620_000068"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_011",
+    "clarity_score": 0.45,
+    "confidence": 0.39
+  },
+  {
+    "behavior_id": "beh_02fdc6b4_000069",
+    "observation_id": "obs_18cdc521_000070",
+    "behavior_text": "random math question",
+    "credibility": 0.52,
+    "reinforcement_count": 1,
+    "last_seen": 1767628317,
+    "prompt_history_ids": [
+      "prompt_95dfc309_000071"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_012",
+    "clarity_score": 0.57,
+    "confidence": 0.39
+  },
+  {
+    "behavior_id": "beh_79c924ee_000072",
+    "observation_id": "obs_f84e9660_000073",
+    "behavior_text": "unrelated book query",
+    "credibility": 0.43,
+    "reinforcement_count": 1,
+    "last_seen": 1767322013,
+    "prompt_history_ids": [
+      "prompt_ae0e98a5_000074"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_013",
+    "clarity_score": 0.57,
+    "confidence": 0.45
+  },
+  {
+    "behavior_id": "beh_7981a2b8_000075",
+    "observation_id": "obs_16b57346_000076",
+    "behavior_text": "unrelated API syntax",
+    "credibility": 0.44,
+    "reinforcement_count": 1,
+    "last_seen": 1767565261,
+    "prompt_history_ids": [
+      "prompt_9c54dd0b_000077"
+    ],
+    "user_id": "user_demo_epistemic",
+    "session_id": "sess_noise_014",
+    "clarity_score": 0.48,
+    "confidence": 0.41
+  }
+]

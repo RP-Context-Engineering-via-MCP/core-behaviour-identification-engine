@@ -46,20 +46,44 @@ def load_json_file(filepath: str) -> List[Dict]:
 
 
 def save_prompts_to_mongodb(prompts_data: List[Dict], mongo_service: MongoDBService) -> bool:
-    """Save prompts to MongoDB"""
+    """Save prompts to MongoDB with duplicate handling"""
     try:
         # Convert to PromptModel objects
         prompts = [PromptModel(**prompt_data) for prompt_data in prompts_data]
         
-        # Bulk insert
+        logger.info(f"Attempting to save {len(prompts)} prompts to MongoDB...")
+        
+        # Try bulk insert first
         success = mongo_service.insert_prompts_bulk(prompts)
         
         if success:
             logger.info(f"✓ Successfully saved {len(prompts)} prompts to MongoDB")
+            return True
         else:
-            logger.error("✗ Failed to save prompts to MongoDB")
+            # Bulk insert failed, try individual inserts
+            logger.warning(f"Bulk insert failed, trying individual inserts...")
+            
+            inserted_count = 0
+            duplicate_count = 0
+            error_count = 0
+            
+            for prompt in prompts:
+                try:
+                    result = mongo_service.insert_prompts_bulk([prompt])
+                    if result:
+                        inserted_count += 1
+                except Exception as single_error:
+                    error_msg = str(single_error)
+                    if 'E11000' in error_msg or 'duplicate key' in error_msg:
+                        duplicate_count += 1
+                    else:
+                        error_count += 1
+                        if error_count <= 3:  # Only log first 3 errors
+                            logger.error(f"Error inserting prompt {prompt.prompt_id}: {single_error}")
+            
+            logger.info(f"✓ Inserted {inserted_count} prompts, skipped {duplicate_count} duplicates, {error_count} errors")
+            return inserted_count > 0
         
-        return success
     except Exception as e:
         logger.error(f"Error saving prompts: {e}")
         return False
@@ -70,7 +94,7 @@ def save_behaviors_to_qdrant(
     qdrant_service: QdrantService, 
     embedding_service: EmbeddingService
 ) -> bool:
-    """Vectorize behaviors and save complete data to Qdrant"""
+    """Vectorize behaviors and save complete data to Qdrant with batch processing"""
     try:
         # Extract behavior texts for vectorization
         behavior_texts = [b['behavior_text'] for b in behaviors_data]
@@ -100,25 +124,43 @@ def save_behaviors_to_qdrant(
                 qdrant_behavior['timestamp'] = b.get('last_seen', int(time.time()))
             qdrant_behaviors.append(qdrant_behavior)
         
-        # Save complete behavior data with embeddings to Qdrant
-        success = qdrant_service.insert_behaviors_with_embeddings(
-            embeddings=embeddings,
-            behaviors=qdrant_behaviors
-        )
+        # Batch processing to avoid payload size limits (33MB max)
+        # Process in batches of 100 behaviors to stay well under the limit
+        batch_size = 100
+        total_batches = (len(embeddings) + batch_size - 1) // batch_size
         
-        if success:
-            logger.info(f"✓ Successfully saved {len(embeddings)} behaviors to Qdrant")
-        else:
-            logger.error("✗ Failed to save behaviors to Qdrant")
+        logger.info(f"Processing {len(embeddings)} behaviors in {total_batches} batches...")
         
-        return success
+        for i in range(0, len(embeddings), batch_size):
+            batch_num = (i // batch_size) + 1
+            end_idx = min(i + batch_size, len(embeddings))
+            
+            batch_embeddings = embeddings[i:end_idx]
+            batch_behaviors = qdrant_behaviors[i:end_idx]
+            
+            logger.info(f"  Batch {batch_num}/{total_batches}: Inserting {len(batch_embeddings)} behaviors...")
+            
+            success = qdrant_service.insert_behaviors_with_embeddings(
+                embeddings=batch_embeddings,
+                behaviors=batch_behaviors
+            )
+            
+            if not success:
+                logger.error(f"✗ Failed to save batch {batch_num}/{total_batches}")
+                return False
+            
+            logger.info(f"  ✓ Batch {batch_num}/{total_batches} saved successfully")
+        
+        logger.info(f"✓ Successfully saved all {len(embeddings)} behaviors to Qdrant")
+        return True
+        
     except Exception as e:
         logger.error(f"Error saving behaviors: {e}")
         return False
 
 
 def save_behaviors_to_mongodb(behaviors_data: List[Dict], mongo_service: MongoDBService) -> bool:
-    """Save behaviors metadata to MongoDB"""
+    """Save behaviors metadata to MongoDB with duplicate handling"""
     try:
         # Convert to BehaviorObservation format
         behavior_observations = []
@@ -131,20 +173,45 @@ def save_behaviors_to_mongodb(behaviors_data: List[Dict], mongo_service: MongoDB
                 prompt_id=b.get('prompt_history_ids', ['unknown'])[0] if b.get('prompt_history_ids') else 'unknown',
                 session_id=b.get('session_id', 'unknown'),
                 credibility=b.get('credibility', 0.75),
-                clarity_score=b.get('clarity_score', b.get('credibility', 0.75)),  # Use clarity_score or fall back to credibility
-                extraction_confidence=b.get('confidence', b.get('credibility', 0.80)),  # Use confidence field
+                clarity_score=b.get('clarity_score', b.get('credibility', 0.75)),
+                extraction_confidence=b.get('confidence', b.get('credibility', 0.80)),
                 decay_rate=0.01
             )
             behavior_observations.append(obs)
         
+        logger.info(f"Attempting to save {len(behavior_observations)} behaviors to MongoDB...")
+        
+        # Try bulk insert first
         success = mongo_service.insert_behaviors_bulk(behavior_observations)
         
         if success:
             logger.info(f"✓ Successfully saved {len(behavior_observations)} behaviors to MongoDB")
+            return True
         else:
-            logger.error("✗ Failed to save behaviors to MongoDB")
+            # Bulk insert failed, try individual inserts
+            logger.warning(f"Bulk insert failed, trying individual inserts...")
+            
+            inserted_count = 0
+            duplicate_count = 0
+            error_count = 0
+            
+            for obs in behavior_observations:
+                try:
+                    result = mongo_service.insert_behaviors_bulk([obs])
+                    if result:
+                        inserted_count += 1
+                except Exception as single_error:
+                    error_msg = str(single_error)
+                    if 'E11000' in error_msg or 'duplicate key' in error_msg:
+                        duplicate_count += 1
+                    else:
+                        error_count += 1
+                        if error_count <= 3:  # Only log first 3 errors
+                            logger.error(f"Error inserting behavior {obs.observation_id}: {single_error}")
+            
+            logger.info(f"✓ Inserted {inserted_count} behaviors, skipped {duplicate_count} duplicates, {error_count} errors")
+            return inserted_count > 0
         
-        return success
     except Exception as e:
         logger.error(f"Error saving behaviors to MongoDB: {e}")
         return False
