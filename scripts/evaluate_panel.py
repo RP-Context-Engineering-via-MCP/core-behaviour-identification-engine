@@ -1,5 +1,10 @@
 import time
 import json
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from pipeline import CBIEPipeline
 
 print("Starting global model load...")
@@ -38,5 +43,6 @@ for user, elapsed in results.items():
     print(f"{user}: {elapsed:.2f} s")
 
 # Save a quick JSON of times to read
-with open("evaluation_times.json", "w") as f:
+out_path = os.path.join(os.path.dirname(__file__), "..", "logs", "evaluation_times.json")
+with open(out_path, "w") as f:
     json.dump(results, f, indent=4)

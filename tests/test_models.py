@@ -1,5 +1,10 @@
 import unittest
 import numpy as np
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from temporal_analysis import TemporalAnalyzer
 from confirmation_model import ConfirmationModel
 
@@ -64,7 +69,7 @@ class TestMathematicalModels(unittest.TestCase):
         self.assertAlmostEqual(score, 0.97, places=2)
         self.assertEqual(self.confirmation_model.determine_status(score), "Stable")
         
-    def test_confirmation_score_noise(self):
+    def test_confirmation_score_archived(self):
         # Terrible consistency (1.0), Decreasing trend (-1.0), Low frequency, Low credibility
         score = self.confirmation_model.calculate_core_score(
             consistency_score=1.0,  # norm = 0.0
@@ -80,7 +85,7 @@ class TestMathematicalModels(unittest.TestCase):
         # credibility: 0.30 * 0.2 = 0.06
         # Total expected = 0.085
         self.assertAlmostEqual(score, 0.085, places=3)
-        self.assertEqual(self.confirmation_model.determine_status(score), "Noise")
+        self.assertEqual(self.confirmation_model.determine_status(score), "ARCHIVED_CORE")
 
     def test_absolute_fact_bypass(self):
         # Even if the final calculated score is 0.0 (utter noise/never reinforced), 

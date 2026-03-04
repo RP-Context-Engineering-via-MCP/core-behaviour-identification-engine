@@ -19,7 +19,7 @@ def main():
     print("Connecting to Supabase...")
     supabase: Client = create_client(url, key)
     
-    csv_path = "behaviors_pilot.csv"
+    csv_path = os.path.join(os.path.dirname(__file__), "..", "data", "behaviors_pilot.csv")
     if not os.path.exists(csv_path):
         print(f"ERROR: {csv_path} not found.")
         return

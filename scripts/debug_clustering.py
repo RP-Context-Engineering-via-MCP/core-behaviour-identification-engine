@@ -1,6 +1,11 @@
 import json
 import numpy as np
 import hdbscan
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from sklearn.metrics.pairwise import euclidean_distances
 from topic_discovery import TopicDiscoverer
 
@@ -51,6 +56,7 @@ for eps in [0.85, 0.9, 0.95, 1.0, 1.1, 1.2]:
         cluster_texts = [texts[i] for i, l in enumerate(labels) if l == label]
         out_str.append(f" - Cluster {label} sample: {cluster_texts[0]}")
 
-with open("clustering_out.txt", "w", encoding="utf-8") as f:
+out_path = os.path.join(os.path.dirname(__file__), "..", "logs", "clustering_out.txt")
+with open(out_path, "w", encoding="utf-8") as f:
     f.write("\n".join(out_str))
-print("Saved to clustering_out.txt")
+print(f"Saved to {out_path}")

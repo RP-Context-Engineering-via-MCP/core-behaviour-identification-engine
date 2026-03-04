@@ -29,7 +29,8 @@ from dotenv import load_dotenv
 from openai import AzureOpenAI
 from faker import Faker
 
-load_dotenv()
+env_path = os.path.join(os.path.dirname(__file__), "..", ".env")
+load_dotenv(env_path)
 fake = Faker()
 
 # ─── Config ───────────────────────────────────────────────────────────────────
