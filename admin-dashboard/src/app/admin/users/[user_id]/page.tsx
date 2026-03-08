@@ -10,8 +10,9 @@ import { CoreProfileView } from "@/components/CoreProfileView";
 import { BehaviorPreviewTable } from "@/components/BehaviorPreviewTable";
 import { Loader2, AlertCircle, ArrowLeft } from "lucide-react";
 
-export default function UserDetailPage({ params }: { params: { user_id: string } }) {
-    const userId = params.user_id;
+export default function UserDetailPage({ params }: { params: Promise<{ user_id: string }> }) {
+    const resolvedParams = React.use(params);
+    const userId = resolvedParams.user_id;
 
     // 1. Fetch User Summary
     const {
