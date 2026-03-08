@@ -57,18 +57,36 @@ async def list_users():
         raise HTTPException(status_code=503, detail="Database connection unavailable.")
 
     try:
-        # Fetch minimal info required for stats
-        behaviors_resp = _data_adapter.supabase.table("behaviors").select("user_id, created_at").eq("behavior_state", "ACTIVE").execute()
+        # Paginate through ALL behaviors — Supabase default page limit is 1000 rows.
+        # Without this, users whose behaviors fall beyond row 1000 are silently invisible.
+        PAGE_SIZE = 1000
+        all_behavior_rows = []
+        offset = 0
+        while True:
+            batch = (
+                _data_adapter.supabase
+                .table("behaviors")
+                .select("user_id, created_at")
+                .eq("behavior_state", "ACTIVE")
+                .range(offset, offset + PAGE_SIZE - 1)
+                .execute()
+            )
+            rows = batch.data or []
+            all_behavior_rows.extend(rows)
+            if len(rows) < PAGE_SIZE:
+                break  # last page
+            offset += PAGE_SIZE
+        behaviors_resp_data = all_behavior_rows
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Database query failed: {e}")
     
     user_stats: Dict[str, Dict[str, Any]] = {}
-    for row in behaviors_resp.data:
+    for row in behaviors_resp_data:
         uid = row["user_id"]
         if uid not in user_stats:
             user_stats[uid] = {"total": 0, "last_at": None}
         user_stats[uid]["total"] += 1
-        
+
         created = row.get("created_at")
         if created:
             if user_stats[uid]["last_at"] is None or created > user_stats[uid]["last_at"]:
