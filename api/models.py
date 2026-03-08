@@ -163,6 +163,11 @@ class CoreProfileDetailResponse(BaseModel):
     identity_anchor_prompt: Optional[str] = None
     last_updated: Optional[str] = None
 
+class JobProgress(BaseModel):
+    stage: str = Field(..., description="Current pipeline stage name")
+    processed: int = Field(..., description="Number of items processed so far")
+    total: int = Field(..., description="Total items to process")
+
 class AdminJobStatusResponse(BaseModel):
     job_id: str
     user_id: str
@@ -170,6 +175,7 @@ class AdminJobStatusResponse(BaseModel):
     started_at: Optional[str] = None
     completed_at: Optional[str] = None
     error: Optional[str] = None
+    progress: Optional[JobProgress] = Field(None, description="Live progress info when RUNNING")
 
 class BehaviorPreviewItem(BaseModel):
     behavior_id: Optional[str] = None

@@ -8,56 +8,58 @@ import { UsersTable } from "@/components/UsersTable";
 import { Loader2, AlertCircle } from "lucide-react";
 
 export default function UsersPage() {
-    const { data, error, isLoading } = useSWR<UserDiscoveryResponse>(
+    const { data, error, isLoading, mutate } = useSWR<UserDiscoveryResponse>(
         "/admin/users",
-        fetcher
+        fetcher,
+        { dedupingInterval: 30_000 }
     );
 
+    const totalBehaviors = data?.users.reduce((s, u) => s + u.total_behaviors, 0) ?? 0;
+    const analyzedCount = data?.users.filter((u) => u.has_profile).length ?? 0;
+
     return (
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-            <div className="sm:flex sm:items-center">
-                <div className="sm:flex-auto">
-                    <h1 className="text-2xl font-semibold leading-6 text-gray-900">
-                        CBIE User Discovery
-                    </h1>
-                    <p className="mt-2 text-sm text-gray-700">
-                        A list of all users with recorded behaviors. You can monitor their
-                        profile readiness and trigger the NLP pipeline manually.
-                    </p>
-                </div>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+
+            {/* Page header */}
+            <div className="mb-6">
+                <h1 className="text-xl font-semibold text-slate-900">User Discovery</h1>
+                <p className="mt-1 text-sm text-slate-500">
+                    {isLoading ? "Loading..." : (
+                        <>
+                            {data?.total_users ?? 0} users &middot; {analyzedCount} analyzed &middot; {totalBehaviors.toLocaleString()} total behaviors
+                        </>
+                    )}
+                </p>
             </div>
 
-            <div className="mt-8">
-                {isLoading && (
-                    <div className="flex items-center justify-center p-12 text-gray-500">
-                        <Loader2 className="h-8 w-8 animate-spin" />
-                        <span className="ml-3">Loading users...</span>
-                    </div>
-                )}
+            {/* States */}
+            {isLoading && (
+                <div className="flex items-center justify-center rounded-lg border border-slate-200 bg-white py-16 text-slate-400 shadow-sm">
+                    <Loader2 className="h-5 w-5 animate-spin mr-2.5" />
+                    <span className="text-sm">Fetching user data...</span>
+                </div>
+            )}
 
-                {error && (
-                    <div className="rounded-md bg-red-50 p-4">
-                        <div className="flex">
-                            <div className="flex-shrink-0">
-                                <AlertCircle className="h-5 w-5 text-red-400" aria-hidden="true" />
-                            </div>
-                            <div className="ml-3">
-                                <h3 className="text-sm font-medium text-red-800">
-                                    Error loading users
-                                </h3>
-                                <div className="mt-2 text-sm text-red-700">
-                                    <p>
-                                        Could not connect to the CBIE FastAPI backend. Make sure it is
-                                        running on port 8000.
-                                    </p>
-                                </div>
-                            </div>
+            {error && (
+                <div className="rounded-lg border border-red-200 bg-red-50 p-4 shadow-sm">
+                    <div className="flex gap-3">
+                        <AlertCircle className="h-5 w-5 text-red-400 mt-0.5 shrink-0" />
+                        <div>
+                            <p className="text-sm font-medium text-red-800">Could not connect to the backend</p>
+                            <p className="mt-1 text-xs text-red-600">
+                                Make sure the CBIE FastAPI server is running on port 8000.
+                            </p>
                         </div>
                     </div>
-                )}
+                </div>
+            )}
 
-                {data && <UsersTable users={data.users} />}
-            </div>
+            {data && (
+                <UsersTable
+                    users={data.users}
+                    onMutate={() => mutate()}
+                />
+            )}
         </div>
     );
 }

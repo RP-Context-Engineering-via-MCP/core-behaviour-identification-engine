@@ -13,6 +13,7 @@ from typing import Any, Dict, Optional
 
 from pipeline import CBIEPipeline          # Existing engine orchestrator
 from logger import get_logger
+from api.models import JobProgress  # For typed progress updates
 
 log = get_logger(__name__)
 
@@ -73,9 +74,20 @@ def create_job(user_id: str) -> str:
         "completed_at": None,
         "result": None,
         "error": None,
+        "progress": None,
     }
     log.info("Pipeline job created", extra={"job_id": job_id, "user_id": user_id, "status": "QUEUED"})
     return job_id
+
+
+def update_job_progress(job_id: str, stage: str, processed: int, total: int) -> None:
+    """Pushes a granular progress update into the job store while a job is RUNNING."""
+    if job_id in _job_store:
+        _job_store[job_id]["progress"] = {
+            "stage": stage,
+            "processed": processed,
+            "total": total,
+        }
 
 
 def get_job(job_id: str) -> Optional[Dict[str, Any]]:
@@ -104,8 +116,11 @@ async def run_pipeline_background(job_id: str, user_id: str) -> None:
     log.info("Pipeline job started", extra={"job_id": job_id, "user_id": user_id, "status": "RUNNING"})
     loop = asyncio.get_event_loop()
 
+    def _progress_callback(stage: str, processed: int, total: int) -> None:
+        update_job_progress(job_id, stage, processed, total)
+
     def _run():
-        return _pipeline_instance.process_user(user_id)
+        return _pipeline_instance.process_user(user_id, progress_callback=_progress_callback)
 
     try:
         result = await loop.run_in_executor(None, _run)

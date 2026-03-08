@@ -1,6 +1,6 @@
 import argparse
 import numpy as np
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Callable, Optional
 from sklearn.metrics.pairwise import cosine_similarity
 
 from logger import get_logger
@@ -74,9 +74,10 @@ class CBIEPipeline:
                 
         return "\n".join(prompt_parts)
 
-    def process_user(self, user_id: str) -> Dict[str, Any]:
+    def process_user(self, user_id: str, progress_callback: Optional[Callable[[str, int, int], None]] = None) -> Dict[str, Any]:
         """
         Runs the full CBIE pipeline for a single user.
+        progress_callback(stage, processed, total) is called at key stages.
         """
         log.info("Starting CBIE Pipeline", extra={"user_id": user_id, "stage": "START"})
         
@@ -86,10 +87,16 @@ class CBIEPipeline:
         if not behaviors:
             log.warning("No behaviors found for user — aborting pipeline", extra={"user_id": user_id, "stage": "INGESTION"})
             return {}
+
+        total_behaviors = len(behaviors)
+        if progress_callback:
+            progress_callback("INGESTION_COMPLETE", total_behaviors, total_behaviors)
             
         # 2. Topic Discovery & Fact Isolation (Stage 1)
-        log.info("Running Topic Discovery, Fact Extraction, and Clustering", extra={"user_id": user_id, "stage": "TOPIC_DISCOVERY", "total_behaviors": len(behaviors)})
-        fact_behaviors, standard_behaviors, _, labels = self.topic_discoverer.process_behaviors(behaviors)
+        log.info("Running Topic Discovery, Fact Extraction, and Clustering", extra={"user_id": user_id, "stage": "TOPIC_DISCOVERY", "total_behaviors": total_behaviors})
+        fact_behaviors, standard_behaviors, _, labels = self.topic_discoverer.process_behaviors(
+            behaviors, progress_callback=progress_callback
+        )
         
         # 3. Temporal Analysis & Confirmation (Stage 2 & 3)
         confirmed_interests = []
@@ -127,13 +134,18 @@ class CBIEPipeline:
             clusters[c_id].append(b)
             
         log.info("HDBSCAN clustering complete", extra={"user_id": user_id, "stage": "CLUSTERING", "cluster_count": len(clusters)})
+        if progress_callback:
+            progress_callback("CLUSTERING_COMPLETE", len(clusters), len(clusters))
         
         # 3. Temporal Analysis & Confirmation (Stage 2 & 3)
         log.info("Analyzing temporal consistency and confirming core interests", extra={"user_id": user_id, "stage": "TEMPORAL_ANALYSIS"})
-        
+
         max_freq = max([len(c) for c in clusters.values()]) if clusters else 0
-        
-        for cluster_id, cluster_behaviors in clusters.items():
+        num_clusters = len(clusters)
+
+        for cluster_idx, (cluster_id, cluster_behaviors) in enumerate(clusters.items()):
+            if progress_callback:
+                progress_callback("TEMPORAL_ANALYSIS", cluster_idx + 1, num_clusters)
             freq = len(cluster_behaviors)
             
             # Extract timestamps and scores

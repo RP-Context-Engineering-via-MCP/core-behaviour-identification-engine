@@ -2,7 +2,7 @@ import numpy as np
 import spacy
 import os
 from openai import AzureOpenAI
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional, Callable
 from transformers import pipeline
 import time
 from sklearn.metrics.pairwise import cosine_distances
@@ -59,7 +59,7 @@ class TopicDiscoverer:
         ]
         self.ruler.add_patterns(patterns)
 
-    def process_behaviors(self, behaviors: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], np.ndarray, np.ndarray]:
+    def process_behaviors(self, behaviors: List[Dict[str, Any]], progress_callback: Optional[Callable[[str, int, int], None]] = None) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], np.ndarray, np.ndarray]:
         """
         Takes raw behaviors, extracts entities, and isolates facts vs standard behaviors.
         Then clusters standard behaviors safely.
@@ -67,10 +67,12 @@ class TopicDiscoverer:
         """
         if not behaviors:
             return [], [], np.array([]), np.array([])
-            
+
+        total = len(behaviors)
+
         # 1. Isolate Absolute Facts
-        log.info("Starting fact isolation via Zero-Shot BART classifier", extra={"stage": "FACT_ISOLATION", "total": len(behaviors)})
-        fact_behaviors, standard_behaviors = self.isolate_absolute_facts(behaviors)
+        log.info("Starting fact isolation via Zero-Shot BART classifier", extra={"stage": "FACT_ISOLATION", "total": total})
+        fact_behaviors, standard_behaviors = self.isolate_absolute_facts(behaviors, progress_callback=progress_callback)
         
         # 2. Process Standard Behaviors
         log.info("Extracting entities for standard behaviors", extra={"stage": "ENTITY_EXTRACTION", "count": len(standard_behaviors)})
@@ -120,7 +122,7 @@ class TopicDiscoverer:
             
         return fact_behaviors, standard_behaviors, final_embeddings, labels
 
-    def isolate_absolute_facts(self, behaviors: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    def isolate_absolute_facts(self, behaviors: List[Dict[str, Any]], progress_callback: Optional[Callable[[str, int, int], None]] = None) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         """
         Separates absolute facts (permanent identity constraints like allergies, 
         dietary restrictions, medical conditions) from regular behavioral habits.
@@ -142,7 +144,10 @@ class TopicDiscoverer:
         
         total = len(behaviors)
         for idx, b in enumerate(behaviors):
-            # Log progress every 50 records so the terminal stays alive during long BART runs
+            # Report progress every behavior so the UI stays live
+            if progress_callback:
+                progress_callback("FACT_ISOLATION", idx + 1, total)
+            # Log every 50 records to keep the terminal alive during long BART runs
             if idx % 50 == 0:
                 log.info(
                     "Fact isolation in progress",

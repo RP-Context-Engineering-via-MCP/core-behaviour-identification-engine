@@ -17,6 +17,7 @@ from api.models import (
     NoiseSummary,
     InterestEntry,
     AdminJobStatusResponse,
+    JobProgress,
     BehaviorPreviewItem,
     BehaviorPreviewResponse,
     PipelineRunResponse
@@ -237,13 +238,17 @@ async def admin_get_job_status(job_id: str):
     if job is None:
         raise HTTPException(status_code=404, detail=f"Job '{job_id}' not found.")
         
+    raw_progress = job.get("progress")
+    progress = JobProgress(**raw_progress) if raw_progress else None
+
     return AdminJobStatusResponse(
         job_id=job["job_id"],
         user_id=job["user_id"],
         status=job["status"],
         started_at=job.get("started_at"),
         completed_at=job.get("completed_at"),
-        error=job.get("error")
+        error=job.get("error"),
+        progress=progress,
     )
 
 

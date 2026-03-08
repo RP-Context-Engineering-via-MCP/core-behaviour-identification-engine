@@ -1,7 +1,7 @@
+// src/components/RunPipelineButton.tsx
 "use client";
 
 import React, { useState } from "react";
-import { Play } from "lucide-react";
 import { runPipeline } from "@/lib/api";
 import { JobStatusBadge } from "./JobStatusBadge";
 
@@ -22,20 +22,16 @@ export function RunPipelineButton({ userId, onCompleted, initialJobId }: RunPipe
             setErrorMsg(null);
             const res = await runPipeline(userId);
             setActiveJobId(res.job_id);
-        } catch (err: any) {
-            setErrorMsg("Failed to start job");
-            console.error(err);
+        } catch (err: unknown) {
+            const msg = err instanceof Error ? err.message : "Failed to start analysis";
+            setErrorMsg(msg);
         } finally {
             setIsStarting(false);
         }
     };
 
     const handleJobFinished = () => {
-        if (onCompleted) {
-            onCompleted();
-        }
-        // We optionally might un-set the active job ID after completion if we want to show the 'Run' button again,
-        // but typically we'll leave it to show 'COMPLETED'.
+        onCompleted?.();
     };
 
     if (activeJobId) {
@@ -43,16 +39,17 @@ export function RunPipelineButton({ userId, onCompleted, initialJobId }: RunPipe
     }
 
     return (
-        <div className="flex items-center gap-2">
+        <div>
             <button
                 onClick={handleRun}
                 disabled={isStarting}
-                className="inline-flex items-center gap-1.5 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
-                <Play className="h-4 w-4" />
-                {isStarting ? "Starting..." : "Run CBIE"}
+                {isStarting ? "Starting..." : "Run Analysis"}
             </button>
-            {errorMsg && <p className="text-xs text-red-600">{errorMsg}</p>}
+            {errorMsg && (
+                <p className="mt-1 text-xs text-red-600">{errorMsg}</p>
+            )}
         </div>
     );
 }

@@ -95,6 +95,12 @@ export interface PipelineRunResponse {
     message: string;
 }
 
+export interface JobProgress {
+    stage: string;
+    processed: number;
+    total: number;
+}
+
 export interface AdminJobStatusResponse {
     job_id: string;
     user_id: string;
@@ -102,6 +108,7 @@ export interface AdminJobStatusResponse {
     started_at?: string;
     completed_at?: string;
     error?: string;
+    progress?: JobProgress;
 }
 
 
