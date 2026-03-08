@@ -17,14 +17,19 @@ class TopicDiscoverer:
     Uses Sentence Transformers for embeddings, HDBSCAN for clustering, and spaCy for domain adaptation.
     """
 
-    def __init__(self, spacy_model: str = 'en_core_web_sm', zero_shot_model: str = 'facebook/bart-large-mnli'):
-        log.info("Initializing Azure OpenAI Client", extra={"stage": "INIT"})
+    def __init__(self, spacy_model: str = 'en_core_web_sm', zero_shot_model: str = 'facebook/bart-large-mnli', embedding_model_name: str = 'all-MiniLM-L6-v2'):
+        log.info("Initializing Azure OpenAI Client for Chat", extra={"stage": "INIT"})
         self.openai_client = AzureOpenAI(
             api_key=os.getenv("OPENAI_API_KEY"),
             api_version=os.getenv("OPENAI_API_VERSION"),
             azure_endpoint=os.getenv("OPENAI_API_BASE")
         )
-        self.embedding_model = os.getenv("OPENAI_EMBEDDING_MODEL")
+        self.chat_model = "gpt-4o-mini"
+        
+        log.info("Initializing SentenceTransformer", extra={"stage": "INIT", "model": embedding_model_name})
+        from sentence_transformers import SentenceTransformer
+        self.sentence_transformer = SentenceTransformer(embedding_model_name)
+        # Using a deterministic embedding length 384 for all-MiniLM-L6-v2
         # Ensure we have a working chat model to fall back to
         self.chat_model = "gpt-4o-mini" # Confirmed to be available
         
@@ -199,7 +204,13 @@ class TopicDiscoverer:
                 facts.append(b)
             else:
                 standards.append(b)
-        
+                
+        # Before returning, bundle all identified facts so they all map to a single unified "Medical/Dietary Restrictions" cluster conceptually
+        for f in facts:
+            f['cluster_id'] = "absolute_fact"
+            # Instead of keeping their unique source texts separate, force their generalized topic to be unified during confirmation
+            f['explicit_topics'] = [f.get('source_text', '')]
+            
         log.info("Fact isolation complete", extra={"stage": "FACT_ISOLATION", "facts_found": len(facts), "standard_behaviors": len(standards)})
         return facts, standards
 
@@ -212,35 +223,12 @@ class TopicDiscoverer:
 
     def generate_embeddings(self, texts: List[str]) -> np.ndarray:
         """
-        Vectorizes source_text using Azure OpenAI text-embedding-3-large.
+        Vectorizes source_text using local sentence-transformers (e.g. all-MiniLM-L6-v2).
+        Returns a (N, 384) dimension numpy array.
         """
-        # OpenAI API has limits, we can batch them.
-        embeddings = []
-        batch_size = 100
-        total_batches = (len(texts) + batch_size - 1) // batch_size
-        for i in range(0, len(texts), batch_size):
-            batch = texts[i:i+batch_size]
-            batch_num = i // batch_size + 1
-            log.info("Generating embedding batch", extra={"stage": "EMBEDDINGS", "batch": batch_num, "total_batches": total_batches, "batch_size": len(batch)})
-            # Handle rate limits
-            retries = 3
-            while retries > 0:
-                try:
-                    response = self.openai_client.embeddings.create(
-                        input=batch,
-                        model=self.embedding_model
-                    )
-                    embeddings.extend([r.embedding for r in response.data])
-                    log.info("Embedding batch complete", extra={"stage": "EMBEDDINGS", "batch": batch_num, "total_batches": total_batches})
-                    break
-                except Exception as e:
-                    log.warning("Azure OpenAI embedding error — retrying", extra={"stage": "EMBEDDINGS", "error": str(e), "retries_left": retries - 1})
-                    time.sleep(2)
-                    retries -= 1
-            if retries == 0:
-                raise Exception("Failed to get embeddings from Azure OpenAI after 3 retries.")
-                
-        return np.array(embeddings)
+        log.info("Generating embeddings locally with sentence-transformers", extra={"stage": "EMBEDDINGS", "count": len(texts)})
+        embeddings = self.sentence_transformer.encode(texts, convert_to_numpy=True)
+        return embeddings
 
     def generalize_cluster_topic(self, texts: List[str]) -> str:
         """
@@ -284,31 +272,45 @@ class TopicDiscoverer:
 
     def cluster_behaviors(self, embeddings: np.ndarray, polarities: List[str] = None, min_cluster_size: int = 2, min_samples: int = 1) -> np.ndarray:
         """
-        Uses DBSCAN to find latent topic clusters.
+        Uses HDBSCAN to find latent topic clusters.
         Applies a 'Polarity Penalty' to prevent POSITIVE and NEGATIVE sentiments
         from clustering together.
+        Dynamic min_cluster_size scales with dataset size to prevent micro-clusters.
         """
-        
+        import hdbscan
         from sklearn.metrics.pairwise import euclidean_distances
         log.info("Building pairwise Euclidean distance matrix", extra={"stage": "CLUSTERING", "n": len(embeddings)})
+        
+        # Ensure we don't pass an empty array
+        if len(embeddings) == 0:
+            return np.array([])
+            
         dist_matrix = euclidean_distances(embeddings).astype(np.float64)
         
         # Apply Polarity Penalty
         if polarities and len(polarities) == len(embeddings):
             n = len(embeddings)
             penalty_count = 0
+            # HDBSCAN operates on distance. We set opposing polarities to maximum possible float
+            max_penalty = 1000.0 
             for i in range(n):
                 for j in range(i+1, n):
                     p1 = str(polarities[i] or '').upper()
                     p2 = str(polarities[j] or '').upper()
                     
                     if (p1 == 'POSITIVE' and p2 == 'NEGATIVE') or (p1 == 'NEGATIVE' and p2 == 'POSITIVE'):
-                        dist_matrix[i, j] = 1000.0
-                        dist_matrix[j, i] = 1000.0
+                        dist_matrix[i, j] = max_penalty
+                        dist_matrix[j, i] = max_penalty
                         penalty_count += 1
             log.info("Polarity penalty applied to distance matrix", extra={"stage": "CLUSTERING", "penalized_pairs": penalty_count})
 
-        log.info("Running DBSCAN", extra={"stage": "CLUSTERING", "eps": 1.1, "min_samples": 3})
-        from sklearn.cluster import DBSCAN
-        clusterer = DBSCAN(eps=1.1, min_samples=3, metric='precomputed')
+        # --- FIX: Dynamic min_cluster_size ---
+        # Scale the minimum cluster size with the dataset.
+        # Rule: a cluster must contain at least 10% of behaviors OR 3, whichever is larger.
+        # This prevents single-query one-offs from being confirmed as "stable" interests.
+        n_behaviors = len(embeddings)
+        actual_min_cluster = max(3, n_behaviors // 10)
+        log.info("Running HDBSCAN", extra={"stage": "CLUSTERING", "min_cluster_size": actual_min_cluster, "n_behaviors": n_behaviors})
+        
+        clusterer = hdbscan.HDBSCAN(min_cluster_size=actual_min_cluster, min_samples=min_samples, metric='precomputed')
         return clusterer.fit_predict(dist_matrix)

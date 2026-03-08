@@ -1,5 +1,7 @@
 import argparse
+import numpy as np
 from typing import Dict, Any, List
+from sklearn.metrics.pairwise import cosine_similarity
 
 from logger import get_logger
 from data_adapter import DataAdapter
@@ -93,24 +95,26 @@ class CBIEPipeline:
         confirmed_interests = []
         
         # --- Handle Absolute Facts first ---
+        # Pre-compute embeddings of all fact source texts for contradiction detection later
+        fact_texts = []
+        fact_embeddings = np.array([])
         if fact_behaviors:
             log.info("Absolute facts identified", extra={"user_id": user_id, "stage": "FACT_ISOLATION", "fact_count": len(fact_behaviors)})
-            for fb in fact_behaviors:
-                # We do not generalize facts because they are literal constraints
-                # (e.g. "cannot eat peanuts", "avoids processed foods").
-                # Generalizing them merges them into generic unhelpful labels like "Food Preferences".
-                raw_fact_text = fb.get('explicit_topics', [fb.get('source_text')])[0]
-                
-                interest_profile = {
-                    "cluster_id": "absolute_fact",
-                    "representative_topics": [raw_fact_text],
-                    "frequency": 1,
-                    "consistency_score": 0.0,
-                    "trend_score": 0.0,
-                    "core_score": 1.0,
-                    "status": self.confirmation_model.determine_status(1.0, is_fact=True)
-                }
-                confirmed_interests.append(interest_profile)
+            all_fact_topics = [fb.get('explicit_topics', [fb.get('source_text')])[0] for fb in fact_behaviors]
+            fact_texts = [fb.get('source_text', '') for fb in fact_behaviors if fb.get('source_text')]
+            if fact_texts:
+                fact_embeddings = self.topic_discoverer.generate_embeddings(fact_texts)
+            
+            interest_profile = {
+                "cluster_id": "absolute_fact",
+                "representative_topics": all_fact_topics,
+                "frequency": len(fact_behaviors),
+                "consistency_score": 0.0,
+                "trend_score": 0.0,
+                "core_score": 1.0,
+                "status": self.confirmation_model.determine_status(1.0, is_fact=True)
+            }
+            confirmed_interests.append(interest_profile)
         
         # --- Handle Standard Clusters ---
         # Group behaviors by cluster
@@ -122,7 +126,7 @@ class CBIEPipeline:
                 clusters[c_id] = []
             clusters[c_id].append(b)
             
-        log.info("DBSCAN clustering complete", extra={"user_id": user_id, "stage": "CLUSTERING", "cluster_count": len(clusters)})
+        log.info("HDBSCAN clustering complete", extra={"user_id": user_id, "stage": "CLUSTERING", "cluster_count": len(clusters)})
         
         # 3. Temporal Analysis & Confirmation (Stage 2 & 3)
         log.info("Analyzing temporal consistency and confirming core interests", extra={"user_id": user_id, "stage": "TEMPORAL_ANALYSIS"})
@@ -151,6 +155,32 @@ class CBIEPipeline:
             raw_cluster_texts = [b.get('source_text', '') for b in cluster_behaviors if b.get('source_text')]
             generalized_label = self.topic_discoverer.generalize_cluster_topic(raw_cluster_texts)
             representative_topics = [generalized_label]
+            
+            # --- FIX 2: Semantic Contradiction Suppression ---
+            # If this cluster is semantically OPPOSED to a confirmed Stable Fact, mark it
+            # as CONTRADICTED and exclude it. This prevents adversarial/opposite behaviors
+            # (e.g., "Steak" for a vegan user) from being confirmed as stable interests.
+            if status != "Noise" and len(fact_embeddings) > 0 and raw_cluster_texts:
+                cluster_embedding = self.topic_discoverer.generate_embeddings(raw_cluster_texts[:5])  # sample
+                cluster_mean = cluster_embedding.mean(axis=0, keepdims=True)
+                fact_mean = fact_embeddings.mean(axis=0, keepdims=True)
+                sim = cosine_similarity(cluster_mean, fact_mean)[0][0]
+                
+                # Check polarity of behaviors in this cluster
+                cluster_polarities = [str(b.get('polarity', '') or '').upper() for b in cluster_behaviors]
+                has_negative_polarity = cluster_polarities.count('NEGATIVE') > len(cluster_polarities) / 2
+                
+                # A cluster contradicts facts if:
+                #   (a) it is semantically distant from facts (sim < 0.1) AND has NEGATIVE polarity, OR
+                #   (b) it is semantically very far AND is predominantly opposite sentiment
+                CONTRADICTION_SIM_THRESHOLD = 0.1
+                if sim < CONTRADICTION_SIM_THRESHOLD and has_negative_polarity:
+                    log.info(
+                        "Cluster suppressed — contradicts confirmed facts",
+                        extra={"stage": "CONTRADICTION_CHECK", "cluster_id": cluster_id,
+                               "similarity": round(float(sim), 4), "label": generalized_label}
+                    )
+                    status = "CONTRADICTED"
                 
             interest_profile = {
                 "cluster_id": cluster_id,
@@ -162,8 +192,8 @@ class CBIEPipeline:
                 "status": status
             }
             
-            if status != "Noise":
-                 confirmed_interests.append(interest_profile)
+            if status not in ("Noise", "CONTRADICTED"):
+                confirmed_interests.append(interest_profile)
                  
         log.info("Confirmation model complete", extra={"user_id": user_id, "stage": "CONFIRMATION", "confirmed_count": len(confirmed_interests)})
         

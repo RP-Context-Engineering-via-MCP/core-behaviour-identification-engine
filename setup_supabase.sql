@@ -8,7 +8,7 @@ CREATE TABLE public.behaviors (
     user_id TEXT NOT NULL,
     session_id TEXT,
     behavior_text TEXT,
-    embedding vector(3072),
+    embedding vector(384),
     credibility REAL DEFAULT 0.5,
     extraction_confidence REAL DEFAULT 0.5,
     clarity_score REAL DEFAULT 0.5,
