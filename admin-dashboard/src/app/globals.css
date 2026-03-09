@@ -6,13 +6,24 @@
 
 /*
   Force light-mode appearance for the admin panel regardless of the OS
-  colour scheme. This is an internal tool and we want a consistent look.
+  colour scheme.
 */
 :root {
   color-scheme: light;
 }
 
 body {
-  background-color: #f5f5f4;  /* warm Stone 100 — never overridden by dark mode */
-  color: #1c1917;              /* Stone 900 */
+  background-color: #f5f5f4;
+  color: #1c1917;
+}
+
+/* Shimmer keyframe for the indeterminate progress bar */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(200%);
+  }
 }
