@@ -1,6 +1,9 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # Stage 1: Builder — install heavy dependencies (torch, transformers, etc.)
+# Requires BuildKit (default in Docker 23+).  If using older Docker, run:
+#   DOCKER_BUILDKIT=1 docker compose -f docker-compose.cbie.yml up --build
 # ─────────────────────────────────────────────────────────────────────────────
+# syntax=docker/dockerfile:1
 FROM python:3.10-slim AS builder
 
 WORKDIR /app
@@ -14,12 +17,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy requirements first so Docker can cache pip install layer
 COPY requirements.txt .
 
-# Install all Python dependencies into a separate directory for clean copy
-RUN pip install --upgrade pip && \
-    pip install --prefix=/install -r requirements.txt
-
-# Also download the spaCy model into the install prefix
-RUN python -m spacy download en_core_web_sm
+# Install all Python deps with a persistent BuildKit cache mount.
+# The /root/.cache/pip directory is reused across builds — packages are
+# NEVER re-downloaded unless requirements.txt changes.
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip && \
+    pip install --prefix=/install -r requirements.txt && \
+    # Download spaCy model into same layer to keep it cached together
+    PYTHONPATH=/install/lib/python3.10/site-packages \
+    python -m spacy download en_core_web_sm --target /install/lib/python3.10/site-packages
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Stage 2: Runtime — lean final image
@@ -31,7 +37,7 @@ WORKDIR /app
 # Copy installed packages from builder
 COPY --from=builder /install /usr/local
 
-# Copy application source
+# Copy application source (only what's needed — .dockerignore keeps this tiny)
 COPY . .
 
 # Ensure the data/profiles directory exists at runtime

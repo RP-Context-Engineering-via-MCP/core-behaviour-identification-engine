@@ -1,37 +1,52 @@
-# Python
+# ── Large directories that must NEVER enter the build context ─────────────────
+# These alone account for >2GB. Excluding them is the single biggest speedup.
 venv/
+.venv/
+env/
+admin-dashboard/
+data/
+models_cache/
+.cache/
 __pycache__/
-*.pyc
+
+# ── Python build artifacts ────────────────────────────────────────────────────
+*.py[cod]
 *.pyo
-.Python
+*.pyd
 *.egg-info/
 dist/
 build/
+*.so
+.Python
 
-# Secrets — never bake into image; injected at runtime via docker-compose env_file
+# ── Secrets / env files ───────────────────────────────────────────────────────
 .env
 .env.*
 
-# Logs
+# ── Logs ──────────────────────────────────────────────────────────────────────
 *.log
 logs/
 cbie.log
 
-# Generated data files (will be stored in named Docker volumes)
-data/
-
-# Local test scripts / artifacts
+# ── Test / dev scripts  ───────────────────────────────────────────────────────
+scripts/
+tests/
 trigger.py
 test_eps.py
-scripts/
 
-# IDE
+# ── IDE / tooling ─────────────────────────────────────────────────────────────
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# Git
+# ── Git ───────────────────────────────────────────────────────────────────────
 .git/
 .gitignore
 
-# Docs
+# ── Docs / CSVs / generated outputs ──────────────────────────────────────────
 *.md
+*.csv
+*.json
+*.txt
+SYSTEM_DOCUMENTATION.md
