@@ -8,6 +8,10 @@ __pycache__/
 dist/
 build/
 
+# Secrets — never bake into image; injected at runtime via docker-compose env_file
+.env
+.env.*
+
 # Logs
 *.log
 logs/
