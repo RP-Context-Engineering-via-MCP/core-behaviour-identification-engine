@@ -255,7 +255,7 @@ class CBIEPipeline:
                 vectors = np.array([b["text_embedding"] for b in embeddable])
                 # perplexity must be < n_samples; cap at 30
                 perp = min(30, len(embeddable) - 1)
-                tsne = TSNE(n_components=2, perplexity=perp, random_state=42, n_iter=300)
+                tsne = TSNE(n_components=2, perplexity=perp, random_state=42, max_iter=300)
                 coords = tsne.fit_transform(vectors)
 
                 # Map cluster_id -> label/status from confirmed_interests
