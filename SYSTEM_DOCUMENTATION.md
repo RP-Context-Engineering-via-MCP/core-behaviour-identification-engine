@@ -72,8 +72,8 @@ graph TD
     end
 
     subgraph DB["Supabase PostgreSQL + pgvector"]
-        BT[(behaviors table)]
-        PT[(core_behavior_profiles table)]
+        BT[(BAC Database: behaviors)]
+        PT[(CBIE Database: profiles)]
     end
 
     LLMC -- "GET /context/{user_id}" --> CTX
@@ -95,11 +95,11 @@ graph TD
 
 | File | Class | Stage | Responsibility |
 |------|-------|-------|----------------|
-| `data_adapter.py` | `DataAdapter` | Ingestion / Output | Reads `behaviors` table from Supabase, writes profile to `core_behavior_profiles` |
-| `topic_discovery.py` | `TopicDiscoverer` | Stage 1 | Fact isolation (Zero-Shot NLP), Azure embeddings, DBSCAN clustering, LLM topic labeling |
+| `data_adapter.py` | `DataAdapter` | Ingestion / Output | Reads `behaviors` from **BAC Supabase**, writes profiles to **CBIE Supabase** |
+| `topic_discovery.py` | `TopicDiscoverer` | Stage 1 | Fact isolation (Zero-Shot NLP), Azure embeddings, **Adaptive DBSCAN clustering**, LLM topic labeling |
 | `temporal_analysis.py` | `TemporalAnalyzer` | Stage 2 | Gini Coefficient (consistency), Mann-Kendall Trend Test (momentum) |
 | `confirmation_model.py` | `ConfirmationModel` | Stage 3 | AHP-weighted heuristic scoring, Vitality Pruning, status classification |
-| `pipeline.py` | `CBIEPipeline` | Orchestration | Ties all stages together; generates the Identity Anchor Prompt string |
+| `pipeline.py` | `CBIEPipeline` | Orchestration | Ties all stages together; supports **Incremental Checkpoint Processing** |
 | `api/main.py` | FastAPI app | API Layer | App entry point, CORS, lifespan startup, health endpoints |
 | `api/dependencies.py` | — | API Layer | Pipeline singleton (load-once), in-memory job store for background runs |
 | `api/models.py` | Pydantic models | API Layer | All request/response schemas |
@@ -206,17 +206,18 @@ All remaining (non-fact) behaviors are embedded using Azure OpenAI's `text-embed
 
 Each behavior's text is processed through spaCy's NER pipeline (`en_core_web_sm`), extended with a custom **EntityRuler** for domain-specific terms (e.g., `kubernetes` → `TECH`, `hdbscan` → `ALGO`).
 
-#### 4.1.4 Density-Based Clustering (HDBSCAN)
+#### 4.1.4 Adaptive Density-Based Clustering (DBSCAN)
 
-Dense semantic embeddings are clustered using **HDBSCAN** (Hierarchical Density-Based Spatial Clustering of Applications with Noise).
+Clusters standard behaviors using **DBSCAN** (Density-Based Spatial Clustering of Applications with Noise) with a mathematically derived **Adaptive Epsilon**.
 
 1. **Base Matrix:** Pairwise Euclidean distances.
 2. **Polarity Penalty:** If two behaviors have opposite sentiments (`POSITIVE` vs `NEGATIVE`), their distance is artificially set to `1000.0`.
-3. **Dynamic Parameterization:** To adapt to varying data density, the pipeline uses a log-scaled `min_cluster_size`:
-   $$\text{min\_cluster\_size} = \max(3, \lfloor \log_2(\text{behavior\_count}) \rfloor)$$
-   This allows the engine to be sensitive to small patterns in sparse data while avoiding over-segmentation in dense histories.
+3. **Adaptive Epsilon (k-distance graph):** 
+   - Uses the distance to the $k$-th nearest neighbor ($k=min\_samples$) to generate a k-distance plot.
+   - Automatically identifies the "elbow" or "knee" point using the `kneed` library.
+   - **Semantic Boundary Cap:** Epsilon is strictly capped at **0.75** (max) and **0.20** (min). This ensures that clusters only form when behaviors are semantically tight (dist ≤ 0.75 ≈ cos sim ≥ 0.72), preventing the formation of overly generic "mega-clusters".
 
-> **Why HDBSCAN over DBSCAN?** HDBSCAN eliminates the need for a global `eps` parameter, instead finding clusters of varying densities. This is critical for behavioral analysis where "Core Interests" (dense centers) coexist with "Emerging Interests" (sparser peripheries).
+> **Why DBSCAN with Adaptive Epsilon?** This method ensures high-precision semantic islands. While HDBSCAN is density-invariant, it often merges distinct but slightly related behavioral groups in sparse datasets. Adaptive DBSCAN maintains strict semantic boundaries, crucial for identifying specific user habits (e.g., "Dog Walking") rather than generic categories.
 
 Behaviors assigned `cluster_id = -1` are classified as **noise** and excluded from the profile.
 
@@ -326,8 +327,10 @@ Step 2: TOPIC DISCOVERY (Stage 1)
         ├─ spaCy NER + EntityRuler → extracted entities
         ├─ Use precomputed embeddings (or generate via Azure if missing)
         ├─ Build Euclidean distance matrix
+        ├─ Build Euclidean distance matrix
         ├─ Apply Polarity Penalty (POSITIVE vs NEGATIVE → distance = 1000)
-        ├─ DBSCAN(eps=1.1, min_samples=3) → cluster_id per behavior
+        ├─ Adaptive Epsilon calculation via k-distance graph (capped at 0.75)
+        ├─ DBSCAN(eps=adaptive, min_samples=2) → cluster_id per behavior
         └─ gpt-4o-mini → cohesive 4-5 word topic label per cluster
 
 Step 3: TEMPORAL ANALYSIS (Stage 2) — per cluster
@@ -540,8 +543,8 @@ EMERGING INTERESTS (Needs more verification):
 | `uvicorn` | ≥ 0.29.0 | ASGI server |
 | `openai` | ≥ 1.0.0 | Azure embeddings and GPT-4o-mini topic labeling |
 | `transformers` | ≥ 4.35.0 | Zero-Shot classifier (`facebook/bart-large-mnli`) |
-| `hdbscan` | ≥ 0.8.33 | Hierarchical density-based clustering |
-| `scikit-learn` | ≥ 1.3.0 | t-SNE dimensionality reduction & distance metrics |
+| `kneed` | ≥ 0.8.5 | Mathematical detection of knee/elbow points for adaptive epsilon |
+| `scikit-learn` | ≥ 1.3.0 | DBSCAN clustering, t-SNE dimensionality reduction & distance metrics |
 | `pymannkendall` | ≥ 1.4.3 | Mann-Kendall Trend Test |
 | `supabase` | ≥ 2.3.4 | Cloud DB client (PostgreSQL + pgvector) |
 | Next.js | 15.x | Admin Dashboard framework |
@@ -654,7 +657,8 @@ python -m pytest test_models.py -v
 
 | Decision | Justification |
 |----------|---------------|
-| **HDBSCAN Clustering** | Eliminates global `eps` parameter; identifies clusters of varying densities (Core vs Emerging) naturally. |
+| **Adaptive DBSCAN** | Mathematically derived epsilon ensures precision; strict semantic capping prevents the merging of distinct habits into generic mega-clusters. |
+| **Dual Database Isolation** | CBIE reads from a dedicated read-only BAC repository while maintaining its own writes in a separate profile database, ensuring architectural decoupling. |
 | **Batched Inference** | Processing Zero-Shot classification in batches of 32 provides 10x throughput scaling for large behavior histories. |
 | **Semantic Suppression** | Cross-similarity checks prevent identity contradictions (e.g., Vegan vs Steak) from contaminating the profile. |
 | **t-SNE Embeddings** | Pre-computed 2D projections allow for intuitive visual audit of semantic segmentation in the admin dashboard. |
