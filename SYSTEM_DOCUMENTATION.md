@@ -308,6 +308,18 @@ Where: $G$ = Gini, $C$ = avg credibility, $f$ = cluster frequency, $f_{max}$ = l
 | `< 0.15` | **ARCHIVED_CORE** | Kept in DB for historical record but excluded from LLM prompt |
 | _(any, if fact)_ | **Stable Fact** | Permanently injected into `CRITICAL CONSTRAINTS` section |
 
+#### 4.3.3 Summary of Classification Logic
+
+To ensure research rigor, the following thresholds are strictly enforced by the CBIE:
+
+| Category | Detection Mechanism | Primary Threshold | Signal Sources |
+| :--- | :--- | :--- | :--- |
+| **Active Facts** (Stable Fact) | Multi-layer Zero-Shot Inference | `fact_confidence ≥ 0.70` | BART-Large-MNLI + BAC `CONSTRAINT` intent + Negative Polarity |
+| **Stable Interests** | AHP-Weighted Heuristic Scoring | `core_score ≥ 0.70` | Gini Consistency (0.35) + Credibility (0.30) + Freq (0.25) + Trend (0.10) |
+| **Emerging Interests** | AHP-Weighted Heuristic Scoring | `0.40 ≤ core_score < 0.70` | Same as above; indicates growing patterns or moderate consistency |
+| **Core Interests** | Collective grouping | `core_score ≥ 0.40` | The union of **Stable** and **Emerging** interests used for context injection |
+| **Noise / Archived** | Vitality Pruning | `core_score < 0.40` | Discarded as one-off queries or historical artifacts |
+
 ---
 
 ## 5. Pipeline Execution Flow
