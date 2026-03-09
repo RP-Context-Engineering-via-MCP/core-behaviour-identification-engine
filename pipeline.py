@@ -76,26 +76,63 @@ class CBIEPipeline:
                 
         return "\n".join(prompt_parts)
 
-    def process_user(self, user_id: str, progress_callback: Optional[Callable[[str, int, int], None]] = None) -> Dict[str, Any]:
+    def process_user(self, user_id: str, progress_callback: Optional[Callable[[str, int, int], None]] = None, force_full_run: bool = False) -> Dict[str, Any]:
         """
-        Runs the full CBIE pipeline for a single user.
+        Runs the CBIE pipeline for a single user.
+
+        Two-track execution:
+          Track A (Full Run)  — No prior checkpoint OR force_full_run=True.
+                                Fetches up to 500 recent behaviors and reclusters everything.
+          Track B (Incremental) — Existing checkpoint found.
+                                  Fetches ONLY new behaviors since last run.
+                                  If fewer than MIN_NEW_BEHAVIORS, skips the run entirely.
+
         progress_callback(stage, processed, total) is called at key stages.
         """
-        log.info("Starting CBIE Pipeline", extra={"user_id": user_id, "stage": "START"})
-        
-        # 1. Ingestion
-        log.info("Fetching user history from Supabase", extra={"user_id": user_id, "stage": "INGESTION"})
-        behaviors = self.data_adapter.fetch_user_history(user_id)
+        # ── Determine run mode ────────────────────────────────────────────
+        MIN_NEW_BEHAVIORS = 10
+
+        last_ts = None if force_full_run else self.data_adapter.fetch_last_processed_timestamp(user_id)
+        is_incremental = last_ts is not None
+
+        if is_incremental:
+            log.info("Incremental run — fetching only new behaviors",
+                     extra={"user_id": user_id, "stage": "START", "since": last_ts})
+        else:
+            log.info("Full run — no prior checkpoint found",
+                     extra={"user_id": user_id, "stage": "START"})
+
+        # ── 1. Ingestion ──────────────────────────────────────────────────
+        behaviors = self.data_adapter.fetch_user_history(
+            user_id,
+            since_timestamp=last_ts if is_incremental else None
+        )
+
         if not behaviors:
-            log.warning("No behaviors found for user — aborting pipeline", extra={"user_id": user_id, "stage": "INGESTION"})
+            if is_incremental:
+                log.info("No new behaviors since last run — skipping pipeline",
+                         extra={"user_id": user_id, "stage": "INGESTION"})
+            else:
+                log.warning("No behaviors found for user — aborting pipeline",
+                            extra={"user_id": user_id, "stage": "INGESTION"})
+            return {}
+
+        if is_incremental and len(behaviors) < MIN_NEW_BEHAVIORS:
+            log.info(
+                "Too few new behaviors for incremental update — skipping",
+                extra={"user_id": user_id, "stage": "INGESTION",
+                       "new_count": len(behaviors), "threshold": MIN_NEW_BEHAVIORS}
+            )
             return {}
 
         total_behaviors = len(behaviors)
         if progress_callback:
             progress_callback("INGESTION_COMPLETE", total_behaviors, total_behaviors)
-            
-        # 2. Topic Discovery & Fact Isolation (Stage 1)
-        log.info("Running Topic Discovery, Fact Extraction, and Clustering", extra={"user_id": user_id, "stage": "TOPIC_DISCOVERY", "total_behaviors": total_behaviors})
+
+        # ── 2. Topic Discovery & Fact Isolation (Stage 1) ─────────────────
+        log.info("Running Topic Discovery, Fact Extraction, and Clustering",
+                 extra={"user_id": user_id, "stage": "TOPIC_DISCOVERY",
+                        "total_behaviors": total_behaviors, "mode": "incremental" if is_incremental else "full"})
         fact_behaviors, standard_behaviors, _, labels = self.topic_discoverer.process_behaviors(
             behaviors, progress_callback=progress_callback
         )
@@ -135,7 +172,7 @@ class CBIEPipeline:
                 clusters[c_id] = []
             clusters[c_id].append(b)
             
-        log.info("HDBSCAN clustering complete", extra={"user_id": user_id, "stage": "CLUSTERING", "cluster_count": len(clusters)})
+        log.info("DBSCAN clustering complete", extra={"user_id": user_id, "stage": "CLUSTERING", "cluster_count": len(clusters)})
         if progress_callback:
             progress_callback("CLUSTERING_COMPLETE", len(clusters), len(clusters))
         

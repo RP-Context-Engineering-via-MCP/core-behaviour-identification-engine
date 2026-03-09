@@ -107,10 +107,11 @@ def now_iso() -> str:
 # Background Pipeline Execution
 # ---------------------------------------------------------------------------
 
-async def run_pipeline_background(job_id: str, user_id: str) -> None:
+async def run_pipeline_background(job_id: str, user_id: str, force_full_run: bool = False) -> None:
     """
     Executes the heavy CBIE pipeline in a thread-pool executor so it does
     not block the FastAPI event loop.
+    force_full_run=True bypasses the incremental checkpoint and reclusters everything.
     """
     update_job(job_id, status="RUNNING", started_at=now_iso())
     log.info("Pipeline job started", extra={"job_id": job_id, "user_id": user_id, "status": "RUNNING"})
@@ -120,7 +121,7 @@ async def run_pipeline_background(job_id: str, user_id: str) -> None:
         update_job_progress(job_id, stage, processed, total)
 
     def _run():
-        return _pipeline_instance.process_user(user_id, progress_callback=_progress_callback)
+        return _pipeline_instance.process_user(user_id, progress_callback=_progress_callback, force_full_run=force_full_run)
 
     try:
         result = await loop.run_in_executor(None, _run)

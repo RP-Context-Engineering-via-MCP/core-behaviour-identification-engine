@@ -92,7 +92,7 @@ async def get_context(user_id: str):
 
     return ContextResponse(
         user_id=user_id,
-        identity_anchor_prompt=prompt,
+        identity_anchor_prompt=prompt.replace("\n", " ").strip(),
         profile_exists=True,
         total_raw_behaviors=row.get("total_raw_behaviors", 0),
         last_updated=row.get("updated_at"),

@@ -31,7 +31,7 @@ from api.dependencies import (
     get_job,
     run_pipeline_background,
 )
-from data_adapter import DataAdapter
+from data_adapter import DataAdapter, _ms_epoch_to_iso
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 _data_adapter = DataAdapter()
@@ -56,8 +56,8 @@ def _parse_interests(raw) -> List[dict]:
     description="Returns a list of all users who have ACTIVE behaviors recorded, along with their profile status.",
 )
 async def list_users():
-    if not _data_adapter.supabase:
-        raise HTTPException(status_code=503, detail="Database connection unavailable.")
+    if not _data_adapter.bac_supabase:
+        raise HTTPException(status_code=503, detail="BAC Database connection unavailable.")
 
     try:
         # Paginate through ALL behaviors — Supabase default page limit is 1000 rows.
@@ -67,7 +67,7 @@ async def list_users():
         offset = 0
         while True:
             batch = (
-                _data_adapter.supabase
+                _data_adapter.bac_supabase
                 .table("behaviors")
                 .select("user_id, created_at")
                 .eq("behavior_state", "ACTIVE")
@@ -90,8 +90,9 @@ async def list_users():
             user_stats[uid] = {"total": 0, "last_at": None}
         user_stats[uid]["total"] += 1
 
-        created = row.get("created_at")
-        if created:
+        created_raw = row.get("created_at")
+        if created_raw:
+            created = _ms_epoch_to_iso(created_raw) if _data_adapter._bac_timestamps_are_bigint else created_raw
             if user_stats[uid]["last_at"] is None or created > user_stats[uid]["last_at"]:
                 user_stats[uid]["last_at"] = created
                 
@@ -139,11 +140,11 @@ async def list_users():
     description="Combines basic behavior stats from the behaviors table with the profile summary from core_behavior_profiles if it exists.",
 )
 async def get_user_summary(user_id: str):
-    if not _data_adapter.supabase:
+    if not _data_adapter.bac_supabase or not _data_adapter.supabase:
         raise HTTPException(status_code=503, detail="Database connection unavailable.")
 
     try:
-        behaviors_resp = _data_adapter.supabase.table("behaviors").select("created_at").eq("user_id", user_id).eq("behavior_state", "ACTIVE").execute()
+        behaviors_resp = _data_adapter.bac_supabase.table("behaviors").select("created_at").eq("user_id", user_id).eq("behavior_state", "ACTIVE").execute()
         prof_resp = _data_adapter.supabase.table("core_behavior_profiles").select("*").eq("user_id", user_id).execute()
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Database query failed: {e}")
@@ -152,7 +153,9 @@ async def get_user_summary(user_id: str):
         raise HTTPException(status_code=404, detail=f"No behaviors found for user '{user_id}'.")
         
     total_behaviors = len(behaviors_resp.data)
-    last_behavior_at = max((r.get("created_at") for r in behaviors_resp.data if r.get("created_at")), default=None)
+    
+    _last_raw = max((r.get("created_at") for r in behaviors_resp.data if r.get("created_at")), default=None)
+    last_behavior_at = _ms_epoch_to_iso(_last_raw) if _last_raw and _data_adapter._bac_timestamps_are_bigint else _last_raw
     
     has_profile = len(prof_resp.data) > 0
     profile_summary = None
@@ -287,15 +290,15 @@ async def get_behaviors_preview(
     limit: int = Query(50, ge=1, le=200, description="Max records to return"),
     offset: int = Query(0, ge=0, description="Pagination offset"),
 ):
-    if not _data_adapter.supabase:
-        raise HTTPException(status_code=503, detail="Database connection unavailable.")
+    if not _data_adapter.bac_supabase:
+        raise HTTPException(status_code=503, detail="BAC Database connection unavailable.")
 
     # Select specific columns to explicitly omit 'embedding'
     columns = "behavior_id, created_at, behavior_text, intent, target, context, polarity, behavior_state, credibility, clarity_score, extraction_confidence"
     
     try:
         resp = (
-            _data_adapter.supabase
+            _data_adapter.bac_supabase
             .table("behaviors")
             .select(columns, count="exact")
             .eq("user_id", user_id)
@@ -311,9 +314,12 @@ async def get_behaviors_preview(
         def _f(val):
             return float(val) if val is not None else None
             
+        raw_ts = row.get("created_at")
+        iso_ts = _ms_epoch_to_iso(raw_ts) if _data_adapter._bac_timestamps_are_bigint else raw_ts
+
         items.append(BehaviorPreviewItem(
             behavior_id=row.get("behavior_id"),
-            created_at=row.get("created_at"),
+            created_at=iso_ts,
             behavior_text=row.get("behavior_text", ""),
             intent=row.get("intent"),
             target=row.get("target"),

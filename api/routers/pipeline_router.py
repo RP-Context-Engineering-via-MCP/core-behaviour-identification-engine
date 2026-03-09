@@ -37,18 +37,20 @@ router = APIRouter(prefix="/pipeline", tags=["Pipeline"])
         "Use `GET /pipeline/status/{job_id}` to poll for completion."
     ),
 )
-async def trigger_pipeline_run(user_id: str, background_tasks: BackgroundTasks):
+async def trigger_pipeline_run(user_id: str, background_tasks: BackgroundTasks, force_full_run: str = "false"):
     """
     Accepts a user_id, creates a background job, and returns immediately.
     The pipeline runs asynchronously — the LLM/frontend should poll for status.
+    Set force_full_run=true to bypass the incremental checkpoint and recluster everything.
     """
+    _force = force_full_run.strip().lower() in ("true", "1", "yes")
     # Ensure the pipeline singleton is available before queuing
     get_pipeline()  # raises 500 if not initialised
 
     job_id = create_job(user_id)
 
     # Schedule the heavy pipeline to run in the background
-    background_tasks.add_task(run_pipeline_background, job_id, user_id)
+    background_tasks.add_task(run_pipeline_background, job_id, user_id, _force)
 
     return PipelineRunResponse(
         job_id=job_id,

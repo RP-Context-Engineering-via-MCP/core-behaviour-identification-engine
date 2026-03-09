@@ -295,15 +295,16 @@ class TopicDiscoverer:
             counts = Counter(texts)
             return counts.most_common(1)[0][0]
 
-    def cluster_behaviors(self, embeddings: np.ndarray, polarities: List[str] = None, min_cluster_size: int = 2, min_samples: int = 1) -> np.ndarray:
+    def cluster_behaviors(self, embeddings: np.ndarray, polarities: List[str] = None, min_samples: int = 2) -> np.ndarray:
         """
-        Uses HDBSCAN to find latent topic clusters.
-        Applies a 'Polarity Penalty' to prevent POSITIVE and NEGATIVE sentiments
-        from clustering together.
-        Dynamic min_cluster_size scales with dataset size to prevent micro-clusters.
+        Uses DBSCAN with an adaptive epsilon (calculated via k-distance graph) to find latent topic clusters.
+        Applies a 'Polarity Penalty' to prevent POSITIVE and NEGATIVE sentiments from clustering together.
         """
-        import hdbscan
+        from sklearn.cluster import DBSCAN
+        from sklearn.neighbors import NearestNeighbors
         from sklearn.metrics.pairwise import euclidean_distances
+        from kneed import KneeLocator
+        
         log.info("Building pairwise Euclidean distance matrix", extra={"stage": "CLUSTERING", "n": len(embeddings)})
         
         # Ensure we don't pass an empty array
@@ -316,7 +317,7 @@ class TopicDiscoverer:
         if polarities and len(polarities) == len(embeddings):
             n = len(embeddings)
             penalty_count = 0
-            # HDBSCAN operates on distance. We set opposing polarities to maximum possible float
+            # Set opposing polarities to a large penalty distance
             max_penalty = 1000.0 
             for i in range(n):
                 for j in range(i+1, n):
@@ -329,13 +330,44 @@ class TopicDiscoverer:
                         penalty_count += 1
             log.info("Polarity penalty applied to distance matrix", extra={"stage": "CLUSTERING", "penalized_pairs": penalty_count})
 
-        # --- FIX: Dynamic min_cluster_size ---
-        # Scale the minimum cluster size with the dataset.
-        # Rule: a cluster must contain at least 10% of behaviors OR 3, whichever is larger.
-        # This prevents single-query one-offs from being confirmed as "stable" interests.
+        # --- Adaptive Epsilon Calculation via k-distance graph ---
+        # Find the optimal eps by looking at the distance to the k-th nearest neighbor (where k = min_samples)
         n_behaviors = len(embeddings)
-        actual_min_cluster = max(3, n_behaviors // 10)
-        log.info("Running HDBSCAN", extra={"stage": "CLUSTERING", "min_cluster_size": actual_min_cluster, "n_behaviors": n_behaviors})
+        k = max(2, min_samples)
         
-        clusterer = hdbscan.HDBSCAN(min_cluster_size=actual_min_cluster, min_samples=min_samples, metric='precomputed')
+        # If we have too few behaviors to meaningfully cluster or find a knee, fallback to a sensible default eps
+        if n_behaviors <= k + 1:
+             optimal_eps = 0.5 
+             log.info("Too few behaviors for k-distance graph; using fallback eps", extra={"stage": "CLUSTERING", "eps": optimal_eps, "n_behaviors": n_behaviors})
+        else:
+             # Fit NearestNeighbors
+             nn = NearestNeighbors(n_neighbors=k, metric='precomputed')
+             nn.fit(dist_matrix)
+             distances, _ = nn.kneighbors(dist_matrix)
+             
+             # Sort distances to the k-th nearest neighbor
+             k_distances = np.sort(distances[:, k-1])
+             
+             try:
+                 # Find the 'knee' (point of maximum curvature)
+                 kneedle = KneeLocator(range(len(k_distances)), k_distances, S=1.0, curve='convex', direction='increasing')
+                 if kneedle.knee is not None:
+                     optimal_eps = k_distances[kneedle.knee]
+                 else:
+                     # Fallback if no knee is found
+                     optimal_eps = np.percentile(k_distances, 50) 
+             except Exception as e:
+                 log.warning("KneeLocator failed, falling back to median distance", extra={"stage": "CLUSTERING", "error": str(e)})
+                 optimal_eps = np.median(k_distances)
+
+        # Enforce strict semantic boundaries. 
+        # Euclidean distance of 0.7 corresponds to cosine similarity of ~0.75.
+        # We don't want clusters forming with distances > 0.8 (cos sim < 0.68).
+        MAX_EPS = 0.75
+        MIN_EPS = 0.20
+        optimal_eps = max(MIN_EPS, min(optimal_eps, MAX_EPS))
+
+        log.info("Running DBSCAN", extra={"stage": "CLUSTERING", "eps": round(float(optimal_eps), 3), "min_samples": min_samples, "n_behaviors": n_behaviors})
+        
+        clusterer = DBSCAN(eps=optimal_eps, min_samples=min_samples, metric='precomputed')
         return clusterer.fit_predict(dist_matrix)

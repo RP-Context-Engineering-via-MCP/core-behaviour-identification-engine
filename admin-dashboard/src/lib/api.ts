@@ -12,7 +12,9 @@ export const apiClient = axios.create({
 export const fetcher = (url: string) => apiClient.get(url).then((res) => res.data);
 
 // Action specific functions
-export const runPipeline = async (userId: string) => {
-    const response = await apiClient.post(`/admin/users/${userId}/run_pipeline`);
+export const runPipeline = async (userId: string, forceFullRun: boolean = false) => {
+    const response = await apiClient.post(
+        `/admin/users/${userId}/run_pipeline?force_full_run=${forceFullRun}`
+    );
     return response.data;
 };

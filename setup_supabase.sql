@@ -45,10 +45,15 @@ CREATE TABLE public.core_behavior_profiles (
     confirmed_interests JSONB DEFAULT '[]'::jsonb,
     identity_anchor_prompt TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    last_processed_timestamp TIMESTAMP WITH TIME ZONE DEFAULT NULL
 );
 
 CREATE INDEX idx_profiles_user_id ON public.core_behavior_profiles(user_id);
+
+-- GIN index for fast JSONB interest lookups (e.g. filter users by topic)
+CREATE INDEX idx_profiles_interests_gin ON public.core_behavior_profiles
+USING GIN (confirmed_interests);
 
 -- Optional: Enable Row Level Security
 -- ALTER TABLE public.behaviors ENABLE ROW LEVEL SECURITY;
