@@ -89,7 +89,17 @@ graph TD
     style CTX fill:#D94A7A,color:#fff
     style DB fill:#3ECF8E,color:#fff
     style UI fill:#6366F1,color:#fff
-```
+
+### 2.2 Dual-Database Isolation & Data Adapter
+
+To ensure architectural decoupling and respect the production-grade separation of concerns, the CBIE initializes two independent Supabase clients within the `DataAdapter` class:
+
+1. **BAC Database (Read-Only)**: Configured via `BAC_SUPABASE_URL`. This serves as the primary data source for raw interaction events.
+2. **CBIE Database (Read/Write)**: Configured via `SUPABASE_URL`. This acts as the dedicated analytical store for generated profiles and processing checkpoints.
+
+**Automatic Data Adaptation:**
+The `DataAdapter` performs schema-alignment on the fly, transforming the BAC's native `bigint` (Unix epoch milliseconds) timestamps into standardized ISO-8601 strings, ensuring full compatibility with the downstream temporal analysis modules.
+
 
 ### 2.1 Component Overview
 
@@ -145,6 +155,16 @@ Each row represents a single behavioral event logged by the BAC. The CBIE **only
 | `identity_anchor_prompt` | `TEXT` | Pre-compiled system prompt for LLMs |
 | `created_at` | `TIMESTAMPTZ` | Profile creation timestamp |
 | `updated_at` | `TIMESTAMPTZ` | Last regeneration timestamp |
+| `last_processed_timestamp` | `TIMESTAMPTZ` | The checkpoint marker used for incremental logic |
+
+### 3.3 Incremental Checkpoint Processing
+
+To optimize performance and avoid redundant $O(n^2)$ distance matrix computations, the CBIE implements a **Checkpoint Marker** system:
+
+1. **Checkpoint Fetch**: The pipeline retrieves the `last_processed_timestamp` from the user's core profile.
+2. **Delta Fetch**: The `DataAdapter` queries the BAC database for only those behaviors created *after* the checkpoint.
+3. **Threshold Gate**: If the number of new behaviors is less than **10** (`MIN_NEW_BEHAVIORS`), the pipeline run is gracefully skipped to conserve compute resources.
+4. **Manual Override**: The system supports the `force_full_run=True` flag to ignore checkpoints and re-analyze the entire 500-behavior window from scratch.
 
 Each object in the `confirmed_interests` JSONB array:
 
@@ -221,17 +241,28 @@ Clusters standard behaviors using **DBSCAN** (Density-Based Spatial Clustering o
 
 Behaviors assigned `cluster_id = -1` are classified as **noise** and excluded from the profile.
 
-#### 4.1.5 Dual-Gate Noise Filtering
+#### 4.1.5 Dual-Gate Noise Filtering & Semantic Guardrails
 
-Before confirmation, clusters undergo two primary high-fidelity noise checks:
-1. **Semantic Contradiction Suppression:** Any cluster whose mean embedding is semantically opposite to a confirmed **Stable Fact** (e.g., "Steak" vs "Vegan") is suppressed as `CONTRADICTED`.
-2. **Trivia/Complexity Gate:** Clusters with a high "Trivia" score from the BART classifier (>0.80) and low Structural Complexity (Clarity Score < 0.65) are discarded as one-off information queries.
+Before confirmation, clusters undergo three primary high-fidelity noise checks:
+
+1. **Semantic Contradiction Suppression**: Any cluster whose mean embedding is semantically opposite to a confirmed **Stable Fact** is suppressed.
+2. **The "Trivia Gate"**: Individual behaviors are scored by the BART Zero-Shot classifier for being `"random trivia or one-off query"`. If a cluster’s average trivia score exceeds **0.80**, it is flagged as noise.
+3. **Structural Complexity Check**: Behaviors with a `clarity_score` below **0.65** (indicative of messy, low-signal extraction) are used for clustering but given low weights during the final core-score derivation.
 
 #### 4.1.5 Generative Topic Labeling (Azure OpenAI `gpt-4o-mini`)
 
 After clustering, the raw behavior texts of each standard cluster are passed to `gpt-4o-mini` with a structured prompt asking for a single cohesive trait label (max 4-5 words). This replaces raw query strings like `"Creating a custom middleware in FastAPI"` with high-level traits like `"Python Backend Development"`.
 
 > **Note on Absolute Facts:** Absolute Facts skip this LLM generalization step. To ensure the LLM strictly adheres to safety-critical constraints, their exact raw text (e.g., `"cannot eat peanuts"`) is injected directly into the Core Profile. This prevents multiple specific constraints from being merged into unhelpful generic labels like "Food Preferences".
+
+### 4.4 Data Visualization Engine (t-SNE)
+
+To bridge the gap between high-dimensional math and administrative clarity, the pipeline includes a **Visualization Lithography** stage.
+
+1. **Projection**: It uses **t-SNE** (t-distributed Stochastic Neighbor Embedding) to project the 3072-dimensional Azure embeddings into a **2D space**.
+2. **Perplexity Mapping**: A dynamic perplexity is chosen based on the number of behaviors to ensure stable local structure.
+3. **The Embedding Map**: Returns an array of `{x, y, label, status}` objects, which are cached in the profile JSON.
+4. **Dashboard Utility**: This map enables the "Semantic Space" scatter chart in the admin dashboard, allowing researchers to visually verify that clustered behaviors are actually grouped correctly in vector space.
 
 ---
 
@@ -600,6 +631,13 @@ cbie_engine/
 # Supabase
 SUPABASE_URL=https://<project-ref>.supabase.co
 SUPABASE_KEY=<anon-or-service-role-key>
+
+# BAC (Behavior Analysis Component) Database
+BAC_SUPABASE_URL=https://<bac-project-ref>.supabase.co
+BAC_SUPABASE_KEY=<bac-anon-key>
+
+# Configurable Thresholds
+MIN_NEW_BEHAVIORS=10
 
 # Azure OpenAI
 OPENAI_API_KEY=<azure-api-key>
