@@ -49,4 +49,5 @@ test_eps.py
 *.csv
 *.json
 *.txt
+!requirements.txt
 SYSTEM_DOCUMENTATION.md
