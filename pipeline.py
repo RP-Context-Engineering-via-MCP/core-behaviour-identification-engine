@@ -193,6 +193,35 @@ class CBIEPipeline:
                                "similarity": round(float(sim), 4), "label": generalized_label}
                     )
                     status = "CONTRADICTED"
+            
+            # --- FIX 3: Classifier & Complexity Noise Filter ---
+            # Random trivia (high classifier trivia score, low complexity) clusters nicely but shouldn't form "Core Interests"
+            if status not in ("Noise", "CONTRADICTED"):
+                # Use clarity_score as a proxy for complexity/specificity if extraction_confidence isn't ideal
+                complexities = [b.get('scores', {}).get('clarity_score', 0.5) for b in cluster_behaviors]
+                avg_complexity = sum(complexities) / len(complexities) if complexities else 0.5
+                
+                # Check the new classifier trivia score
+                trivia_scores = [b.get('scores', {}).get('classifier_trivia', 0.0) for b in cluster_behaviors]
+                avg_trivia_score = sum(trivia_scores) / len(trivia_scores) if trivia_scores else 0.0
+                
+                log.info(
+                    "Cluster stats for calibration",
+                    extra={"stage": "NOISE_CALIBRATION", "cluster_id": cluster_id,
+                           "avg_trivia_score": round(avg_trivia_score, 3), 
+                           "avg_complexity": round(avg_complexity, 3), 
+                           "label": generalized_label}
+                )
+                
+                if avg_trivia_score > 0.8 and avg_complexity < 0.65:
+                     log.info(
+                         "Cluster suppressed — excessive low-complexity noise",
+                         extra={"stage": "NOISE_FILTER", "cluster_id": cluster_id,
+                                "avg_trivia_score": round(avg_trivia_score, 3), 
+                                "avg_complexity": round(avg_complexity, 3), 
+                                "label": generalized_label}
+                     )
+                     status = "Noise"
                 
             interest_profile = {
                 "cluster_id": cluster_id,

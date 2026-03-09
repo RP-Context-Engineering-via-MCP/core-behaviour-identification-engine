@@ -127,8 +127,8 @@ class TopicDiscoverer:
         Separates absolute facts (permanent identity constraints like allergies, 
         dietary restrictions, medical conditions) from regular behavioral habits.
         
-        Uses Zero-Shot NLP Classification to dynamically evaluate the text against 
-        conceptual labels, completely eliminating hardcoded keyword arrays.
+        Uses Zero-Shot NLP Classification (batched for performance) to dynamically evaluate 
+        the text against conceptual labels, completely eliminating hardcoded keyword arrays.
         """
         facts = []
         standards = []
@@ -139,81 +139,101 @@ class TopicDiscoverer:
             "strict dietary restriction",
             "hobby or regular habit",
             "personal preference",
-            "informational query"
+            "informational query",
+            "random trivia or one-off query"
         ]
         
         total = len(behaviors)
-        for idx, b in enumerate(behaviors):
-            # Report progress every behavior so the UI stays live
-            if progress_callback:
-                progress_callback("FACT_ISOLATION", idx + 1, total)
-            # Log every 50 records to keep the terminal alive during long BART runs
-            if idx % 50 == 0:
-                log.info(
-                    "Fact isolation in progress",
-                    extra={"stage": "FACT_ISOLATION", "processed": idx, "total": total, "pct": round(idx / total * 100)}
-                )
+        BATCH_SIZE = 32
+        
+        # Process in batches for massive PyTorch speedup
+        for batch_start in range(0, total, BATCH_SIZE):
+            batch_behaviors = behaviors[batch_start:batch_start + BATCH_SIZE]
+            batch_texts = [b.get('source_text', '') for b in batch_behaviors]
             
-            text = b.get('source_text', '')
-            fact_confidence = 0.0
-            detection_reasons = []
+            # Run the HuggingFace pipeline on the whole batch at once
+            # multi_label=True ensures each label gets an independent probability
+            batch_results = self.classifier(batch_texts, candidate_labels, multi_label=True)
             
-            # ================================================================
-            # LAYER 1: Zero-Shot Classification (Primary Signal)
-            # ================================================================
-            if text.strip():
-                # multi_label=True ensures each label gets an independent probability (sigmoid) 
-                # instead of competing against each other (softmax).
-                result = self.classifier(text, candidate_labels, multi_label=True)
-                scores_dict = dict(zip(result['labels'], result['scores']))
+            # If batch_texts has length 1, the pipeline returns a single dict instead of a list
+            if not isinstance(batch_results, list):
+                batch_results = [batch_results]
                 
-                # Check how strongly the model believes this is a fact-like concept
-                med_score = scores_dict.get("medical condition or severe allergy", 0.0)
-                diet_score = scores_dict.get("strict dietary restriction", 0.0)
+            for idx, b in enumerate(batch_behaviors):
+                # Report progress
+                current_idx = batch_start + idx + 1
+                if progress_callback:
+                    progress_callback("FACT_ISOLATION", current_idx, total)
+                if current_idx % 50 == 0 or current_idx == total:
+                    log.info(
+                        "Fact isolation in progress",
+                        extra={"stage": "FACT_ISOLATION", "processed": current_idx, "total": total, "pct": round(current_idx / total * 100)}
+                    )
                 
-                # We take the max confidence across the fact-like labels
-                zero_shot_score = max(med_score, diet_score)
-                fact_confidence += zero_shot_score
+                text = batch_texts[idx]
+                result = batch_results[idx]
+                fact_confidence = 0.0
+                detection_reasons = []
                 
-                if zero_shot_score > 0.5:
-                    top_label = max(
-                        ("medical condition", med_score),
-                        ("dietary restriction", diet_score),
-                        key=lambda x: x[1]
-                    )[0]
-                    detection_reasons.append(f"zero_shot_{top_label.replace(' ', '_')}: {zero_shot_score:.2f}")
-            
-            # ================================================================
-            # LAYER 2: BAC Metadata (Secondary Confidence Boost Only)
-            # ================================================================
-            intent = b.get('intent', '').upper()
-            polarity = str(b.get('polarity', '') or '').upper()
-            
-            if intent == "CONSTRAINT":
-                fact_confidence += 0.1
-                detection_reasons.append("bac_intent_constraint")
-            
-            if polarity == "NEGATIVE" and intent == "CONSTRAINT":
-                fact_confidence += 0.05
-                detection_reasons.append("bac_negative_constraint")
-            
-            # ================================================================
-            # DECISION: Classify as Fact if combined confidence >= 0.70
-            # ================================================================
-            FACT_THRESHOLD = 0.70
-            
-            if fact_confidence >= FACT_THRESHOLD:
-                b['fact_confidence'] = round(fact_confidence, 3)
-                b['fact_detection_reasons'] = detection_reasons
-                log.debug("Fact detected", extra={"stage": "FACT_ISOLATION", "text_preview": text[:60], "confidence": round(fact_confidence, 3), "reasons": detection_reasons})
-                facts.append(b)
-            else:
-                standards.append(b)
+                # ================================================================
+                # LAYER 1: Zero-Shot Classification (Primary Signal)
+                # ================================================================
+                if text.strip():
+                    scores_dict = dict(zip(result['labels'], result['scores']))
+                    
+                    # Capture the trivia score for noise filtering later in pipeline.py
+                    trivia_score = scores_dict.get("random trivia or one-off query", 0.0)
+                    if 'scores' not in b or b['scores'] is None:
+                        b['scores'] = {}
+                    b['scores']['classifier_trivia'] = trivia_score
+                    
+                    # Check how strongly the model believes this is a fact-like concept
+                    med_score = scores_dict.get("medical condition or severe allergy", 0.0)
+                    diet_score = scores_dict.get("strict dietary restriction", 0.0)
+                    
+                    # We take the max confidence across the fact-like labels
+                    zero_shot_score = max(med_score, diet_score)
+                    fact_confidence += zero_shot_score
+                    
+                    if zero_shot_score > 0.5:
+                        top_label = max(
+                            ("medical condition", med_score),
+                            ("dietary restriction", diet_score),
+                            key=lambda x: x[1]
+                        )[0]
+                        detection_reasons.append(f"zero_shot_{top_label.replace(' ', '_')}: {zero_shot_score:.2f}")
                 
-        # Before returning, bundle all identified facts so they all map to a single unified "Medical/Dietary Restrictions" cluster conceptually
+                # ================================================================
+                # LAYER 2: BAC Metadata (Secondary Confidence Boost Only)
+                # ================================================================
+                intent = b.get('intent', '').upper()
+                polarity = str(b.get('polarity', '') or '').upper()
+                
+                if intent == "CONSTRAINT":
+                    fact_confidence += 0.1
+                    detection_reasons.append("bac_intent_constraint")
+                
+                if polarity == "NEGATIVE" and intent == "CONSTRAINT":
+                    fact_confidence += 0.05
+                    detection_reasons.append("bac_negative_constraint")
+                
+                # ================================================================
+                # DECISION: Classify as Fact if combined confidence >= 0.70
+                # ================================================================
+                FACT_THRESHOLD = 0.70
+                
+                if fact_confidence >= FACT_THRESHOLD:
+                    b['fact_confidence'] = round(fact_confidence, 3)
+                    b['fact_detection_reasons'] = detection_reasons
+                    log.debug("Fact detected", extra={"stage": "FACT_ISOLATION", "text_preview": text[:60], "confidence": round(fact_confidence, 3), "reasons": detection_reasons})
+                    facts.append(b)
+                else:
+                    standards.append(b)
+                
+        # Before returning, bundle all identified facts so they map to a single unified constraint block
         for f in facts:
             f['cluster_id'] = "absolute_fact"
-            # Instead of keeping their unique source texts separate, force their generalized topic to be unified during confirmation
+            # Instead of keeping unique source texts separate, force generalized topic unification
             f['explicit_topics'] = [f.get('source_text', '')]
             
         log.info("Fact isolation complete", extra={"stage": "FACT_ISOLATION", "facts_found": len(facts), "standard_behaviors": len(standards)})

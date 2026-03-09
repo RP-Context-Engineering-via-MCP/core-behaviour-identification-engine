@@ -33,17 +33,19 @@ class DataAdapter:
         else:
             self.supabase: Client = create_client(url, key)
 
-    def fetch_user_history(self, user_id: str) -> List[Dict[str, Any]]:
+    def fetch_user_history(self, user_id: str, limit: int = 500) -> List[Dict[str, Any]]:
         """
         Retrieves the time-series objects of behaviors for a given user directly from Supabase.
+        Uses a sliding window (limit) to prevent OOM errors on massive datasets, fetching
+        the most recent behaviors.
         """
         if not self.supabase:
             log.error("Supabase client not initialized — cannot fetch data", extra={"user_id": user_id, "stage": "FETCH"})
             return []
             
-        log.info("Querying Supabase behaviors table", extra={"user_id": user_id, "stage": "FETCH", "filter": "behavior_state=ACTIVE"})
+        log.info("Querying Supabase behaviors table", extra={"user_id": user_id, "stage": "FETCH", "filter": "behavior_state=ACTIVE", "limit": limit})
         try:
-            response = self.supabase.table('behaviors').select('*').eq('user_id', user_id).eq('behavior_state', 'ACTIVE').execute()
+            response = self.supabase.table('behaviors').select('*').eq('user_id', user_id).eq('behavior_state', 'ACTIVE').order('created_at', desc=True).limit(limit).execute()
         except Exception as e:
             log.error("Error querying Supabase", extra={"user_id": user_id, "stage": "FETCH", "error": str(e)})
             return []
