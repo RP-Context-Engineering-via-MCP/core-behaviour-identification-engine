@@ -1,0 +1,33 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+
+# Logs
+*.log
+logs/
+cbie.log
+
+# Generated data files (will be stored in named Docker volumes)
+data/
+
+# Local test scripts / artifacts
+trigger.py
+test_eps.py
+scripts/
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
+
+# Docs
+*.md
