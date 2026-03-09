@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an Axios instance pointing to the FastAPI backend
 export const apiClient = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
+    baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:6009",
     headers: {
         "Content-Type": "application/json",
     },

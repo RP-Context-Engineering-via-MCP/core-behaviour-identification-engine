@@ -47,7 +47,7 @@ export default function UsersPage() {
                         <div>
                             <p className="text-sm font-medium text-red-800">Could not connect to the backend</p>
                             <p className="mt-1 text-xs text-red-600">
-                                Make sure the CBIE FastAPI server is running on port 8000.
+                                Make sure the CBIE FastAPI server is running on port 6009.
                             </p>
                         </div>
                     </div>

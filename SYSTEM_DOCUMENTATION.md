@@ -53,7 +53,7 @@ graph TD
         UI --- V2
     end
 
-    subgraph API["CBIE Microservice — FastAPI :8000"]
+    subgraph API["CBIE Microservice — FastAPI :6009"]
         direction TB
         GW[FastAPI App / main.py]
         CTX["GET /context/{user_id} ★"]
@@ -407,7 +407,7 @@ Step 7: OUTPUT
 
 ## 6. REST API Reference (FastAPI Microservice)
 
-The CBIE is deployed as a FastAPI microservice. All endpoints are documented interactively at **`http://localhost:8000/docs`** (Swagger UI).
+The CBIE is deployed as a FastAPI microservice. All endpoints are documented interactively at **`http://localhost:6009/docs`** (Swagger UI).
 
 ### 6.1 LLM Context Endpoint ⭐
 
@@ -678,22 +678,22 @@ python pipeline.py --user_id user_chaos_03
 
 ### Start the API Server
 ```bash
-uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn api.main:app --host 0.0.0.0 --port 6009 --reload
 ```
-- **Swagger UI:** `http://localhost:8000/docs`
-- **ReDoc:** `http://localhost:8000/redoc`
-- **Health Check:** `http://localhost:8000/health`
+- **Swagger UI:** `http://localhost:6009/docs`
+- **ReDoc:** `http://localhost:6009/redoc`
+- **Health Check:** `http://localhost:6009/health`
 
-### Trigger a Pipeline Run via API
+### 6.7 Trigger a Pipeline Run via API
 ```bash
 # 1. Trigger the run (returns job_id immediately)
-curl -X POST http://localhost:8000/pipeline/run/user_alpha_01
+curl -X POST http://localhost:6009/pipeline/run/user_alpha_01
 
 # 2. Poll for completion
-curl http://localhost:8000/pipeline/status/<job_id>
+curl http://localhost:6009/pipeline/status/<job_id>
 
 # 3. Get the LLM context prompt
-curl http://localhost:8000/context/user_alpha_01
+curl http://localhost:6009/context/user_alpha_01
 ```
 
 ### Run Unit Tests

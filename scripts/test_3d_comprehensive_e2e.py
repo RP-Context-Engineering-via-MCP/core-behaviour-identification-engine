@@ -25,7 +25,7 @@ Run:
     python -m tests.test_3d_comprehensive_e2e
 
 Prerequisites:
-    - Server running on http://localhost:8000
+    - Server running on http://localhost:6009
     - Database migrated with search_vector column + GIN index
     - Database migrated with behavior_co_occurrences table
 """

@@ -38,7 +38,7 @@ COPY . .
 RUN mkdir -p /app/data/profiles
 
 # Port exposed by uvicorn
-EXPOSE 8000
+EXPOSE 6009
 
 # Start FastAPI with uvicorn
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "6009"]

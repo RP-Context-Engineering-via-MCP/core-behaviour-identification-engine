@@ -13,8 +13,8 @@ RUN npm ci
 COPY . .
 
 # The CBIE API base URL is baked in at build time via NEXT_PUBLIC_ env vars.
-# Pass --build-arg NEXT_PUBLIC_API_URL=http://cbie-engine:8000 when building.
-ARG NEXT_PUBLIC_API_URL=http://localhost:8000
+# Pass --build-arg NEXT_PUBLIC_API_URL=http://cbie-engine:6009 when building.
+ARG NEXT_PUBLIC_API_URL=http://localhost:6009
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
 RUN npm run build
