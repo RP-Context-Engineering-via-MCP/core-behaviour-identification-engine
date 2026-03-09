@@ -5,6 +5,7 @@ Admin endpoints for managing users and their profiles, listing raw behaviors, an
 """
 from __future__ import annotations
 import json
+import os
 from typing import List, Dict, Any
 
 from fastapi import APIRouter, HTTPException, BackgroundTasks, Query
@@ -20,6 +21,8 @@ from api.models import (
     JobProgress,
     BehaviorPreviewItem,
     BehaviorPreviewResponse,
+    EmbeddingPoint,
+    EmbeddingMapResponse,
     PipelineRunResponse
 )
 from api.dependencies import (
@@ -324,3 +327,49 @@ async def get_behaviors_preview(
         
     total = resp.count if resp.count is not None else len(items)
     return BehaviorPreviewResponse(user_id=user_id, total=total, behaviors=items)
+
+
+# ---------------------------------------------------------------------------
+# G. GET /admin/users/{user_id}/embedding-map
+# ---------------------------------------------------------------------------
+@router.get(
+    "/users/{user_id}/embedding-map",
+    response_model=EmbeddingMapResponse,
+    summary="Get 2D t-SNE Embedding Map",
+    description="Returns pre-computed 2D coordinates for each behavior's embedding, colored by cluster status. Generated during last pipeline run.",
+)
+async def get_embedding_map(user_id: str):
+    """Reads the locally-saved profile JSON for this user and returns the embedding_map array."""
+    profile_path = os.path.join(_data_adapter.output_dir, f"{user_id}_profile.json")
+
+    if not os.path.exists(profile_path):
+        raise HTTPException(
+            status_code=404,
+            detail=f"No saved profile found for '{user_id}'. Run the pipeline first."
+        )
+
+    try:
+        with open(profile_path, "r", encoding="utf-8") as f:
+            profile_data = json.load(f)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Could not read profile file: {e}")
+
+    raw_points = profile_data.get("embedding_map", [])
+    if not raw_points:
+        raise HTTPException(
+            status_code=404,
+            detail="Embedding map not found in profile. This profile may have been generated before this feature was added — re-run the pipeline to generate it."
+        )
+
+    points = [
+        EmbeddingPoint(
+            x=p["x"], y=p["y"],
+            cluster_id=str(p["cluster_id"]),
+            status=p.get("status", "Noise"),
+            label=p.get("label", ""),
+            text=p.get("text", ""),
+        )
+        for p in raw_points
+    ]
+
+    return EmbeddingMapResponse(user_id=user_id, total_points=len(points), points=points)

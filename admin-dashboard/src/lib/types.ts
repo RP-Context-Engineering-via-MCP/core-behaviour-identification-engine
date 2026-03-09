@@ -13,7 +13,23 @@ export interface InterestEntry {
     consistency_score: number;
     trend_score: number;
     core_score: number;
+    avg_credibility: number;
     status: InterestStatus;
+}
+
+export interface EmbeddingPoint {
+    x: number;
+    y: number;
+    cluster_id: string;
+    status: string;
+    label: string;
+    text: string;
+}
+
+export interface EmbeddingMapResponse {
+    user_id: string;
+    total_points: number;
+    points: EmbeddingPoint[];
 }
 
 

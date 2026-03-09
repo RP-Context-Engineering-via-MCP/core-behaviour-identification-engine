@@ -7,6 +7,7 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -21,7 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-slate-50 font-sans antialiased">
+      <body
+        className={`min-h-screen bg-[#f5f5f4] font-sans antialiased ${inter.variable}`}
+        suppressHydrationWarning
+      >
         {/* Top nav */}
         <header className="sticky top-0 z-40 border-b border-slate-200 bg-white shadow-sm">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

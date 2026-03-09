@@ -2,6 +2,8 @@ import argparse
 import numpy as np
 from typing import Dict, Any, List, Callable, Optional
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.manifold import TSNE
+import os
 
 from logger import get_logger
 from data_adapter import DataAdapter
@@ -230,6 +232,7 @@ class CBIEPipeline:
                 "consistency_score": consistency,
                 "trend_score": trend,
                 "core_score": core_score,
+                "avg_credibility": round(avg_credibility, 3),
                 "status": status
             }
             
@@ -237,12 +240,55 @@ class CBIEPipeline:
                 confirmed_interests.append(interest_profile)
                  
         log.info("Confirmation model complete", extra={"user_id": user_id, "stage": "CONFIRMATION", "confirmed_count": len(confirmed_interests)})
-        
+        if progress_callback:
+            progress_callback("BUILDING_PROFILE", 1, 1)
+
+        # 4a. Build Embedding Map via t-SNE
+        # Collect all standard behaviors that have a valid embedding + their cluster labels
+        embedding_map = []
+        try:
+            embeddable = [
+                b for b in standard_behaviors
+                if b.get("text_embedding") is not None and len(b["text_embedding"]) > 0
+            ]
+            if len(embeddable) >= 4:  # t-SNE needs at least 4 points
+                vectors = np.array([b["text_embedding"] for b in embeddable])
+                # perplexity must be < n_samples; cap at 30
+                perp = min(30, len(embeddable) - 1)
+                tsne = TSNE(n_components=2, perplexity=perp, random_state=42, n_iter=300)
+                coords = tsne.fit_transform(vectors)
+
+                # Map cluster_id -> label/status from confirmed_interests
+                cluster_meta: Dict[Any, Dict] = {}
+                for ci in confirmed_interests:
+                    cluster_meta[str(ci["cluster_id"])] = {
+                        "label": ci["representative_topics"][0] if ci["representative_topics"] else "",
+                        "status": ci["status"],
+                    }
+
+                for i, b in enumerate(embeddable):
+                    cid = str(labels[standard_behaviors.index(b)]) if b in standard_behaviors else "-1"
+                    meta = cluster_meta.get(cid, {"label": "Noise", "status": "Noise"})
+                    embedding_map.append({
+                        "x": round(float(coords[i, 0]), 4),
+                        "y": round(float(coords[i, 1]), 4),
+                        "cluster_id": cid,
+                        "status": meta["status"],
+                        "label": meta["label"],
+                        "text": b.get("source_text", "")[:120],
+                    })
+                log.info("t-SNE embedding map built", extra={"user_id": user_id, "stage": "TSNE", "points": len(embedding_map)})
+            else:
+                log.warning("Too few embeddable behaviors for t-SNE", extra={"user_id": user_id, "count": len(embeddable)})
+        except Exception as e:
+            log.error("t-SNE computation failed", extra={"user_id": user_id, "error": str(e), "stage": "TSNE"})
+
         # 4. Finalizing Profile
         final_profile = {
             "user_id": user_id,
             "total_raw_behaviors": len(behaviors),
-            "confirmed_interests": confirmed_interests
+            "confirmed_interests": confirmed_interests,
+            "embedding_map": embedding_map,
         }
         
         # 5. Generate Identity Anchor Prompt
@@ -253,7 +299,6 @@ class CBIEPipeline:
         self.data_adapter.save_profile(user_id, final_profile)
         
         # Save prompt string to a .txt file
-        import os
         prompt_path = os.path.join(self.data_adapter.output_dir, f"{user_id}_prompt.txt")
         with open(prompt_path, "w", encoding="utf-8") as f:
             f.write(prompt_string)

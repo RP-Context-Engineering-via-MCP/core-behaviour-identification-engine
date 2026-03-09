@@ -20,7 +20,23 @@ class InterestEntry(BaseModel):
     consistency_score: float = Field(..., description="Gini-based consistency (0-1)")
     trend_score: float = Field(..., description="Mann-Kendall trend score (-1 to 1)")
     core_score: float = Field(..., description="AHP-weighted final confirmation score")
+    avg_credibility: float = Field(0.5, description="Mean credibility score across behaviors in cluster")
     status: str = Field(..., description="Stable | Emerging | Stable Fact | Noise | ARCHIVED_CORE")
+
+
+class EmbeddingPoint(BaseModel):
+    x: float
+    y: float
+    cluster_id: str
+    status: str
+    label: str
+    text: str
+
+
+class EmbeddingMapResponse(BaseModel):
+    user_id: str
+    total_points: int
+    points: List[EmbeddingPoint]
 
 
 # ---------------------------------------------------------------------------

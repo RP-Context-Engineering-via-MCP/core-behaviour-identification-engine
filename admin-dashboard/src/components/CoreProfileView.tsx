@@ -2,16 +2,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { CoreProfileDetailResponse, InterestEntry } from "@/lib/types";
-import { Check, Copy } from "lucide-react";
+import useSWR from "swr";
+import { CoreProfileDetailResponse, InterestEntry, EmbeddingMapResponse } from "@/lib/types";
+import { Check, Copy, Loader2, AlertCircle } from "lucide-react";
+import { fetcher } from "@/lib/api";
+import { EmbeddingScatterPlot } from "./EmbeddingScatterPlot";
+import { RadarScoreChart } from "./RadarScoreChart";
 
-// ── Status card used for each interest category ────────────────────────────────
+// ── Interest Status Card ──────────────────────────────────────────────────────
 
 interface StatusCardProps {
     title: string;
     items: InterestEntry[];
-    accentClass: string; // Tailwind left-border color
-    badgeClass: string;  // Tailwind badge bg color
+    accentClass: string;
+    badgeClass: string;
 }
 
 const StatusCard = ({ title, items, accentClass, badgeClass }: StatusCardProps) => {
@@ -34,6 +38,7 @@ const StatusCard = ({ title, items, accentClass, badgeClass }: StatusCardProps) 
                                 <span>Frequency: {item.frequency}</span>
                                 <span>Consistency: {item.consistency_score.toFixed(2)}</span>
                                 <span>Trend: {item.trend_score.toFixed(2)}</span>
+                                <span>Credibility: {(item.avg_credibility ?? 0.5).toFixed(2)}</span>
                             </div>
                         </div>
                         <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${badgeClass}`}>
@@ -46,7 +51,7 @@ const StatusCard = ({ title, items, accentClass, badgeClass }: StatusCardProps) 
     );
 };
 
-// ── Copy-to-clipboard button ──────────────────────────────────────────────────
+// ── Copy-to-clipboard ──────────────────────────────────────────────────────────
 
 function CopyButton({ text }: { text: string }) {
     const [copied, setCopied] = useState(false);
@@ -68,9 +73,39 @@ function CopyButton({ text }: { text: string }) {
     );
 }
 
-// ── Main export ───────────────────────────────────────────────────────────────
+// ── Section wrapper with title ─────────────────────────────────────────────────
+
+function ChartSection({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
+    return (
+        <div className="rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <div className="border-b border-slate-100 px-4 py-3">
+                <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
+                {description && <p className="mt-0.5 text-xs text-slate-400">{description}</p>}
+            </div>
+            <div className="px-4 py-4">
+                {children}
+            </div>
+        </div>
+    );
+}
+
+// ── Main Export ────────────────────────────────────────────────────────────────
 
 export function CoreProfileView({ profile }: { profile: CoreProfileDetailResponse }) {
+    // Fetch embedding map — this may 404 for older profiles; we handle it gracefully
+    const { data: embeddingData, isLoading: embLoading } = useSWR<EmbeddingMapResponse>(
+        `/admin/users/${profile.user_id}/embedding-map`,
+        fetcher,
+        { shouldRetryOnError: false, dedupingInterval: 60_000 }
+    );
+
+    // Combine all non-noise interests for the radar chart
+    const allConfirmed: InterestEntry[] = [
+        ...profile.critical_constraints,
+        ...profile.stable_interests,
+        ...profile.emerging_interests,
+    ];
+
     return (
         <div className="space-y-6 mt-4">
 
@@ -92,7 +127,7 @@ export function CoreProfileView({ profile }: { profile: CoreProfileDetailRespons
                 </div>
             )}
 
-            {/* Summary row */}
+            {/* Summary stat row */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {[
                     { label: "Critical Constraints", value: profile.critical_constraints.length, color: "text-rose-600" },
@@ -107,7 +142,50 @@ export function CoreProfileView({ profile }: { profile: CoreProfileDetailRespons
                 ))}
             </div>
 
-            {/* Interest cards grid */}
+            {/* ── Charts row ─────────────────────────────────────────────────────── */}
+            <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+
+                {/* Radar / Pentagon scoring chart */}
+                <ChartSection
+                    title="Profile Scoring Radar"
+                    description="AHP dimensions for each confirmed interest cluster — all values normalized 0 to 1"
+                >
+                    {allConfirmed.length > 0 ? (
+                        <RadarScoreChart interests={allConfirmed} />
+                    ) : (
+                        <div className="flex h-48 items-center justify-center text-sm text-slate-400">
+                            No confirmed interests to plot.
+                        </div>
+                    )}
+                </ChartSection>
+
+                {/* 2D t-SNE embedding scatter */}
+                <ChartSection
+                    title="Behavior Embedding Map"
+                    description="t-SNE projection of all behavior embeddings — clusters that are semantically similar appear close together"
+                >
+                    {embLoading ? (
+                        <div className="flex h-48 items-center justify-center gap-2 text-sm text-slate-400">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            Computing layout...
+                        </div>
+                    ) : embeddingData ? (
+                        <EmbeddingScatterPlot points={embeddingData.points} />
+                    ) : (
+                        <div className="flex h-48 flex-col items-center justify-center gap-2 text-center">
+                            <AlertCircle className="h-5 w-5 text-slate-300" />
+                            <p className="text-sm text-slate-400">
+                                No embedding map found.
+                            </p>
+                            <p className="text-xs text-slate-300">
+                                Re-run the pipeline to generate it.
+                            </p>
+                        </div>
+                    )}
+                </ChartSection>
+            </div>
+
+            {/* ── Interest cards ─────────────────────────────────────────────────── */}
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 <StatusCard
                     title="Critical Constraints"
@@ -135,7 +213,7 @@ export function CoreProfileView({ profile }: { profile: CoreProfileDetailRespons
                 />
             </div>
 
-            {/* Noise summary */}
+            {/* Noise footer */}
             <p className="text-xs text-slate-400">
                 {profile.noise_summary.noise_count} behavior{profile.noise_summary.noise_count !== 1 ? "s" : ""} classified as noise
                 &nbsp;&middot;&nbsp;
