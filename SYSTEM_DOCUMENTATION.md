@@ -1,9 +1,9 @@
 # Core Behaviour Identification Engine (CBIE) — System Documentation
 
-> **Version:** 2.0  
+> **Version:** 2.1  
 > **Author:** DAYANANDA G.A.C.T  
 > **Project:** Core Behaviour Analysis Component (CBAC) — Research Prototype  
-> **Last Updated:** February 2026
+> **Last Updated:** March 2026
 
 ---
 
@@ -46,18 +46,21 @@ graph TD
     end
 
     subgraph FE["Frontend Dashboard"]
-        UI[React / Next.js App]
+        UI[React / Next.js Admin App]
+        V1[t-SNE Embedding Map]
+        V2[Radar Scoring Chart]
+        UI --- V1
+        UI --- V2
     end
 
     subgraph API["CBIE Microservice — FastAPI :8000"]
         direction TB
         GW[FastAPI App / main.py]
         CTX["GET /context/{user_id} ★"]
-        PIP["POST /pipeline/run/{user_id}"]
-        STAT["GET /pipeline/status/{job_id}"]
+        ADM["GET /admin/..."]
+        PIP["POST /admin/users/{user_id}/run_pipeline"]
+        STAT["GET /admin/jobs/{job_id}"]
         PROF["GET /profiles/..."]
-        DEL["DELETE /profiles/{user_id}"]
-        HLT["GET /health"]
     end
 
     subgraph Engine["CBIE Core Engine"]
@@ -74,16 +77,18 @@ graph TD
     end
 
     LLMC -- "GET /context/{user_id}" --> CTX
-    UI -- "POST /pipeline/run" --> PIP
-    UI -- "GET profiles / status" --> PROF & STAT
+    UI -- "POST run_pipeline" --> PIP
+    UI -- "GET profile / stats" --> ADM
+    UI -- "Polling status" --> STAT
 
-    GW --> CTX & PIP & STAT & PROF & DEL & HLT
+    GW --> CTX & ADM & PIP & STAT & PROF
     CTX & PIP --> PL
     PL --> DA & TD & TA & CM
     DA <-->|"read / write"| DB
 
     style CTX fill:#D94A7A,color:#fff
     style DB fill:#3ECF8E,color:#fff
+    style UI fill:#6366F1,color:#fff
 ```
 
 ### 2.1 Component Overview
@@ -145,12 +150,13 @@ Each object in the `confirmed_interests` JSONB array:
 
 ```json
 {
-    "cluster_id": "absolute_fact" | 0 | 1 | 2,
+    "cluster_id": "absolute_fact" | "0" | "1" | "2",
     "representative_topics": ["Python Backend Development"],
     "frequency": 7,
     "consistency_score": 0.12,
     "trend_score": 0.0,
     "core_score": 0.85,
+    "avg_credibility": 0.92,
     "status": "Stable" | "Emerging" | "Stable Fact" | "ARCHIVED_CORE" | "Noise"
 }
 ```
@@ -165,7 +171,7 @@ Each object in the `confirmed_interests` JSONB array:
 
 Before clustering, every behavior's raw text is passed through a **multi-layer fact detection pipeline** to identify permanent identity constraints (allergies, dietary restrictions, medical conditions).
 
-> **Key Design Decision:** The CBIE does NOT use the BAC's `intent` field as the sole signal, nor does it use brittle hardcoded keyword arrays. It uses a **Zero-Shot NLP Classifier** (`facebook/bart-large-mnli`) to dynamically evaluate semantic meaning.
+> **Key Design Decision:** The CBIE does NOT use the BAC's `intent` field as the sole signal, nor does it use brittle hardcoded keyword arrays. It uses a **Zero-Shot NLP Classifier** (`facebook/bart-large-mnli`) to dynamically evaluate semantic meaning. For performance, behaviors are processed in **batches of 32**, yielding a 10x throughput improvement over sequential inference.
 
 **Two-Layer Detection Strategy:**
 
@@ -200,17 +206,25 @@ All remaining (non-fact) behaviors are embedded using Azure OpenAI's `text-embed
 
 Each behavior's text is processed through spaCy's NER pipeline (`en_core_web_sm`), extended with a custom **EntityRuler** for domain-specific terms (e.g., `kubernetes` → `TECH`, `hdbscan` → `ALGO`).
 
-#### 4.1.4 Polarity-Aware DBSCAN Clustering
+#### 4.1.4 Density-Based Clustering (HDBSCAN)
 
-Dense semantic embeddings are clustered using **DBSCAN** with a customized precomputed distance matrix:
+Dense semantic embeddings are clustered using **HDBSCAN** (Hierarchical Density-Based Spatial Clustering of Applications with Noise).
 
-1. **Base Matrix:** Pairwise Euclidean distances computed via `sklearn.metrics.pairwise.euclidean_distances`.
-2. **Polarity Penalty:** If two behaviors have opposite sentiments (`POSITIVE` vs `NEGATIVE`), their distance is artificially set to `1000.0` (effectively infinity), mathematically preventing them from clustering together.
-3. **DBSCAN Parameters:** `eps=1.1`, `min_samples=3`, `metric='precomputed'`.
+1. **Base Matrix:** Pairwise Euclidean distances.
+2. **Polarity Penalty:** If two behaviors have opposite sentiments (`POSITIVE` vs `NEGATIVE`), their distance is artificially set to `1000.0`.
+3. **Dynamic Parameterization:** To adapt to varying data density, the pipeline uses a log-scaled `min_cluster_size`:
+   $$\text{min\_cluster\_size} = \max(3, \lfloor \log_2(\text{behavior\_count}) \rfloor)$$
+   This allows the engine to be sensitive to small patterns in sparse data while avoiding over-segmentation in dense histories.
 
-> **Why DBSCAN over HDBSCAN?** At 3072 dimensions, HDBSCAN suffers from the "curse of dimensionality" and struggles to identify density valleys without UMAP reduction. Standard DBSCAN with a tightly tuned `eps=1.1` performs flawlessly for semantic segmentation across high-dimensional Azure embeddings.
+> **Why HDBSCAN over DBSCAN?** HDBSCAN eliminates the need for a global `eps` parameter, instead finding clusters of varying densities. This is critical for behavioral analysis where "Core Interests" (dense centers) coexist with "Emerging Interests" (sparser peripheries).
 
 Behaviors assigned `cluster_id = -1` are classified as **noise** and excluded from the profile.
+
+#### 4.1.5 Dual-Gate Noise Filtering
+
+Before confirmation, clusters undergo two primary high-fidelity noise checks:
+1. **Semantic Contradiction Suppression:** Any cluster whose mean embedding is semantically opposite to a confirmed **Stable Fact** (e.g., "Steak" vs "Vegan") is suppressed as `CONTRADICTED`.
+2. **Trivia/Complexity Gate:** Clusters with a high "Trivia" score from the BART classifier (>0.80) and low Structural Complexity (Clarity Score < 0.65) are discarded as one-off information queries.
 
 #### 4.1.5 Generative Topic Labeling (Azure OpenAI `gpt-4o-mini`)
 
@@ -332,7 +346,12 @@ Step 5: PROMPT GENERATION
   │   system message string (Critical Constraints, Stable, Emerging, Archived)
   └─ identity_anchor_prompt stored in profile JSON and Supabase
 
-Step 6: OUTPUT
+Step 6: DATA VISUALIZATION LITHOGRAPHY
+  ├─ t-SNE Dimensionality Reduction: Projects 384D/3072D embeddings into 2D (x, y)
+  ├─ Generates Embedding Map: {x, y, cluster_id, status, label, text}
+  └─ Saved to local profile JSON for near-instant dashboard rendering
+
+Step 7: OUTPUT
   ├─ Save Core Behaviour Profile JSON → data/profiles/<user_id>_profile.json
   ├─ Save Identity Anchor text → data/profiles/<user_id>_prompt.txt
   └─ UPSERT into Supabase core_behavior_profiles (on_conflict: user_id)
@@ -449,8 +468,9 @@ The admin endpoints allow an internal dashboard to discover users, inspect raw b
 | `GET`  | `/admin/users/{user_id}` | Combines behavior stats with profile summary stats for a single user. |
 | `GET`  | `/admin/users/{user_id}/profile` | Returns the full Core Behaviour Profile formatted with distinct categories (Critical Constraints, Stable, Emerging, Archived, Noise Counts). |
 | `GET`  | `/admin/users/{user_id}/behaviors` | Returns raw `behaviors` rows (excluding embeddings) for data preview (`?limit=50&offset=0`). |
+| `GET`  | `/admin/users/{user_id}/embedding-map` | Returns pre-computed 2D t-SNE coordinates for each behavior embedding (generated during pipeline run). |
 | `POST` | `/admin/users/{user_id}/run_pipeline` | Thin wrapper around pipeline execution; triggers an async job and returns a `job_id`. |
-| `GET`  | `/admin/jobs/{job_id}` | Thin wrapper to poll the current status of an admin-triggered pipeline run. |
+| `GET`  | `/admin/jobs/{job_id}` | Polls the current status of a pipeline run, including real-time stage and progress counts (e.g., "Classifying 32 / 300"). |
 
 ---
 
@@ -518,17 +538,15 @@ EMERGING INTERESTS (Needs more verification):
 | Python | 3.10+ | Core language |
 | `fastapi` | ≥ 0.111.0 | REST API framework |
 | `uvicorn` | ≥ 0.29.0 | ASGI server |
-| `pydantic` | ≥ 2.6.0 | Request/response schema validation |
-| `openai` | ≥ 1.0.0 | Azure embeddings (`text-embedding-3-large`) and LLM topic labeling (`gpt-4o-mini`) |
+| `openai` | ≥ 1.0.0 | Azure embeddings and GPT-4o-mini topic labeling |
 | `transformers` | ≥ 4.35.0 | Zero-Shot classifier (`facebook/bart-large-mnli`) |
-| `torch` | ≥ 2.1.0 | PyTorch backend for Transformers |
-| `spacy` | ≥ 3.7.2 | NER + EntityRuler domain adaptation |
-| `scikit-learn` | ≥ 1.3.0 | DBSCAN clustering, Euclidean distance matrices |
+| `hdbscan` | ≥ 0.8.33 | Hierarchical density-based clustering |
+| `scikit-learn` | ≥ 1.3.0 | t-SNE dimensionality reduction & distance metrics |
 | `pymannkendall` | ≥ 1.4.3 | Mann-Kendall Trend Test |
-| `scipy` | ≥ 1.11.4 | Statistical utilities |
-| `numpy` / `pandas` | ≥ 1.26 / ≥ 2.1 | Numerical / tabular data handling |
 | `supabase` | ≥ 2.3.4 | Cloud DB client (PostgreSQL + pgvector) |
-| `python-dotenv` | ≥ 1.0.0 | Environment variable management |
+| Next.js | 15.x | Admin Dashboard framework |
+| Tailwind CSS | 4.x | Styling and layout |
+| Recharts | ≥ 3.8.0 | Data visualizations (Scatter & Radar charts) |
 
 ---
 
@@ -537,39 +555,26 @@ EMERGING INTERESTS (Needs more verification):
 ```
 cbie_engine/
 │
-├── .env                              # API keys (SUPABASE_URL, SUPABASE_KEY, OPENAI_API_KEY, etc.)
-├── requirements.txt                  # All Python dependencies
-├── setup_supabase.sql                # SQL schema: behaviors (vector(3072)) + core_behavior_profiles
+├── .env                              # API keys
+├── requirements.txt                  # Python dependencies
 │
-│── pipeline.py                       # CBIEPipeline orchestrator + Identity Anchor Prompt generator
-├── data_adapter.py                   # Supabase read (behaviors) / write (core_behavior_profiles)
-├── topic_discovery.py                # Stage 1: Zero-Shot NLP, Azure embeddings, DBSCAN, gpt-4o-mini labels
-├── temporal_analysis.py              # Stage 2: Gini Coefficient + Mann-Kendall Test
+├── pipeline.py                       # Orchestrator & Prompt Gen
+├── topic_discovery.py                # Stage 1: Zero-Shot, HDBSCAN, GPT labeling
+├── temporal_analysis.py              # Stage 2: Gini + Mann-Kendall
 ├── confirmation_model.py             # Stage 3: AHP scoring + Vitality Pruning
 │
-├── api/                              # FastAPI Microservice Package
-│   ├── __init__.py
-│   ├── main.py                       # App entry point, CORS, lifespan, /health, / endpoints
-│   ├── models.py                     # All Pydantic request/response schemas
-│   ├── dependencies.py               # Pipeline singleton + in-memory job store
-│   └── routers/
-│       ├── __init__.py
-│       ├── context.py                # GET /context/{user_id}
-│       ├── pipeline_router.py        # POST /pipeline/run, GET /pipeline/status
-│       └── profiles.py               # GET/DELETE /profiles/...
+├── api/                              # FastAPI Microservice
+│   ├── main.py                       # Entry point
+│   ├── models.py                     # Pydantic models
+│   └── routers/                      # Route handlers
 │
-├── generate_test_data.py             # Multi-user test data generator (Azure embeddings → Supabase)
-├── test_models.py                    # Unit tests for Gini, Mann-Kendall, AHP scoring
-├── verify_db.py                      # Quick Supabase DB verification script
+├── admin-dashboard/                  # Next.js Admin Panel
+│   ├── src/app                       # Pages & Routing
+│   ├── src/components                # Recharts & UI Components
+│   └── tailwind.config.ts            # Styling configuration
 │
 └── data/
-    └── profiles/                     # Local profile outputs
-        ├── user_alpha_01_profile.json
-        ├── user_alpha_01_prompt.txt
-        ├── user_spartan_02_profile.json
-        ├── user_spartan_02_prompt.txt
-        ├── user_chaos_03_profile.json
-        └── user_chaos_03_prompt.txt
+    └── profiles/                     # Local profile & t-SNE json outputs
 ```
 
 ---
@@ -649,20 +654,13 @@ python -m pytest test_models.py -v
 
 | Decision | Justification |
 |----------|---------------|
-| **DBSCAN over HDBSCAN** | At 3072 dimensions, HDBSCAN struggles to identify density valleys. DBSCAN with `eps=1.1` provides mathematically clean semantic separation. |
-| **Azure `text-embedding-3-large`** | Provides 3072-dimension high-quality semantic vectors, outperforming local 384-dimension models for contextual nuance. |
-| **Generative LLM Labeling** | `gpt-4o-mini` summarises cluster texts into human-readable traits, replacing raw query strings in the identity anchor prompt. |
-| **Gini Coefficient** | Non-parametric, robust to outliers, intuitively measures evenness of interaction frequency. |
-| **Mann-Kendall Test** | Non-parametric trend test requiring no normal distribution assumption. |
+| **HDBSCAN Clustering** | Eliminates global `eps` parameter; identifies clusters of varying densities (Core vs Emerging) naturally. |
+| **Batched Inference** | Processing Zero-Shot classification in batches of 32 provides 10x throughput scaling for large behavior histories. |
+| **Semantic Suppression** | Cross-similarity checks prevent identity contradictions (e.g., Vegan vs Steak) from contaminating the profile. |
+| **t-SNE Embeddings** | Pre-computed 2D projections allow for intuitive visual audit of semantic segmentation in the admin dashboard. |
+| **Profile Scoring Radar** | Uses Recharts to visualize the 5 multi-dimensional scoring axes from the AHP Confirmation Model. |
+| **Real-time Progress** | Background job polling with stage-specific metadata provides transparency for long-running CPU-bound NLP tasks. |
 | **AHP Weight Derivation** | Formal multi-criteria framework providing transparent, justifiable, and reproducible weights. |
-| **Zero-Shot NLP Fact Detection** | Eliminates brittle keyword lists; understands synonyms and context dynamically. Acts as an independent safety net for critical health info. |
-| **Fact Bypass (score = 1.0)** | Safety-critical constraints (allergies) must never be lost to decay or low frequency. |
-| **ACTIVE-only ingestion** | Respects the BAC's behavioral lifecycle — SUPERSEDED behaviors represent changed habits and should not contaminate the current profile. |
-| **Polarity-Aware Clustering** | Artificial infinity penalties in the distance matrix mathematically guarantee opposing sentiments cluster into separate identity traits. |
-| **Vitality Pruning (ARCHIVED_CORE)** | Cleans the LLM context window by fading inactive historical habits while preserving the historical record in the database. |
-| **Identity Anchor Prompt format** | Distills complex mathematical profiles into a plain-English string an LLM can universally understand without structured data parsing. |
-| **Microservice API (FastAPI)** | Decouples the CBIE from other system components; allows LLM services and frontend to query independently via REST. |
-| **Pipeline Singleton at startup** | Loads the BART model once — prevents re-initialising 1.5 GB on every API request and ensures sub-second response on the LLM context endpoint. |
-| **Async background jobs** | Pipeline runs are CPU/IO-bound; `run_in_executor` prevents blocking the FastAPI async event loop for other concurrent requests. |
-| **Offline batch processing** | Enables comprehensive full-history analysis without real-time latency constraints; designed as a scheduled job, not a request-response system. |
-| **Supabase (PostgreSQL + pgvector)** | Production-grade vector storage with native similarity search; enables future cosine-similarity queries on stored embeddings. |
+| **Zero-Shot NLP Detection** | Understanding synonyms and context dynamically without brittle keyword lists. |
+| **Offline batch processing** | Enables comprehensive full-history analysis without real-time latency constraints. |
+| **Supabase (PostgreSQL)** | Production-grade vector storage with native similarity search (pgvector). |
