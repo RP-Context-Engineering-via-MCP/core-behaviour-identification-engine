@@ -141,26 +141,44 @@ class CBIEPipeline:
         confirmed_interests = []
         
         # --- Handle Absolute Facts first ---
-        # Pre-compute embeddings of all fact source texts for contradiction detection later
-        fact_texts = []
-        fact_embeddings = np.array([])
+        # Instead of one big block, we cluster facts semanticallly too.
+        # This allows "Nut Allergy" and "Celiac Disease" to be separate records.
         if fact_behaviors:
-            log.info("Absolute facts identified", extra={"user_id": user_id, "stage": "FACT_ISOLATION", "fact_count": len(fact_behaviors)})
-            all_fact_topics = [fb.get('explicit_topics', [fb.get('source_text')])[0] for fb in fact_behaviors]
-            fact_texts = [fb.get('source_text', '') for fb in fact_behaviors if fb.get('source_text')]
-            if fact_texts:
-                fact_embeddings = self.topic_discoverer.generate_embeddings(fact_texts)
+            log.info("Clustering absolute facts", extra={"user_id": user_id, "stage": "FACT_ISOLATION", "fact_count": len(fact_behaviors)})
             
-            interest_profile = {
-                "cluster_id": "absolute_fact",
-                "representative_topics": all_fact_topics,
-                "frequency": len(fact_behaviors),
-                "consistency_score": 0.0,
-                "trend_score": 0.0,
-                "core_score": 1.0,
-                "status": self.confirmation_model.determine_status(1.0, is_fact=True)
-            }
-            confirmed_interests.append(interest_profile)
+            # Generate embeddings for facts to cluster them
+            fact_texts = [fb.get('source_text', '') for fb in fact_behaviors]
+            fact_embeddings = self.topic_discoverer.generate_embeddings(fact_texts)
+            
+            # Cluster with min_samples=1 (every individual fact is important)
+            # Use a slightly tighter epsilon than standard behaviors
+            fact_clusters = self.topic_discoverer.cluster_behaviors(fact_behaviors, fact_embeddings, eps=0.4, min_samples=1)
+            
+            # Group facts by their newly assigned cluster IDs
+            fact_groups: Dict[int, List[Dict[str, Any]]] = {}
+            for fb in fact_behaviors:
+                c_id = fb.get('cluster_id', -1)
+                if c_id not in fact_groups: fact_groups[c_id] = []
+                fact_groups[c_id].append(fb)
+
+            # Process each fact cluster into a distinct interest profile
+            for c_id, behaviors in fact_groups.items():
+                topics = [b.get('source_text', '') for b in behaviors]
+                
+                # Generate a professional label for this fact group
+                label = self.topic_discoverer.generate_cluster_label(behaviors)
+                
+                interest_profile = {
+                    "cluster_id": f"fact_{c_id}",
+                    "label": label,
+                    "representative_topics": list(set(topics)),
+                    "frequency": len(behaviors),
+                    "consistency_score": 1.0,  # Facts are inherently consistent
+                    "trend_score": 0.0,
+                    "core_score": 1.0,
+                    "status": self.confirmation_model.determine_status(1.0, is_fact=True)
+                }
+                confirmed_interests.append(interest_profile)
         
         # --- Handle Standard Clusters ---
         # Group behaviors by cluster

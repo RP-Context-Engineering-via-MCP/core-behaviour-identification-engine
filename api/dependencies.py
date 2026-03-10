@@ -11,7 +11,6 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
-from pipeline import CBIEPipeline          # Existing engine orchestrator
 from logger import get_logger
 from api.models import JobProgress  # For typed progress updates
 
@@ -23,21 +22,24 @@ log = get_logger(__name__)
 # ---------------------------------------------------------------------------
 # The BART zero-shot model (~1.5 GB) and Azure client are created once here.
 # All routers import `get_pipeline()` to access the shared instance.
+# CBIEPipeline is imported lazily to avoid loading ML libraries in the
+# lightweight API container (which never calls init_pipeline).
 # ---------------------------------------------------------------------------
 
-_pipeline_instance: Optional[CBIEPipeline] = None
+_pipeline_instance = None
 
 
-def init_pipeline() -> CBIEPipeline:
-    """Called once in the app lifespan at startup."""
+def init_pipeline():
+    """Called once in the app lifespan at startup (processor only)."""
     global _pipeline_instance
+    from pipeline import CBIEPipeline   # Lazy: only loaded in the processor container
     log.info("Initialising pipeline singleton — loading BART NLP model", extra={"stage": "STARTUP"})
     _pipeline_instance = CBIEPipeline()
     log.info("Pipeline singleton ready", extra={"stage": "STARTUP"})
     return _pipeline_instance
 
 
-def get_pipeline() -> CBIEPipeline:
+def get_pipeline():
     """FastAPI dependency — injects the singleton pipeline."""
     if _pipeline_instance is None:
         raise RuntimeError("Pipeline not initialised. Did the app lifespan event fire?")

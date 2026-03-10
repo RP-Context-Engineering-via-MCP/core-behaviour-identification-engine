@@ -50,4 +50,5 @@ test_eps.py
 *.json
 *.txt
 !requirements.txt
+!requirements_api.txt
 SYSTEM_DOCUMENTATION.md

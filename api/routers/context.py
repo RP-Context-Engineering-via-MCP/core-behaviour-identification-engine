@@ -18,7 +18,6 @@ from supabase import Client
 
 from api.models import ContextResponse
 from api.dependencies import get_pipeline
-from pipeline import CBIEPipeline
 from data_adapter import DataAdapter
 
 router = APIRouter(prefix="/context", tags=["LLM Context"])

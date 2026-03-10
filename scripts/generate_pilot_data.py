@@ -26,7 +26,8 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
-from openai import AzureOpenAI
+from supabase import create_client, Client
+from sentence_transformers import SentenceTransformer
 from faker import Faker
 
 env_path = os.path.join(os.path.dirname(__file__), "..", ".env")
@@ -39,15 +40,15 @@ BEHAVIORS_PER_USER = 300
 START_DATE         = datetime(2024, 1, 1)
 END_DATE           = datetime(2026, 3, 1)
 TOTAL_DAYS         = (END_DATE - START_DATE).days
-EMBEDDING_BATCH    = 96   # safely under AzureOAI's 100-item limit
-EMBED_MODEL        = os.environ.get("OPENAI_EMBEDDING_MODEL", "text-embedding-3-large")
+EMBEDDING_BATCH    = 96   
 
-# ─── Azure OpenAI client ──────────────────────────────────────────────────────
-client = AzureOpenAI(
-    api_key      = os.environ.get("OPENAI_API_KEY"),
-    api_version  = os.environ.get("OPENAI_API_VERSION"),
-    azure_endpoint = os.environ.get("OPENAI_API_BASE"),
-)
+BAC_SUPABASE_URL = os.getenv("BAC_SUPABASE_URL")
+BAC_SUPABASE_KEY = os.getenv("BAC_SUPABASE_KEY")
+if not all([BAC_SUPABASE_URL, BAC_SUPABASE_KEY]):
+    raise ValueError("Missing essential BAC_SUPABASE environment variables!")
+
+supabase: Client = create_client(BAC_SUPABASE_URL, BAC_SUPABASE_KEY)
+model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # ─── Persona definitions ──────────────────────────────────────────────────────
 # Each trait key maps to a list of varied, short, natural-language phrases
@@ -571,33 +572,16 @@ def get_timestamps(pattern: str, count: int):
     else:
         deltas = np.random.uniform(0, TOTAL_DAYS, count)
     dates = sorted([START_DATE + timedelta(days=float(d)) for d in deltas])
-    return [d.isoformat() + "Z" for d in dates]
+    return [int(d.timestamp() * 1000) for d in dates]
 
 
 def fetch_embeddings(texts: list[str]) -> list[list[float]]:
-    """Call Azure OpenAI in batches, returning list-of-list embeddings."""
-    all_embeddings = []
-    total = len(texts)
-    batches = (total + EMBEDDING_BATCH - 1) // EMBEDDING_BATCH
-    for i in range(0, total, EMBEDDING_BATCH):
-        batch = texts[i : i + EMBEDDING_BATCH]
-        batch_num = i // EMBEDDING_BATCH + 1
-        print(f"  Embedding batch {batch_num}/{batches} ({len(batch)} texts)…", flush=True)
-        retries = 5
-        while retries > 0:
-            try:
-                resp = client.embeddings.create(input=batch, model=EMBED_MODEL)
-                # Preserve original order (Azure returns in order)
-                all_embeddings.extend([item.embedding for item in resp.data])
-                break
-            except Exception as exc:
-                print(f"  ⚠ Azure error: {exc}  Retrying in 5 s…", flush=True)
-                time.sleep(5)
-                retries -= 1
-        if retries == 0:
-            raise RuntimeError("Failed to fetch embeddings after 5 retries.")
-    return all_embeddings
-
+    try:
+        embeddings = model.encode(texts)
+        return embeddings.tolist()
+    except Exception as e:
+        print(f"Embedding error: {e}")
+        return [[0.0] * 384 for _ in texts]
 
 def embedding_to_str(vec: list[float]) -> str:
     return "[" + ",".join(f"{v:.8f}" for v in vec) + "]"
@@ -700,6 +684,7 @@ def generate_data():
 
                 row = {
                     "behavior_id":          str(uuid.uuid4()),
+                    "session_id":           str(uuid.uuid4()),
                     "user_id":              user_id,
                     "behavior_text":        b_text,
                     "embedding":            None,   # filled after API call
@@ -722,15 +707,15 @@ def generate_data():
         print(f"  {user_id}: {sum(counts.values())} rows  |  signal {total_signal}  |  noise {counts['noise']}")
 
     # ── batch-embed all texts ──────────────────────────────────────────────────
-    print(f"\nFetching embeddings for {len(all_texts)} texts via Azure OpenAI…")
+    print(f"\nFetching embeddings for {len(all_texts)} texts via sentence-transformers…")
     embeddings = fetch_embeddings(all_texts)
     for row, emb in zip(behaviors_data, embeddings):
-        row["embedding"] = embedding_to_str(emb)
+        row["embedding"] = emb  # Supabase client needs list, not string
 
     print(f"\n✓ Embeddings complete ({len(embeddings)} vectors, dim={len(embeddings[0])})")
 
     COLS = [
-        "behavior_id", "user_id", "behavior_text", "embedding",
+        "behavior_id", "session_id", "user_id", "behavior_text", "embedding",
         "credibility", "clarity_score", "extraction_confidence",
         "intent", "target", "context", "polarity", "created_at",
         "decay_rate", "reinforcement_count", "behavior_state",
@@ -738,46 +723,41 @@ def generate_data():
     return pd.DataFrame(behaviors_data)[COLS], pd.DataFrame(ground_truth_data)
 
 
-# ─── Output ───────────────────────────────────────────────────────────────────
+# ─── Output & Insert ──────────────────────────────────────────────────────────
 
-def save_outputs(behaviors_df: pd.DataFrame, gt_df: pd.DataFrame):
+def save_outputs_and_insert(behaviors_df: pd.DataFrame, gt_df: pd.DataFrame):
     out_dir = os.path.dirname(os.path.abspath(__file__))
 
     csv_path = os.path.join(out_dir, "behaviors_pilot.csv")
-    behaviors_df.to_csv(csv_path, index=False)
+    # For CSV saving, convert list to string
+    behaviors_df_csv = behaviors_df.copy()
+    behaviors_df_csv["embedding"] = behaviors_df_csv["embedding"].apply(embedding_to_str)
+    behaviors_df_csv.to_csv(csv_path, index=False)
     print(f"\nSaved {len(behaviors_df)} rows → {csv_path}")
 
     gt_path = os.path.join(out_dir, "ground_truth_pilot.csv")
     gt_df.to_csv(gt_path, index=False)
     print(f"Saved {len(gt_df)} rows → {gt_path}")
 
-    sql_path = os.path.join(out_dir, "behaviors_pilot.sql")
-    with open(sql_path, "w", encoding="utf-8") as f:
-        f.write("-- CBIE Pilot Eval Data (generated with real embeddings)\n\n")
-        for i in range(0, len(behaviors_df), 100):
-            chunk = behaviors_df.iloc[i : i + 100]
-            vals  = []
-            for _, r in chunk.iterrows():
-                t = r["behavior_text"].replace("'", "''")
-                vals.append(
-                    f"('{r.behavior_id}','{r.user_id}','{t}','{r.embedding}',"
-                    f"{r.credibility},{r.clarity_score},{r.extraction_confidence},"
-                    f"'{r.intent}','{r.target}','{r.context}','{r.polarity}',"
-                    f"'{r.created_at}',{r.decay_rate},{r.reinforcement_count},'ACTIVE')"
-                )
-            f.write(
-                "INSERT INTO behaviors (behavior_id,user_id,behavior_text,embedding,"
-                "credibility,clarity_score,extraction_confidence,intent,target,context,"
-                "polarity,created_at,decay_rate,reinforcement_count,behavior_state) VALUES\n"
-                + ",\n".join(vals) + ";\n\n"
-            )
-    print(f"Saved SQL → {sql_path}")
+    print("\nInserting data directly into BAC DB behaviors table...")
+    records = behaviors_df.to_dict('records')
+    user_ids = list(behaviors_df["user_id"].unique())
+    
+    for uid in user_ids:
+        print(f"  Clearing existing data for user: {uid}")
+        supabase.table("behaviors").delete().eq("user_id", uid).execute()
+        
+    chunk_size = 50
+    for i in range(0, len(records), chunk_size):
+        chunk = records[i:i+chunk_size]
+        supabase.table("behaviors").insert(chunk).execute()
+    print(f"✓ Inserted {len(records)} records directly to Supabase.")
 
 
 def main():
     b_df, gt_df = generate_data()
-    save_outputs(b_df, gt_df)
-    print("\n✓ Done.  Next step: run `python seed_pilot_data.py`\n")
+    save_outputs_and_insert(b_df, gt_df)
+    print("\n✓ Done. Pilot data populated in DB.\n")
 
 
 if __name__ == "__main__":
