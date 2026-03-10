@@ -1,0 +1,54 @@
+# ── Large directories that must NEVER enter the build context ─────────────────
+# These alone account for >2GB. Excluding them is the single biggest speedup.
+venv/
+.venv/
+env/
+admin-dashboard/
+data/
+models_cache/
+.cache/
+__pycache__/
+
+# ── Python build artifacts ────────────────────────────────────────────────────
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+*.so
+.Python
+
+# ── Secrets / env files ───────────────────────────────────────────────────────
+.env
+.env.*
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+logs/
+cbie.log
+
+# ── Test / dev scripts  ───────────────────────────────────────────────────────
+scripts/
+tests/
+trigger.py
+test_eps.py
+
+# ── IDE / tooling ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Git ───────────────────────────────────────────────────────────────────────
+.git/
+.gitignore
+
+# ── Docs / CSVs / generated outputs ──────────────────────────────────────────
+*.md
+*.csv
+*.json
+*.txt
+!requirements.txt
+!requirements_api.txt
+SYSTEM_DOCUMENTATION.md

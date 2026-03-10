@@ -2,7 +2,7 @@ import numpy as np
 import spacy
 import os
 from openai import AzureOpenAI
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional, Callable
 from transformers import pipeline
 import time
 from sklearn.metrics.pairwise import cosine_distances
@@ -17,14 +17,19 @@ class TopicDiscoverer:
     Uses Sentence Transformers for embeddings, HDBSCAN for clustering, and spaCy for domain adaptation.
     """
 
-    def __init__(self, spacy_model: str = 'en_core_web_sm', zero_shot_model: str = 'facebook/bart-large-mnli'):
-        log.info("Initializing Azure OpenAI Client", extra={"stage": "INIT"})
+    def __init__(self, spacy_model: str = 'en_core_web_sm', zero_shot_model: str = 'facebook/bart-large-mnli', embedding_model_name: str = 'all-MiniLM-L6-v2'):
+        log.info("Initializing Azure OpenAI Client for Chat", extra={"stage": "INIT"})
         self.openai_client = AzureOpenAI(
             api_key=os.getenv("OPENAI_API_KEY"),
             api_version=os.getenv("OPENAI_API_VERSION"),
             azure_endpoint=os.getenv("OPENAI_API_BASE")
         )
-        self.embedding_model = os.getenv("OPENAI_EMBEDDING_MODEL")
+        self.chat_model = "gpt-4o-mini"
+        
+        log.info("Initializing SentenceTransformer", extra={"stage": "INIT", "model": embedding_model_name})
+        from sentence_transformers import SentenceTransformer
+        self.sentence_transformer = SentenceTransformer(embedding_model_name)
+        # Using a deterministic embedding length 384 for all-MiniLM-L6-v2
         # Ensure we have a working chat model to fall back to
         self.chat_model = "gpt-4o-mini" # Confirmed to be available
         
@@ -54,7 +59,7 @@ class TopicDiscoverer:
         ]
         self.ruler.add_patterns(patterns)
 
-    def process_behaviors(self, behaviors: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], np.ndarray, np.ndarray]:
+    def process_behaviors(self, behaviors: List[Dict[str, Any]], progress_callback: Optional[Callable[[str, int, int], None]] = None) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]], np.ndarray, np.ndarray]:
         """
         Takes raw behaviors, extracts entities, and isolates facts vs standard behaviors.
         Then clusters standard behaviors safely.
@@ -62,10 +67,12 @@ class TopicDiscoverer:
         """
         if not behaviors:
             return [], [], np.array([]), np.array([])
-            
+
+        total = len(behaviors)
+
         # 1. Isolate Absolute Facts
-        log.info("Starting fact isolation via Zero-Shot BART classifier", extra={"stage": "FACT_ISOLATION", "total": len(behaviors)})
-        fact_behaviors, standard_behaviors = self.isolate_absolute_facts(behaviors)
+        log.info("Starting fact isolation via Zero-Shot BART classifier", extra={"stage": "FACT_ISOLATION", "total": total})
+        fact_behaviors, standard_behaviors = self.isolate_absolute_facts(behaviors, progress_callback=progress_callback)
         
         # 2. Process Standard Behaviors
         log.info("Extracting entities for standard behaviors", extra={"stage": "ENTITY_EXTRACTION", "count": len(standard_behaviors)})
@@ -115,13 +122,13 @@ class TopicDiscoverer:
             
         return fact_behaviors, standard_behaviors, final_embeddings, labels
 
-    def isolate_absolute_facts(self, behaviors: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    def isolate_absolute_facts(self, behaviors: List[Dict[str, Any]], progress_callback: Optional[Callable[[str, int, int], None]] = None) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         """
         Separates absolute facts (permanent identity constraints like allergies, 
         dietary restrictions, medical conditions) from regular behavioral habits.
         
-        Uses Zero-Shot NLP Classification to dynamically evaluate the text against 
-        conceptual labels, completely eliminating hardcoded keyword arrays.
+        Uses Zero-Shot NLP Classification (batched for performance) to dynamically evaluate 
+        the text against conceptual labels, completely eliminating hardcoded keyword arrays.
         """
         facts = []
         standards = []
@@ -132,74 +139,103 @@ class TopicDiscoverer:
             "strict dietary restriction",
             "hobby or regular habit",
             "personal preference",
-            "informational query"
+            "informational query",
+            "random trivia or one-off query"
         ]
         
         total = len(behaviors)
-        for idx, b in enumerate(behaviors):
-            # Log progress every 50 records so the terminal stays alive during long BART runs
-            if idx % 50 == 0:
-                log.info(
-                    "Fact isolation in progress",
-                    extra={"stage": "FACT_ISOLATION", "processed": idx, "total": total, "pct": round(idx / total * 100)}
-                )
-            
-            text = b.get('source_text', '')
-            fact_confidence = 0.0
-            detection_reasons = []
-            
-            # ================================================================
-            # LAYER 1: Zero-Shot Classification (Primary Signal)
-            # ================================================================
-            if text.strip():
-                # multi_label=True ensures each label gets an independent probability (sigmoid) 
-                # instead of competing against each other (softmax).
-                result = self.classifier(text, candidate_labels, multi_label=True)
-                scores_dict = dict(zip(result['labels'], result['scores']))
-                
-                # Check how strongly the model believes this is a fact-like concept
-                med_score = scores_dict.get("medical condition or severe allergy", 0.0)
-                diet_score = scores_dict.get("strict dietary restriction", 0.0)
-                
-                # We take the max confidence across the fact-like labels
-                zero_shot_score = max(med_score, diet_score)
-                fact_confidence += zero_shot_score
-                
-                if zero_shot_score > 0.5:
-                    top_label = max(
-                        ("medical condition", med_score),
-                        ("dietary restriction", diet_score),
-                        key=lambda x: x[1]
-                    )[0]
-                    detection_reasons.append(f"zero_shot_{top_label.replace(' ', '_')}: {zero_shot_score:.2f}")
-            
-            # ================================================================
-            # LAYER 2: BAC Metadata (Secondary Confidence Boost Only)
-            # ================================================================
-            intent = b.get('intent', '').upper()
-            polarity = str(b.get('polarity', '') or '').upper()
-            
-            if intent == "CONSTRAINT":
-                fact_confidence += 0.1
-                detection_reasons.append("bac_intent_constraint")
-            
-            if polarity == "NEGATIVE" and intent == "CONSTRAINT":
-                fact_confidence += 0.05
-                detection_reasons.append("bac_negative_constraint")
-            
-            # ================================================================
-            # DECISION: Classify as Fact if combined confidence >= 0.70
-            # ================================================================
-            FACT_THRESHOLD = 0.70
-            
-            if fact_confidence >= FACT_THRESHOLD:
-                b['fact_confidence'] = round(fact_confidence, 3)
-                b['fact_detection_reasons'] = detection_reasons
-                log.debug("Fact detected", extra={"stage": "FACT_ISOLATION", "text_preview": text[:60], "confidence": round(fact_confidence, 3), "reasons": detection_reasons})
-                facts.append(b)
-            else:
-                standards.append(b)
+        BATCH_SIZE = 32
         
+        # Process in batches for massive PyTorch speedup
+        for batch_start in range(0, total, BATCH_SIZE):
+            batch_behaviors = behaviors[batch_start:batch_start + BATCH_SIZE]
+            batch_texts = [b.get('source_text', '') for b in batch_behaviors]
+            
+            # Run the HuggingFace pipeline on the whole batch at once
+            # multi_label=True ensures each label gets an independent probability
+            batch_results = self.classifier(batch_texts, candidate_labels, multi_label=True)
+            
+            # If batch_texts has length 1, the pipeline returns a single dict instead of a list
+            if not isinstance(batch_results, list):
+                batch_results = [batch_results]
+                
+            for idx, b in enumerate(batch_behaviors):
+                # Report progress
+                current_idx = batch_start + idx + 1
+                if progress_callback:
+                    progress_callback("FACT_ISOLATION", current_idx, total)
+                if current_idx % 50 == 0 or current_idx == total:
+                    log.info(
+                        "Fact isolation in progress",
+                        extra={"stage": "FACT_ISOLATION", "processed": current_idx, "total": total, "pct": round(current_idx / total * 100)}
+                    )
+                
+                text = batch_texts[idx]
+                result = batch_results[idx]
+                fact_confidence = 0.0
+                detection_reasons = []
+                
+                # ================================================================
+                # LAYER 1: Zero-Shot Classification (Primary Signal)
+                # ================================================================
+                if text.strip():
+                    scores_dict = dict(zip(result['labels'], result['scores']))
+                    
+                    # Capture the trivia score for noise filtering later in pipeline.py
+                    trivia_score = scores_dict.get("random trivia or one-off query", 0.0)
+                    if 'scores' not in b or b['scores'] is None:
+                        b['scores'] = {}
+                    b['scores']['classifier_trivia'] = trivia_score
+                    
+                    # Check how strongly the model believes this is a fact-like concept
+                    med_score = scores_dict.get("medical condition or severe allergy", 0.0)
+                    diet_score = scores_dict.get("strict dietary restriction", 0.0)
+                    
+                    # We take the max confidence across the fact-like labels
+                    zero_shot_score = max(med_score, diet_score)
+                    fact_confidence += zero_shot_score
+                    
+                    if zero_shot_score > 0.5:
+                        top_label = max(
+                            ("medical condition", med_score),
+                            ("dietary restriction", diet_score),
+                            key=lambda x: x[1]
+                        )[0]
+                        detection_reasons.append(f"zero_shot_{top_label.replace(' ', '_')}: {zero_shot_score:.2f}")
+                
+                # ================================================================
+                # LAYER 2: BAC Metadata (Secondary Confidence Boost Only)
+                # ================================================================
+                intent = b.get('intent', '').upper()
+                polarity = str(b.get('polarity', '') or '').upper()
+                
+                if intent == "CONSTRAINT":
+                    fact_confidence += 0.1
+                    detection_reasons.append("bac_intent_constraint")
+                
+                if polarity == "NEGATIVE" and intent == "CONSTRAINT":
+                    fact_confidence += 0.05
+                    detection_reasons.append("bac_negative_constraint")
+                
+                # ================================================================
+                # DECISION: Classify as Fact if combined confidence >= 0.70
+                # ================================================================
+                FACT_THRESHOLD = 0.70
+                
+                if fact_confidence >= FACT_THRESHOLD:
+                    b['fact_confidence'] = round(fact_confidence, 3)
+                    b['fact_detection_reasons'] = detection_reasons
+                    log.debug("Fact detected", extra={"stage": "FACT_ISOLATION", "text_preview": text[:60], "confidence": round(fact_confidence, 3), "reasons": detection_reasons})
+                    facts.append(b)
+                else:
+                    standards.append(b)
+                
+        # Before returning, bundle all identified facts so they map to a single unified constraint block
+        for f in facts:
+            f['cluster_id'] = "absolute_fact"
+            # Instead of keeping unique source texts separate, force generalized topic unification
+            f['explicit_topics'] = [f.get('source_text', '')]
+            
         log.info("Fact isolation complete", extra={"stage": "FACT_ISOLATION", "facts_found": len(facts), "standard_behaviors": len(standards)})
         return facts, standards
 
@@ -212,35 +248,12 @@ class TopicDiscoverer:
 
     def generate_embeddings(self, texts: List[str]) -> np.ndarray:
         """
-        Vectorizes source_text using Azure OpenAI text-embedding-3-large.
+        Vectorizes source_text using local sentence-transformers (e.g. all-MiniLM-L6-v2).
+        Returns a (N, 384) dimension numpy array.
         """
-        # OpenAI API has limits, we can batch them.
-        embeddings = []
-        batch_size = 100
-        total_batches = (len(texts) + batch_size - 1) // batch_size
-        for i in range(0, len(texts), batch_size):
-            batch = texts[i:i+batch_size]
-            batch_num = i // batch_size + 1
-            log.info("Generating embedding batch", extra={"stage": "EMBEDDINGS", "batch": batch_num, "total_batches": total_batches, "batch_size": len(batch)})
-            # Handle rate limits
-            retries = 3
-            while retries > 0:
-                try:
-                    response = self.openai_client.embeddings.create(
-                        input=batch,
-                        model=self.embedding_model
-                    )
-                    embeddings.extend([r.embedding for r in response.data])
-                    log.info("Embedding batch complete", extra={"stage": "EMBEDDINGS", "batch": batch_num, "total_batches": total_batches})
-                    break
-                except Exception as e:
-                    log.warning("Azure OpenAI embedding error — retrying", extra={"stage": "EMBEDDINGS", "error": str(e), "retries_left": retries - 1})
-                    time.sleep(2)
-                    retries -= 1
-            if retries == 0:
-                raise Exception("Failed to get embeddings from Azure OpenAI after 3 retries.")
-                
-        return np.array(embeddings)
+        log.info("Generating embeddings locally with sentence-transformers", extra={"stage": "EMBEDDINGS", "count": len(texts)})
+        embeddings = self.sentence_transformer.encode(texts, convert_to_numpy=True)
+        return embeddings
 
     def generalize_cluster_topic(self, texts: List[str]) -> str:
         """
@@ -282,33 +295,79 @@ class TopicDiscoverer:
             counts = Counter(texts)
             return counts.most_common(1)[0][0]
 
-    def cluster_behaviors(self, embeddings: np.ndarray, polarities: List[str] = None, min_cluster_size: int = 2, min_samples: int = 1) -> np.ndarray:
+    def cluster_behaviors(self, embeddings: np.ndarray, polarities: List[str] = None, min_samples: int = 2) -> np.ndarray:
         """
-        Uses DBSCAN to find latent topic clusters.
-        Applies a 'Polarity Penalty' to prevent POSITIVE and NEGATIVE sentiments
-        from clustering together.
+        Uses DBSCAN with an adaptive epsilon (calculated via k-distance graph) to find latent topic clusters.
+        Applies a 'Polarity Penalty' to prevent POSITIVE and NEGATIVE sentiments from clustering together.
         """
-        
+        from sklearn.cluster import DBSCAN
+        from sklearn.neighbors import NearestNeighbors
         from sklearn.metrics.pairwise import euclidean_distances
+        from kneed import KneeLocator
+        
         log.info("Building pairwise Euclidean distance matrix", extra={"stage": "CLUSTERING", "n": len(embeddings)})
+        
+        # Ensure we don't pass an empty array
+        if len(embeddings) == 0:
+            return np.array([])
+            
         dist_matrix = euclidean_distances(embeddings).astype(np.float64)
         
         # Apply Polarity Penalty
         if polarities and len(polarities) == len(embeddings):
             n = len(embeddings)
             penalty_count = 0
+            # Set opposing polarities to a large penalty distance
+            max_penalty = 1000.0 
             for i in range(n):
                 for j in range(i+1, n):
                     p1 = str(polarities[i] or '').upper()
                     p2 = str(polarities[j] or '').upper()
                     
                     if (p1 == 'POSITIVE' and p2 == 'NEGATIVE') or (p1 == 'NEGATIVE' and p2 == 'POSITIVE'):
-                        dist_matrix[i, j] = 1000.0
-                        dist_matrix[j, i] = 1000.0
+                        dist_matrix[i, j] = max_penalty
+                        dist_matrix[j, i] = max_penalty
                         penalty_count += 1
             log.info("Polarity penalty applied to distance matrix", extra={"stage": "CLUSTERING", "penalized_pairs": penalty_count})
 
-        log.info("Running DBSCAN", extra={"stage": "CLUSTERING", "eps": 1.1, "min_samples": 3})
-        from sklearn.cluster import DBSCAN
-        clusterer = DBSCAN(eps=1.1, min_samples=3, metric='precomputed')
+        # --- Adaptive Epsilon Calculation via k-distance graph ---
+        # Find the optimal eps by looking at the distance to the k-th nearest neighbor (where k = min_samples)
+        n_behaviors = len(embeddings)
+        k = max(2, min_samples)
+        
+        # If we have too few behaviors to meaningfully cluster or find a knee, fallback to a sensible default eps
+        if n_behaviors <= k + 1:
+             optimal_eps = 0.5 
+             log.info("Too few behaviors for k-distance graph; using fallback eps", extra={"stage": "CLUSTERING", "eps": optimal_eps, "n_behaviors": n_behaviors})
+        else:
+             # Fit NearestNeighbors
+             nn = NearestNeighbors(n_neighbors=k, metric='precomputed')
+             nn.fit(dist_matrix)
+             distances, _ = nn.kneighbors(dist_matrix)
+             
+             # Sort distances to the k-th nearest neighbor
+             k_distances = np.sort(distances[:, k-1])
+             
+             try:
+                 # Find the 'knee' (point of maximum curvature)
+                 kneedle = KneeLocator(range(len(k_distances)), k_distances, S=1.0, curve='convex', direction='increasing')
+                 if kneedle.knee is not None:
+                     optimal_eps = k_distances[kneedle.knee]
+                 else:
+                     # Fallback if no knee is found
+                     optimal_eps = np.percentile(k_distances, 50) 
+             except Exception as e:
+                 log.warning("KneeLocator failed, falling back to median distance", extra={"stage": "CLUSTERING", "error": str(e)})
+                 optimal_eps = np.median(k_distances)
+
+        # Enforce strict semantic boundaries. 
+        # Euclidean distance of 0.7 corresponds to cosine similarity of ~0.75.
+        # We don't want clusters forming with distances > 0.8 (cos sim < 0.68).
+        MAX_EPS = 0.75
+        MIN_EPS = 0.20
+        optimal_eps = max(MIN_EPS, min(optimal_eps, MAX_EPS))
+
+        log.info("Running DBSCAN", extra={"stage": "CLUSTERING", "eps": round(float(optimal_eps), 3), "min_samples": min_samples, "n_behaviors": n_behaviors})
+        
+        clusterer = DBSCAN(eps=optimal_eps, min_samples=min_samples, metric='precomputed')
         return clusterer.fit_predict(dist_matrix)

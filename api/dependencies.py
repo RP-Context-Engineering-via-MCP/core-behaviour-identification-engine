@@ -11,8 +11,8 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
-from pipeline import CBIEPipeline          # Existing engine orchestrator
 from logger import get_logger
+from api.models import JobProgress  # For typed progress updates
 
 log = get_logger(__name__)
 
@@ -22,21 +22,24 @@ log = get_logger(__name__)
 # ---------------------------------------------------------------------------
 # The BART zero-shot model (~1.5 GB) and Azure client are created once here.
 # All routers import `get_pipeline()` to access the shared instance.
+# CBIEPipeline is imported lazily to avoid loading ML libraries in the
+# lightweight API container (which never calls init_pipeline).
 # ---------------------------------------------------------------------------
 
-_pipeline_instance: Optional[CBIEPipeline] = None
+_pipeline_instance = None
 
 
-def init_pipeline() -> CBIEPipeline:
-    """Called once in the app lifespan at startup."""
+def init_pipeline():
+    """Called once in the app lifespan at startup (processor only)."""
     global _pipeline_instance
+    from pipeline import CBIEPipeline   # Lazy: only loaded in the processor container
     log.info("Initialising pipeline singleton — loading BART NLP model", extra={"stage": "STARTUP"})
     _pipeline_instance = CBIEPipeline()
     log.info("Pipeline singleton ready", extra={"stage": "STARTUP"})
     return _pipeline_instance
 
 
-def get_pipeline() -> CBIEPipeline:
+def get_pipeline():
     """FastAPI dependency — injects the singleton pipeline."""
     if _pipeline_instance is None:
         raise RuntimeError("Pipeline not initialised. Did the app lifespan event fire?")
@@ -73,9 +76,20 @@ def create_job(user_id: str) -> str:
         "completed_at": None,
         "result": None,
         "error": None,
+        "progress": None,
     }
     log.info("Pipeline job created", extra={"job_id": job_id, "user_id": user_id, "status": "QUEUED"})
     return job_id
+
+
+def update_job_progress(job_id: str, stage: str, processed: int, total: int) -> None:
+    """Pushes a granular progress update into the job store while a job is RUNNING."""
+    if job_id in _job_store:
+        _job_store[job_id]["progress"] = {
+            "stage": stage,
+            "processed": processed,
+            "total": total,
+        }
 
 
 def get_job(job_id: str) -> Optional[Dict[str, Any]]:
@@ -95,17 +109,21 @@ def now_iso() -> str:
 # Background Pipeline Execution
 # ---------------------------------------------------------------------------
 
-async def run_pipeline_background(job_id: str, user_id: str) -> None:
+async def run_pipeline_background(job_id: str, user_id: str, force_full_run: bool = False) -> None:
     """
     Executes the heavy CBIE pipeline in a thread-pool executor so it does
     not block the FastAPI event loop.
+    force_full_run=True bypasses the incremental checkpoint and reclusters everything.
     """
     update_job(job_id, status="RUNNING", started_at=now_iso())
     log.info("Pipeline job started", extra={"job_id": job_id, "user_id": user_id, "status": "RUNNING"})
     loop = asyncio.get_event_loop()
 
+    def _progress_callback(stage: str, processed: int, total: int) -> None:
+        update_job_progress(job_id, stage, processed, total)
+
     def _run():
-        return _pipeline_instance.process_user(user_id)
+        return _pipeline_instance.process_user(user_id, progress_callback=_progress_callback, force_full_run=force_full_run)
 
     try:
         result = await loop.run_in_executor(None, _run)

@@ -1,0 +1,27 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Dockerfile.api — Lightweight CBIE Context API
+# ─────────────────────────────────────────────────────────────────────────────
+# This produces a ~150MB image (vs ~12GB for the ML processor).
+# It serves only read-only endpoints: /context, /profiles, /admin (reads).
+# No PyTorch, spaCy, sentence-transformers, or any ML libraries installed.
+# ─────────────────────────────────────────────────────────────────────────────
+
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install only the lightweight dependencies + curl for healthcheck
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+COPY requirements_api.txt .
+RUN pip install --upgrade pip && \
+    pip install -r requirements_api.txt
+
+# Copy the application source
+COPY . .
+
+# Create data dir (needed by DataAdapter for output_dir path resolution)
+RUN mkdir -p /app/data/profiles
+
+EXPOSE 6009
+
+CMD ["uvicorn", "api.main_api:app", "--host", "0.0.0.0", "--port", "6009"]

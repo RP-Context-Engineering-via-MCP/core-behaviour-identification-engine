@@ -6,35 +6,27 @@ import numpy as np
 from typing import List, Dict, Any
 from dotenv import load_dotenv
 from supabase import create_client, Client
-from openai import AzureOpenAI
+from sentence_transformers import SentenceTransformer
 
 load_dotenv()
 
 # --- Configuration ---
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
-AZURE_OPENAI_KEY = os.getenv("OPENAI_API_KEY")
-AZURE_OPENAI_ENDPOINT = os.getenv("OPENAI_API_BASE")
-AZURE_OPENAI_VERSION = os.getenv("OPENAI_API_VERSION", "2024-02-01")
-EMBEDDING_MODEL = os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-large")
+BAC_SUPABASE_URL = os.getenv("BAC_SUPABASE_URL")
+BAC_SUPABASE_KEY = os.getenv("BAC_SUPABASE_KEY")
 
-if not all([SUPABASE_URL, SUPABASE_KEY, AZURE_OPENAI_KEY, AZURE_OPENAI_ENDPOINT]):
-    raise ValueError("Missing essential environment variables!")
+if not all([BAC_SUPABASE_URL, BAC_SUPABASE_KEY]):
+    raise ValueError("Missing essential BAC_SUPABASE environment variables!")
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-client = AzureOpenAI(
-    api_key=AZURE_OPENAI_KEY,
-    api_version=AZURE_OPENAI_VERSION,
-    azure_endpoint=AZURE_OPENAI_ENDPOINT
-)
+supabase: Client = create_client(BAC_SUPABASE_URL, BAC_SUPABASE_KEY)
+model = SentenceTransformer("all-MiniLM-L6-v2")
 
 def get_embeddings_batch(texts: List[str]) -> List[List[float]]:
     try:
-        response = client.embeddings.create(input=texts, model=EMBEDDING_MODEL)
-        return [data.embedding for data in response.data]
+        embeddings = model.encode(texts)
+        return embeddings.tolist()
     except Exception as e:
         print(f"Embedding error: {e}")
-        return [[0.0] * 3072 for _ in texts]
+        return [[0.0] * 384 for _ in texts]
 
 def generate_noise_behavior() -> str:
     topics = [
@@ -54,6 +46,7 @@ def generate_noise_behavior() -> str:
 def build_behavior(user_id: str, text: str, timestamp: datetime.datetime, intent: str, context: str, polarity: str, clarity_score: float = 0.5) -> Dict[str, Any]:
     return {
         "behavior_id": f"evt_{uuid.uuid4().hex[:12]}",
+        "session_id": f"sess_{uuid.uuid4().hex[:12]}",
         "user_id": user_id,
         "behavior_text": text,
         "credibility": random.uniform(0.7, 0.95),
@@ -63,7 +56,7 @@ def build_behavior(user_id: str, text: str, timestamp: datetime.datetime, intent
         "target": "general",
         "context": context,
         "polarity": polarity,
-        "created_at": timestamp.isoformat(),
+        "created_at": int(timestamp.timestamp() * 1000),
         "behavior_state": "ACTIVE"
     }
 

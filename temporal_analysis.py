@@ -68,7 +68,8 @@ class TemporalAnalyzer:
             return 0.0
             
         try:
-            result = mk.original_test(scores)
+            # Alpha=0.10 allows for better trend detection on sparse/small behavioral datasets
+            result = mk.original_test(scores, alpha=0.10)
             
             # Map trend string to numerical score
             if result.trend == 'increasing':

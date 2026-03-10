@@ -20,7 +20,23 @@ class InterestEntry(BaseModel):
     consistency_score: float = Field(..., description="Gini-based consistency (0-1)")
     trend_score: float = Field(..., description="Mann-Kendall trend score (-1 to 1)")
     core_score: float = Field(..., description="AHP-weighted final confirmation score")
+    avg_credibility: float = Field(0.5, description="Mean credibility score across behaviors in cluster")
     status: str = Field(..., description="Stable | Emerging | Stable Fact | Noise | ARCHIVED_CORE")
+
+
+class EmbeddingPoint(BaseModel):
+    x: float
+    y: float
+    cluster_id: str
+    status: str
+    label: str
+    text: str
+
+
+class EmbeddingMapResponse(BaseModel):
+    user_id: str
+    total_points: int
+    points: List[EmbeddingPoint]
 
 
 # ---------------------------------------------------------------------------
@@ -163,6 +179,11 @@ class CoreProfileDetailResponse(BaseModel):
     identity_anchor_prompt: Optional[str] = None
     last_updated: Optional[str] = None
 
+class JobProgress(BaseModel):
+    stage: str = Field(..., description="Current pipeline stage name")
+    processed: int = Field(..., description="Number of items processed so far")
+    total: int = Field(..., description="Total items to process")
+
 class AdminJobStatusResponse(BaseModel):
     job_id: str
     user_id: str
@@ -170,6 +191,7 @@ class AdminJobStatusResponse(BaseModel):
     started_at: Optional[str] = None
     completed_at: Optional[str] = None
     error: Optional[str] = None
+    progress: Optional[JobProgress] = Field(None, description="Live progress info when RUNNING")
 
 class BehaviorPreviewItem(BaseModel):
     behavior_id: Optional[str] = None

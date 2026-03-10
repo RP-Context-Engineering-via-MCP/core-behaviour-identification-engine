@@ -13,7 +13,23 @@ export interface InterestEntry {
     consistency_score: number;
     trend_score: number;
     core_score: number;
+    avg_credibility: number;
     status: InterestStatus;
+}
+
+export interface EmbeddingPoint {
+    x: number;
+    y: number;
+    cluster_id: string;
+    status: string;
+    label: string;
+    text: string;
+}
+
+export interface EmbeddingMapResponse {
+    user_id: string;
+    total_points: number;
+    points: EmbeddingPoint[];
 }
 
 
@@ -95,6 +111,12 @@ export interface PipelineRunResponse {
     message: string;
 }
 
+export interface JobProgress {
+    stage: string;
+    processed: number;
+    total: number;
+}
+
 export interface AdminJobStatusResponse {
     job_id: string;
     user_id: string;
@@ -102,6 +124,7 @@ export interface AdminJobStatusResponse {
     started_at?: string;
     completed_at?: string;
     error?: string;
+    progress?: JobProgress;
 }
 
 

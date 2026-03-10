@@ -5,11 +5,11 @@ FastAPI application entry point for the CBIE Microservice.
 
 Start the server:
     cd cbie_engine
-    uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+    uvicorn api.main:app --host 0.0.0.0 --port 6009 --reload
 
 Interactive API docs:
-    http://localhost:8000/docs      (Swagger UI)
-    http://localhost:8000/redoc     (ReDoc)
+    http://localhost:6009/docs      (Swagger UI)
+    http://localhost:6009/redoc     (ReDoc)
 """
 from __future__ import annotations
 import sys

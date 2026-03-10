@@ -1,7 +1,7 @@
+// src/components/RunPipelineButton.tsx
 "use client";
 
 import React, { useState } from "react";
-import { Play } from "lucide-react";
 import { runPipeline } from "@/lib/api";
 import { JobStatusBadge } from "./JobStatusBadge";
 
@@ -15,27 +15,24 @@ export function RunPipelineButton({ userId, onCompleted, initialJobId }: RunPipe
     const [activeJobId, setActiveJobId] = useState<string | null>(initialJobId || null);
     const [isStarting, setIsStarting] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [forceFullRun, setForceFullRun] = useState(false);
 
     const handleRun = async () => {
         try {
             setIsStarting(true);
             setErrorMsg(null);
-            const res = await runPipeline(userId);
+            const res = await runPipeline(userId, forceFullRun);
             setActiveJobId(res.job_id);
-        } catch (err: any) {
-            setErrorMsg("Failed to start job");
-            console.error(err);
+        } catch (err: unknown) {
+            const msg = err instanceof Error ? err.message : "Failed to start analysis";
+            setErrorMsg(msg);
         } finally {
             setIsStarting(false);
         }
     };
 
     const handleJobFinished = () => {
-        if (onCompleted) {
-            onCompleted();
-        }
-        // We optionally might un-set the active job ID after completion if we want to show the 'Run' button again,
-        // but typically we'll leave it to show 'COMPLETED'.
+        onCompleted?.();
     };
 
     if (activeJobId) {
@@ -43,16 +40,28 @@ export function RunPipelineButton({ userId, onCompleted, initialJobId }: RunPipe
     }
 
     return (
-        <div className="flex items-center gap-2">
-            <button
-                onClick={handleRun}
-                disabled={isStarting}
-                className="inline-flex items-center gap-1.5 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50"
-            >
-                <Play className="h-4 w-4" />
-                {isStarting ? "Starting..." : "Run CBIE"}
-            </button>
-            {errorMsg && <p className="text-xs text-red-600">{errorMsg}</p>}
+        <div>
+            <div className="flex items-center gap-3">
+                <button
+                    onClick={handleRun}
+                    disabled={isStarting}
+                    className="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                    {isStarting ? "Starting..." : "Run Analysis"}
+                </button>
+                <label className="flex items-center gap-1.5 cursor-pointer select-none text-xs text-gray-500">
+                    <input
+                        type="checkbox"
+                        checked={forceFullRun}
+                        onChange={(e) => setForceFullRun(e.target.checked)}
+                        className="h-3.5 w-3.5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    Force full run
+                </label>
+            </div>
+            {errorMsg && (
+                <p className="mt-1 text-xs text-red-600">{errorMsg}</p>
+            )}
         </div>
     );
 }
