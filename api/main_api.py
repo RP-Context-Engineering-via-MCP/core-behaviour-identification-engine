@@ -27,6 +27,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from logger import get_logger
 from api.routers import context, profiles
 from api.routers import admin
+from api.routers import chat
 from api.models import HealthResponse, RootResponse
 
 log = get_logger(__name__)
@@ -76,6 +77,7 @@ app.add_middleware(
 app.include_router(context.router)   # GET /context/{user_id}
 app.include_router(profiles.router)  # GET /profiles/...
 app.include_router(admin.router)     # GET /admin/users/... (reads + admin run_pipeline — proxied to processor)
+app.include_router(chat.router)      # POST /chat — Gemini demo with optional CBIE context
 
 
 # ---------------------------------------------------------------------------

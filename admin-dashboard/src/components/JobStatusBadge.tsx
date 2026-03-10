@@ -4,7 +4,7 @@
 import React from "react";
 import useSWR from "swr";
 import { Loader2, CheckCircle2, AlertCircle, Clock } from "lucide-react";
-import { fetcher } from "@/lib/api";
+import { processorFetcher } from "@/lib/api";
 import { AdminJobStatusResponse } from "@/lib/types";
 import { PipelineProgressBar } from "./PipelineProgressBar";
 
@@ -16,7 +16,7 @@ interface JobStatusBadgeProps {
 export function JobStatusBadge({ jobId, onCompleted }: JobStatusBadgeProps) {
     const { data, error } = useSWR<AdminJobStatusResponse>(
         jobId ? `/admin/jobs/${jobId}` : null,
-        fetcher,
+        processorFetcher,
         {
             // Poll every 1.5 s while active — fast enough for a progress bar to look smooth
             refreshInterval: (data) =>

@@ -17,6 +17,9 @@ COPY . .
 ARG NEXT_PUBLIC_API_URL=http://localhost:6009
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
+ARG NEXT_PUBLIC_PROCESSOR_URL=http://localhost:6010
+ENV NEXT_PUBLIC_PROCESSOR_URL=$NEXT_PUBLIC_PROCESSOR_URL
+
 RUN npm run build
 
 # ─────────────────────────────────────────────────────────────────────────────

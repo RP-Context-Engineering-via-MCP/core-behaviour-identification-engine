@@ -44,6 +44,12 @@ export default function RootLayout({
                 >
                   Users
                 </Link>
+                <Link
+                  href="/chat"
+                  className="font-medium text-indigo-600 transition-colors hover:text-indigo-800 flex items-center gap-1"
+                >
+                  <span>Chat Demo</span>
+                </Link>
               </nav>
             </div>
           </div>
