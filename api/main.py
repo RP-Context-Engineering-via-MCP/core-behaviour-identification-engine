@@ -29,6 +29,7 @@ from api.dependencies import init_pipeline
 from api.routers import context, profiles
 from api.routers import pipeline_router
 from api.routers import admin
+from api.routers import chat
 from api.models import HealthResponse, RootResponse
 
 log = get_logger(__name__)
@@ -94,6 +95,7 @@ app.include_router(context.router)
 app.include_router(pipeline_router.router)
 app.include_router(profiles.router)
 app.include_router(admin.router)
+app.include_router(chat.router)
 
 
 # ---------------------------------------------------------------------------

@@ -55,45 +55,9 @@ class ChatResponse(BaseModel):
     context_used: str | None = None  # The identity anchor prompt, for display
 
 
-# ── Helper: fetch identity anchor prompt ──────────────────────────────────────
-
-def _get_identity_anchor(user_id: str) -> str | None:
-    """Fetch the stored identity anchor prompt for a user, or None if not found."""
-    if not _data_adapter.supabase:
-        return None
-    try:
-        resp = (
-            _data_adapter.supabase
-            .table("core_behavior_profiles")
-            .select("identity_anchor_prompt, confirmed_interests")
-            .eq("user_id", user_id)
-            .limit(1)
-            .execute()
-        )
-        if not resp.data:
-            return None
-
-        row = resp.data[0]
-        prompt = row.get("identity_anchor_prompt") or ""
-
-        # Fallback: build a simple prompt from interests if anchor not stored
-        if not prompt:
-            raw = row.get("confirmed_interests", "[]")
-            interests: List = json.loads(raw) if isinstance(raw, str) else (raw or [])
-            if interests:
-                topics = ", ".join(
-                    i.get("label", i.get("topic", "")) for i in interests[:8]
-                )
-                prompt = (
-                    f"The user has the following confirmed core interests and traits: {topics}. "
-                    "Please personalise your responses accordingly."
-                )
-        return prompt or None
-    except Exception:
-        return None
-
-
 # ── Chat endpoint ─────────────────────────────────────────────────────────────
+
+from api.routers.context import get_context
 
 @router.post("", response_model=ChatResponse, summary="Chat with Azure OpenAI + optional CBIE context")
 async def chat(req: ChatRequest):
@@ -105,7 +69,15 @@ async def chat(req: ChatRequest):
     messages = []
 
     if req.use_context:
-        context_text = _get_identity_anchor(req.user_id)
+        try:
+            # Use the official context endpoint logic to ensure we get the exact 
+            # same anchor prompt that the production system would inject.
+            ctx_response = await get_context(req.user_id)
+            context_text = ctx_response.identity_anchor_prompt
+        except HTTPException:
+            # If no profile exists (404) or DB error, we fall back to no context
+            context_text = None
+
         if context_text:
             system_instruction = (
                 "You are a helpful, friendly, and highly personalised AI assistant.\n\n"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { apiClient } from "@/lib/api";
 import {
     Brain,
@@ -13,6 +13,8 @@ import {
     Info,
     ChevronDown,
     ChevronUp,
+    Users,
+    RefreshCw,
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -29,6 +31,62 @@ interface ChatApiResponse {
     user_id: string;
     use_context: boolean;
     context_used: string | null;
+}
+
+interface UserItem {
+    user_id: string;
+    total_behaviors: number;
+    has_profile: boolean;
+    profile_interest_count?: number;
+}
+
+interface UsersApiResponse {
+    total_users: number;
+    users: UserItem[];
+}
+
+// ─── Lightweight Markdown → HTML ─────────────────────────────────────────────
+
+function mdToHtml(md: string): string {
+    let html = md
+        // Escape HTML entities
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        // Code blocks
+        .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre class="bg-slate-800 text-slate-100 rounded-lg p-3 my-2 overflow-x-auto text-xs"><code>$2</code></pre>')
+        // Inline code
+        .replace(/`([^`]+)`/g, '<code class="bg-slate-100 text-indigo-700 rounded px-1.5 py-0.5 text-xs font-mono">$1</code>')
+        // Headers
+        .replace(/^### (.+)$/gm, '<h3 class="text-sm font-semibold mb-1 mt-2">$1</h3>')
+        .replace(/^## (.+)$/gm, '<h2 class="text-sm font-bold mb-1.5 mt-2.5">$1</h2>')
+        .replace(/^# (.+)$/gm, '<h1 class="text-base font-bold mb-2 mt-3">$1</h1>')
+        // Bold & italic
+        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        // Unordered lists
+        .replace(/^[\-\*] (.+)$/gm, '<li class="leading-relaxed ml-4 list-disc">$1</li>')
+        // Ordered lists
+        .replace(/^\d+\. (.+)$/gm, '<li class="leading-relaxed ml-4 list-decimal">$1</li>')
+        // Links
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-indigo-600 underline hover:text-indigo-800">$1</a>')
+        // Blockquotes
+        .replace(/^> (.+)$/gm, '<blockquote class="border-l-2 border-indigo-300 pl-3 my-1 text-slate-600 italic">$1</blockquote>')
+        // Horizontal rules
+        .replace(/^---$/gm, '<hr class="my-3 border-slate-200" />')
+        // Line breaks → paragraphs
+        .replace(/\n\n+/g, '</p><p class="mb-2">')
+        .replace(/\n/g, '<br />');
+
+    // Wrap consecutive <li> in <ul>
+    html = html.replace(/((?:<li[^>]*>.*?<\/li>\s*(?:<br \/>)?\s*)+)/g, '<ul class="list-disc pl-4 mb-2 space-y-1">$1</ul>');
+    // Clean up <br /> inside <ul>
+    html = html.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/g, (match) => match.replace(/<br \/>/g, ''));
+
+    return `<p class="mb-2">${html}</p>`;
+}
+
+function MarkdownContent({ content }: { content: string }) {
+    const html = useMemo(() => mdToHtml(content), [content]);
+    return <div className="prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 // ─── Context Preview Card ────────────────────────────────────────────────────
@@ -58,7 +116,7 @@ function ContextPreview({ text }: { text: string }) {
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
 export default function ChatDemoPage() {
-    const [userId, setUserId] = useState("pilot_user_1");
+    const [userId, setUserId] = useState("");
     const [useContext, setUseContext] = useState(true);
     const [input, setInput] = useState("");
     const [messages, setMessages] = useState<Message[]>([]);
@@ -66,12 +124,51 @@ export default function ChatDemoPage() {
     const [error, setError] = useState<string | null>(null);
     const bottomRef = useRef<HTMLDivElement>(null);
 
+    // User dropdown state
+    const [users, setUsers] = useState<UserItem[]>([]);
+    const [usersLoading, setUsersLoading] = useState(true);
+    const [usersError, setUsersError] = useState<string | null>(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const fetchUsers = useCallback(async () => {
+        setUsersLoading(true);
+        setUsersError(null);
+        try {
+            const res = await apiClient.get<UsersApiResponse>("/admin/users");
+            const sortedUsers = res.data.users.sort((a, b) => a.user_id.localeCompare(b.user_id));
+            setUsers(sortedUsers);
+            if (!userId && sortedUsers.length > 0) {
+                // Auto-select first user with a profile, or first user
+                const withProfile = sortedUsers.find(u => u.has_profile);
+                setUserId((withProfile || sortedUsers[0]).user_id);
+            }
+        } catch {
+            setUsersError("Failed to load users");
+        } finally {
+            setUsersLoading(false);
+        }
+    }, [userId]);
+
+    useEffect(() => { fetchUsers(); }, [fetchUsers]);
+
+    // Close dropdown on outside click
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+                setDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
+    }, []);
+
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages, loading]);
 
     const sendMessage = async () => {
-        if (!input.trim() || loading) return;
+        if (!input.trim() || loading || !userId) return;
         const userMsg = input.trim();
         setInput("");
         setError(null);
@@ -106,12 +203,14 @@ export default function ChatDemoPage() {
         }
     };
 
-    const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
         }
     };
+
+    const selectedUser = users.find(u => u.user_id === userId);
 
     return (
         <div className="flex flex-col min-h-[calc(100vh-56px)] bg-gradient-to-br from-slate-50 to-indigo-50/30">
@@ -126,7 +225,7 @@ export default function ChatDemoPage() {
                             </div>
                             <div>
                                 <h1 className="text-base font-semibold text-slate-900">
-                                    Gemini Chat Demo
+                                    Chat Demo
                                 </h1>
                                 <p className="text-xs text-slate-500">
                                     Powered by CBIE context injection
@@ -136,40 +235,101 @@ export default function ChatDemoPage() {
 
                         {/* Controls */}
                         <div className="flex flex-wrap items-center gap-3">
-                            {/* User selector */}
-                            <div className="flex items-center gap-2">
-                                <label className="text-xs font-medium text-slate-600">
-                                    User ID
+                            {/* User dropdown */}
+                            <div className="relative" ref={dropdownRef}>
+                                <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-1">
+                                    User
                                 </label>
-                                <input
-                                    value={userId}
-                                    onChange={(e) => setUserId(e.target.value)}
-                                    className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 w-44"
-                                    placeholder="e.g. pilot_user_1"
-                                />
+                                <button
+                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    disabled={usersLoading}
+                                    className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-800 shadow-sm hover:border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 min-w-[200px] transition-colors"
+                                >
+                                    <Users className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                                    {usersLoading ? (
+                                        <span className="text-slate-400 flex items-center gap-1">
+                                            <Loader2 className="h-3 w-3 animate-spin" /> Loading…
+                                        </span>
+                                    ) : usersError ? (
+                                        <span className="text-red-500">{usersError}</span>
+                                    ) : userId ? (
+                                        <span className="truncate flex-1 text-left">{userId}</span>
+                                    ) : (
+                                        <span className="text-slate-400">Select a user…</span>
+                                    )}
+                                    <ChevronDown className={`h-3 w-3 text-slate-400 shrink-0 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
+                                </button>
+
+                                {dropdownOpen && !usersLoading && users.length > 0 && (
+                                    <div className="absolute top-full left-0 mt-1 w-72 max-h-64 overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-lg z-50">
+                                        <div className="p-1.5">
+                                            {users.map((u) => (
+                                                <button
+                                                    key={u.user_id}
+                                                    onClick={() => { setUserId(u.user_id); setDropdownOpen(false); }}
+                                                    className={`w-full flex items-center justify-between gap-2 rounded-md px-3 py-2 text-xs transition-colors ${
+                                                        u.user_id === userId
+                                                            ? "bg-indigo-50 text-indigo-700 font-medium"
+                                                            : "text-slate-700 hover:bg-slate-50"
+                                                    }`}
+                                                >
+                                                    <div className="flex items-center gap-2 min-w-0">
+                                                        <User className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+                                                        <span className="truncate">{u.user_id}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 shrink-0">
+                                                        <span className="text-[10px] text-slate-400">{u.total_behaviors} behaviors</span>
+                                                        {u.has_profile ? (
+                                                            <span className="flex h-4 items-center rounded-full bg-emerald-50 px-1.5 text-[10px] font-medium text-emerald-700 border border-emerald-200">
+                                                                Profile ✓
+                                                            </span>
+                                                        ) : (
+                                                            <span className="flex h-4 items-center rounded-full bg-slate-50 px-1.5 text-[10px] text-slate-400 border border-slate-200">
+                                                                No profile
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <div className="border-t border-slate-100 p-1.5">
+                                            <button
+                                                onClick={() => { fetchUsers(); }}
+                                                className="w-full flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-[11px] text-slate-500 hover:bg-slate-50 transition-colors"
+                                            >
+                                                <RefreshCw className="h-3 w-3" /> Refresh list
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Context toggle */}
-                            <button
-                                onClick={() => setUseContext(!useContext)}
-                                className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 shadow-sm ${useContext
-                                        ? "bg-indigo-600 text-white hover:bg-indigo-700 ring-2 ring-indigo-400/30"
-                                        : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-                                    }`}
-                            >
-                                {useContext ? (
-                                    <Brain className="h-4 w-4" />
-                                ) : (
-                                    <Bot className="h-4 w-4" />
-                                )}
-                                <span>{useContext ? "Context ON" : "Context OFF"}</span>
-                                <span
-                                    className={`ml-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold ${useContext ? "bg-white/20" : "bg-slate-200"
+                            <div>
+                                <label className="block text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-1">
+                                    Context
+                                </label>
+                                <button
+                                    onClick={() => setUseContext(!useContext)}
+                                    className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 shadow-sm ${useContext
+                                            ? "bg-indigo-600 text-white hover:bg-indigo-700 ring-2 ring-indigo-400/30"
+                                            : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                                         }`}
                                 >
-                                    {useContext ? "✓" : "✗"}
-                                </span>
-                            </button>
+                                    {useContext ? (
+                                        <Brain className="h-4 w-4" />
+                                    ) : (
+                                        <Bot className="h-4 w-4" />
+                                    )}
+                                    <span>{useContext ? "Context ON" : "Context OFF"}</span>
+                                    <span
+                                        className={`ml-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold ${useContext ? "bg-white/20" : "bg-slate-200"
+                                            }`}
+                                    >
+                                        {useContext ? "✓" : "✗"}
+                                    </span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -184,13 +344,18 @@ export default function ChatDemoPage() {
                         <span>
                             {useContext ? (
                                 <>
-                                    <strong>Context ON:</strong> Gemini is given the CBIE identity anchor prompt for{" "}
-                                    <strong>{userId}</strong>. Responses will be personalised to their long-term
+                                    <strong>Context ON:</strong> The LLM is given the CBIE identity anchor prompt for{" "}
+                                    <strong>{userId || "—"}</strong>. Responses will be personalised to their long-term
                                     interests and constraints.
+                                    {selectedUser && !selectedUser.has_profile && (
+                                        <span className="ml-1 text-amber-700 font-medium">
+                                            ⚠ This user has no profile yet — run the pipeline first for context injection to work.
+                                        </span>
+                                    )}
                                 </>
                             ) : (
                                 <>
-                                    <strong>Context OFF:</strong> Gemini sees only your message — no CBIE profile
+                                    <strong>Context OFF:</strong> The LLM sees only your message — no CBIE profile
                                     injected. This is the baseline, unpersonalised response.
                                 </>
                             )}
@@ -212,7 +377,7 @@ export default function ChatDemoPage() {
                             </h2>
                             <p className="mt-1 text-sm text-slate-500 max-w-sm">
                                 Ask the same question with Context ON and OFF to see how the
-                                CBIE profile personalises Gemini&apos;s responses.
+                                CBIE profile personalises the LLM&apos;s responses.
                             </p>
                             <div className="mt-4 flex flex-wrap justify-center gap-2">
                                 {[
@@ -258,8 +423,8 @@ export default function ChatDemoPage() {
                                     {m.role === "user"
                                         ? "You"
                                         : m.useContext
-                                            ? "Gemini + CBIE context"
-                                            : "Gemini (no context)"}
+                                            ? "LLM + CBIE context"
+                                            : "LLM (no context)"}
                                 </span>
 
                                 {/* Bubble */}
@@ -271,7 +436,11 @@ export default function ChatDemoPage() {
                                                 : "bg-white border border-slate-200 text-slate-700 rounded-tl-sm"
                                         }`}
                                 >
-                                    {m.content}
+                                    {m.role === "assistant" ? (
+                                        <MarkdownContent content={m.content} />
+                                    ) : (
+                                        m.content
+                                    )}
                                 </div>
 
                                 {/* Context accordion */}
@@ -313,28 +482,36 @@ export default function ChatDemoPage() {
             {/* ── Input bar ────────────────────────────────────────────────── */}
             <div className="border-t border-slate-200 bg-white/80 backdrop-blur-sm">
                 <div className="mx-auto max-w-4xl px-4 py-3 sm:px-6">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-end gap-3">
                         <div
-                            className={`flex h-2 w-2 rounded-full shrink-0 ${useContext ? "bg-indigo-500 animate-pulse" : "bg-slate-300"
+                            className={`flex h-2 w-2 rounded-full shrink-0 mb-3 ${useContext ? "bg-indigo-500 animate-pulse" : "bg-slate-300"
                                 }`}
                         />
-                        <div className="flex flex-1 items-center gap-2 rounded-2xl border border-slate-200 bg-white shadow-sm px-4 py-2.5 focus-within:ring-2 focus-within:ring-indigo-400">
-                            <input
+                        <div className="flex flex-1 items-end gap-2 rounded-2xl border border-slate-200 bg-white shadow-sm px-4 py-2.5 focus-within:ring-2 focus-within:ring-indigo-400">
+                            <textarea
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyDown={handleKey}
                                 placeholder={
-                                    useContext
-                                        ? `Ask something personalised for ${userId}…`
-                                        : "Ask anything (no personalisation)…"
+                                    !userId
+                                        ? "Select a user first…"
+                                        : useContext
+                                            ? `Ask something personalised for ${userId}…`
+                                            : "Ask anything (no personalisation)…"
                                 }
-                                className="flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
-                                disabled={loading}
+                                className="flex-1 bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400 resize-none max-h-32"
+                                disabled={loading || !userId}
+                                rows={1}
+                                onInput={(e) => {
+                                    const el = e.target as HTMLTextAreaElement;
+                                    el.style.height = "auto";
+                                    el.style.height = Math.min(el.scrollHeight, 128) + "px";
+                                }}
                             />
                             <button
                                 onClick={sendMessage}
-                                disabled={!input.trim() || loading}
-                                className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-600 text-white transition-all hover:bg-indigo-700 disabled:opacity-30 disabled:cursor-not-allowed"
+                                disabled={!input.trim() || loading || !userId}
+                                className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-600 text-white transition-all hover:bg-indigo-700 disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
                             >
                                 {loading ? (
                                     <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -346,7 +523,8 @@ export default function ChatDemoPage() {
                     </div>
                     <p className="mt-2 text-center text-[11px] text-slate-400">
                         Press <kbd className="rounded bg-slate-100 px-1 py-0.5 font-mono text-[10px]">Enter</kbd> to send •
-                        Toggle context to compare personalised vs. baseline Gemini responses
+                        <kbd className="rounded bg-slate-100 px-1 py-0.5 font-mono text-[10px] ml-1">Shift+Enter</kbd> for new line •
+                        Toggle context to compare personalised vs. baseline responses
                     </p>
                 </div>
             </div>
