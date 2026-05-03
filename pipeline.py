@@ -143,6 +143,7 @@ class CBIEPipeline:
         # --- Handle Absolute Facts first ---
         # Instead of one big block, we cluster facts semanticallly too.
         # This allows "Nut Allergy" and "Celiac Disease" to be separate records.
+        fact_embeddings = np.array([])  # default for zero-fact users
         if fact_behaviors:
             log.info("Clustering absolute facts", extra={"user_id": user_id, "stage": "FACT_ISOLATION", "fact_count": len(fact_behaviors)})
             
@@ -152,7 +153,8 @@ class CBIEPipeline:
             
             # Cluster with min_samples=1 (every individual fact is important)
             # Use a slightly tighter epsilon than standard behaviors
-            fact_clusters = self.topic_discoverer.cluster_behaviors(fact_behaviors, fact_embeddings, eps=0.4, min_samples=1)
+            fact_polarities = [str(fb.get('polarity', '') or '') for fb in fact_behaviors]
+            fact_clusters = self.topic_discoverer.cluster_behaviors(fact_embeddings, fact_polarities, min_samples=1, eps_override=0.4)
             
             # Group facts by their newly assigned cluster IDs
             fact_groups: Dict[int, List[Dict[str, Any]]] = {}
@@ -166,7 +168,7 @@ class CBIEPipeline:
                 topics = [b.get('source_text', '') for b in behaviors]
                 
                 # Generate a professional label for this fact group
-                label = self.topic_discoverer.generate_cluster_label(behaviors)
+                label = self.topic_discoverer.generalize_cluster_topic(topics)
                 
                 interest_profile = {
                     "cluster_id": f"fact_{c_id}",
@@ -364,7 +366,8 @@ class CBIEPipeline:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the CBIE Pipeline.")
     parser.add_argument("--user_id", type=str, required=True, help="The User ID to process.")
+    parser.add_argument("--force_full_run", action="store_true", help="Force a full run ignoring checkpoints.")
     args = parser.parse_args()
     
     pipeline = CBIEPipeline()
-    pipeline.process_user(args.user_id)
+    pipeline.process_user(args.user_id, force_full_run=args.force_full_run)
