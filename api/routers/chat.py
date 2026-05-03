@@ -20,7 +20,7 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-import google.generativeai as genai
+from openai import AzureOpenAI
 
 from data_adapter import DataAdapter
 
@@ -28,10 +28,16 @@ router = APIRouter(prefix="/chat", tags=["Chat Demo"])
 
 _data_adapter = DataAdapter()
 
-# ── Gemini client setup ────────────────────────────────────────────────────────
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
-genai.configure(api_key=GEMINI_API_KEY)
-_gemini_model = genai.GenerativeModel("gemini-1.5-flash")
+# ── Azure OpenAI client setup ──────────────────────────────────────────────────
+
+# Use deployment name 'gpt-4o-mini' as seen in topic_discovery.py
+AZURE_DEPLOYMENT = os.environ.get("OPENAI_CHAT_MODEL", "gpt-4o-mini")
+
+client = AzureOpenAI(
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    api_version=os.environ.get("OPENAI_API_VERSION", "2024-02-01"),
+    azure_endpoint=os.environ.get("OPENAI_API_BASE"),
+)
 
 
 # ── Request / Response models ──────────────────────────────────────────────────
@@ -89,19 +95,14 @@ def _get_identity_anchor(user_id: str) -> str | None:
 
 # ── Chat endpoint ─────────────────────────────────────────────────────────────
 
-@router.post("", response_model=ChatResponse, summary="Chat with Gemini + optional CBIE context")
+@router.post("", response_model=ChatResponse, summary="Chat with Azure OpenAI + optional CBIE context")
 async def chat(req: ChatRequest):
     """
-    Send a message to Gemini, with or without the CBIE identity anchor injected.
+    Send a message to Azure OpenAI, with or without the CBIE identity anchor injected.
     Toggle `use_context` to see the difference in responses side-by-side.
     """
-    if not GEMINI_API_KEY:
-        raise HTTPException(status_code=503, detail="GEMINI_API_KEY not configured.")
-
     context_text: str | None = None
-    system_instruction: str = (
-        "You are a helpful, friendly AI assistant."
-    )
+    messages = []
 
     if req.use_context:
         context_text = _get_identity_anchor(req.user_id)
@@ -114,17 +115,23 @@ async def chat(req: ChatRequest):
                 "Use the above context to tailor every response to this specific user's "
                 "background, interests, and constraints. Reference relevant details naturally."
             )
+            messages.append({"role": "system", "content": system_instruction})
+        else:
+            messages.append({"role": "system", "content": "You are a helpful, friendly AI assistant."})
+    else:
+        messages.append({"role": "system", "content": "You are a helpful, friendly AI assistant."})
+
+    messages.append({"role": "user", "content": req.message})
 
     try:
-        model = genai.GenerativeModel(
-            "gemini-1.5-flash",
-            system_instruction=system_instruction,
+        response = client.chat.completions.create(
+            model=AZURE_DEPLOYMENT,
+            messages=messages,
+            temperature=0.7,
         )
-        chat_session = model.start_chat(history=[])
-        response = chat_session.send_message(req.message)
-        reply = response.text
+        reply = response.choices[0].message.content or "No response from AI."
     except Exception as e:
-        raise HTTPException(status_code=502, detail=f"Gemini API error: {e}")
+        raise HTTPException(status_code=502, detail=f"Azure OpenAI error: {e}")
 
     return ChatResponse(
         reply=reply,

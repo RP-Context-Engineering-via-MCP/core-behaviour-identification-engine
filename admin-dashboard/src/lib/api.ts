@@ -9,7 +9,7 @@ export const apiClient = axios.create({
 });
 
 export const processorClient = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_PROCESSOR_URL || "http://localhost:6010",
+    baseURL: process.env.NEXT_PUBLIC_PROCESSOR_URL || "http://localhost:6009",
     headers: {
         "Content-Type": "application/json",
     },

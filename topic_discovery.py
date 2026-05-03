@@ -295,7 +295,7 @@ class TopicDiscoverer:
             counts = Counter(texts)
             return counts.most_common(1)[0][0]
 
-    def cluster_behaviors(self, embeddings: np.ndarray, polarities: List[str] = None, min_samples: int = 2) -> np.ndarray:
+    def cluster_behaviors(self, embeddings: np.ndarray, polarities: List[str] = None, min_samples: int = 2, eps_override: float = None) -> np.ndarray:
         """
         Uses DBSCAN with an adaptive epsilon (calculated via k-distance graph) to find latent topic clusters.
         Applies a 'Polarity Penalty' to prevent POSITIVE and NEGATIVE sentiments from clustering together.
@@ -360,14 +360,30 @@ class TopicDiscoverer:
                  log.warning("KneeLocator failed, falling back to median distance", extra={"stage": "CLUSTERING", "error": str(e)})
                  optimal_eps = np.median(k_distances)
 
-        # Enforce strict semantic boundaries. 
-        # Euclidean distance of 0.7 corresponds to cosine similarity of ~0.75.
-        # We don't want clusters forming with distances > 0.8 (cos sim < 0.68).
-        MAX_EPS = 0.75
-        MIN_EPS = 0.20
-        optimal_eps = max(MIN_EPS, min(optimal_eps, MAX_EPS))
+        # Allow callers (e.g. fact clustering) to override the adaptive epsilon
+        if eps_override is not None:
+            optimal_eps = eps_override
+        else:
+            MAX_EPS = 0.75
+            MIN_EPS = 0.55
+            optimal_eps = max(MIN_EPS, min(optimal_eps, MAX_EPS))
 
         log.info("Running DBSCAN", extra={"stage": "CLUSTERING", "eps": round(float(optimal_eps), 3), "min_samples": min_samples, "n_behaviors": n_behaviors})
         
         clusterer = DBSCAN(eps=optimal_eps, min_samples=min_samples, metric='precomputed')
-        return clusterer.fit_predict(dist_matrix)
+        labels = clusterer.fit_predict(dist_matrix)
+        
+        # Calculate Silhouette Score (ignoring noise points label=-1)
+        from sklearn.metrics import silhouette_score
+        unique_labels = set(labels)
+        if len(unique_labels - {-1}) >= 2:
+            try:
+                # We calculate silhouette score on the original embeddings
+                sil_score = silhouette_score(embeddings, labels, metric='euclidean')
+                log.info("Silhouette Score calculated", extra={"stage": "CLUSTERING_EVAL", "silhouette_score": round(sil_score, 4)})
+            except Exception as e:
+                log.warning("Could not calculate Silhouette Score", extra={"stage": "CLUSTERING_EVAL", "error": str(e)})
+        else:
+            log.info("Not enough distinct clusters for Silhouette Score", extra={"stage": "CLUSTERING_EVAL"})
+            
+        return labels

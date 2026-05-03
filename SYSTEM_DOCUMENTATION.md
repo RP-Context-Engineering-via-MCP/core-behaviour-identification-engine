@@ -106,17 +106,17 @@ The `DataAdapter` performs schema-alignment on the fly, transforming the BAC's n
 | File | Class | Stage | Responsibility |
 |------|-------|-------|----------------|
 | `data_adapter.py` | `DataAdapter` | Ingestion / Output | Reads `behaviors` from **BAC Supabase**, writes profiles to **CBIE Supabase** |
-| `topic_discovery.py` | `TopicDiscoverer` | Stage 1 | Fact isolation (Zero-Shot NLP), Azure embeddings, **Adaptive DBSCAN clustering**, LLM topic labeling |
+| `topic_discovery.py` | `TopicDiscoverer` | Stage 1 | Fact isolation (Zero-Shot NLP), **Sentence-Transformer embeddings**, **Adaptive DBSCAN clustering**, LLM topic labeling |
 | `temporal_analysis.py` | `TemporalAnalyzer` | Stage 2 | Gini Coefficient (consistency), Mann-Kendall Trend Test (momentum) |
 | `confirmation_model.py` | `ConfirmationModel` | Stage 3 | AHP-weighted heuristic scoring, Vitality Pruning, status classification |
-| `pipeline.py` | `CBIEPipeline` | Orchestration | Ties all stages together; supports **Incremental Checkpoint Processing** |
+| `pipeline.py` | `CBIEPipeline` | Orchestration | Ties all stages together; supports **Incremental Checkpoint Processing**, applies semantic clustering to facts |
 | `api/main.py` | FastAPI app | API Layer | App entry point, CORS, lifespan startup, health endpoints |
 | `api/dependencies.py` | — | API Layer | Pipeline singleton (load-once), in-memory job store for background runs |
 | `api/models.py` | Pydantic models | API Layer | All request/response schemas |
 | `api/routers/context.py` | — | API Layer | `GET /context/{user_id}` — the critical LLM endpoint |
 | `api/routers/pipeline_router.py` | — | API Layer | `POST /pipeline/run`, `GET /pipeline/status` |
 | `api/routers/profiles.py` | — | API Layer | Profile CRUD and inspection endpoints |
-| `generate_test_data.py` | — | Testing | Generates multi-user test data with Azure embeddings, seeds to Supabase |
+| `generate_test_data.py` | — | Testing | Generates multi-user test data with **Sentence-Transformer embeddings**, seeds to Supabase |
 
 ---
 
@@ -131,7 +131,7 @@ Each row represents a single behavioral event logged by the BAC. The CBIE **only
 | `behavior_id` | `TEXT (PK)` | Unique identifier |
 | `user_id` | `TEXT` | The owning user |
 | `behavior_text` | `TEXT` | Raw natural language text of the behavior |
-| `embedding` | `vector(3072)` | Pre-computed semantic embedding (Azure `text-embedding-3-large`) |
+| `embedding` | `vector(384)` | Pre-computed semantic embedding (Sentence-Transformers `all-MiniLM-L6-v2`) |
 | `credibility` | `REAL` | BAC-assigned credibility (0.0 – 1.0) |
 | `clarity_score` | `REAL` | Clarity of expression (0.0 – 1.0) |
 | `extraction_confidence` | `REAL` | BAC extraction confidence (0.0 – 1.0) |
@@ -197,7 +197,7 @@ Before clustering, every behavior's raw text is passed through a **multi-layer f
 
 | Layer | Signal | Weight |
 |-------|--------|--------|
-| **Zero-Shot NLP** (Primary) | Scores text against `"medical condition or severe allergy"`, `"strict dietary restriction"` using `multi_label=True` | Max score across the two labels |
+| **Zero-Shot NLP** (Primary) | Scores text against six candidate labels (including `"medical condition or severe allergy"`, `"strict dietary restriction"`, and `"random trivia or one-off query"`) using `multi_label=True`. The "trivia" score is cached for later noise filtering. | Max score across the two core fact labels |
 | **BAC Metadata** (Secondary Boost) | If `intent == CONSTRAINT`: +0.10. If `polarity == NEGATIVE` AND `intent == CONSTRAINT`: additional +0.05 | Additive boost only |
 
 **Decision Rule:** If combined `fact_confidence ≥ 0.70` → classified as **Absolute Fact**.
@@ -212,15 +212,15 @@ Input: "I am severely allergic to penicillin"
   Total fact_confidence = 1.07  (≥ 0.70) → FACT ✓
 ```
 
-Facts are immediately routed to the profile with `core_score = 1.0` and `status = "Stable Fact"`. No temporal analysis is needed.
+Facts receive `core_score = 1.0` and `status = "Stable Fact"`. Unlike previous iterations, facts are also **semantically clustered** (`eps=0.4`, `min_samples=1`) using DBSCAN to ensure distinct facts (e.g., "Nut Allergy" vs. "Celiac Disease") are kept as distinct records rather than lumped together. No temporal analysis is needed.
 
-#### 4.1.2 Semantic Embeddings (Azure OpenAI `text-embedding-3-large`)
+#### 4.1.2 Semantic Embeddings (Sentence-Transformers)
 
-All remaining (non-fact) behaviors are embedded using Azure OpenAI's `text-embedding-3-large` model, producing **3072-dimensional** semantic vectors. If the database already contains precomputed embeddings, they are reused. Missing embeddings are generated in batches of 20.
+All behaviors are embedded using a local `sentence-transformers` model, producing **384-dimensional** semantic vectors. If the database already contains precomputed embeddings, they are reused. Missing embeddings are generated via the local model.
 
-- **Model:** `text-embedding-3-large`
-- **Dimensions:** 3072
-- **Storage:** pgvector `vector(3072)` column in Supabase
+- **Model:** `all-MiniLM-L6-v2`
+- **Dimensions:** 384
+- **Storage:** pgvector `vector(384)` column in Supabase
 
 #### 4.1.3 Entity Extraction (spaCy + EntityRuler)
 
@@ -245,9 +245,8 @@ Behaviors assigned `cluster_id = -1` are classified as **noise** and excluded fr
 
 Before confirmation, clusters undergo three primary high-fidelity noise checks:
 
-1. **Semantic Contradiction Suppression**: Any cluster whose mean embedding is semantically opposite to a confirmed **Stable Fact** is suppressed.
-2. **The "Trivia Gate"**: Individual behaviors are scored by the BART Zero-Shot classifier for being `"random trivia or one-off query"`. If a cluster’s average trivia score exceeds **0.80**, it is flagged as noise.
-3. **Structural Complexity Check**: Behaviors with a `clarity_score` below **0.65** (indicative of messy, low-signal extraction) are used for clustering but given low weights during the final core-score derivation.
+1. **Semantic Contradiction Suppression**: Any cluster whose mean embedding mathematically opposes a confirmed **Stable Fact** is flagged as `CONTRADICTED` and suppressed. This strictly occurs when the cosine similarity is **less than 0.1** AND the behaviors have predominantly `NEGATIVE` polarity.
+2. **Classifier & Complexity Noise Filter**: Combines Zero-Shot and extraction metrics. If a cluster's average trivia score (from BART) exceeds **0.80** AND its average BAC `clarity_score` is below **0.65**, it is completely discarded as low-complexity noise (`status = "Noise"`).
 
 #### 4.1.5 Generative Topic Labeling (Azure OpenAI `gpt-4o-mini`)
 
@@ -259,7 +258,7 @@ After clustering, the raw behavior texts of each standard cluster are passed to 
 
 To bridge the gap between high-dimensional math and administrative clarity, the pipeline includes a **Visualization Lithography** stage.
 
-1. **Projection**: It uses **t-SNE** (t-distributed Stochastic Neighbor Embedding) to project the 3072-dimensional Azure embeddings into a **2D space**.
+1. **Projection**: It uses **t-SNE** (t-distributed Stochastic Neighbor Embedding) to project the 384-dimensional embeddings into a **2D space**.
 2. **Perplexity Mapping**: A dynamic perplexity is chosen based on the number of behaviors to ensure stable local structure.
 3. **The Embedding Map**: Returns an array of `{x, y, label, status}` objects, which are cached in the profile JSON.
 4. **Dashboard Utility**: This map enables the "Semantic Space" scatter chart in the admin dashboard, allowing researchers to visually verify that clustered behaviors are actually grouped correctly in vector space.
@@ -304,7 +303,7 @@ A non-parametric statistical test applied to the sequence of `complexity_score` 
 | `decreasing` | `-1.0` | Fading interest |
 | `no trend` | `0.0` | No significant change |
 
-Requires ≥ 4 data points; otherwise defaults to `0.0`.
+Requires ≥ 4 data points; otherwise defaults to `0.0`. The test utilizes an `alpha=0.10` to allow for better trend detection on sparse or small behavioral datasets.
 
 ---
 
@@ -364,12 +363,12 @@ Step 1: INGESTION
 
 Step 2: TOPIC DISCOVERY (Stage 1)
   ├─ Zero-Shot NLP Classification → Isolate Absolute Facts
-  │     ├─ Facts bypass all scoring → core_score = 1.0, status = "Stable Fact"
+  │     ├─ Facts are semantically clustered (eps=0.4, min_samples=1) to keep separate constraints distinct
+  │     ├─ Facts bypass scoring → core_score = 1.0, status = "Stable Fact"
   │     └─ Facts bypass LLM generalization; raw text is used directly
   └─ Standard Behaviors:
         ├─ spaCy NER + EntityRuler → extracted entities
-        ├─ Use precomputed embeddings (or generate via Azure if missing)
-        ├─ Build Euclidean distance matrix
+        ├─ Use precomputed embeddings (or generate via local sentence-transformers if missing)
         ├─ Build Euclidean distance matrix
         ├─ Apply Polarity Penalty (POSITIVE vs NEGATIVE → distance = 1000)
         ├─ Adaptive Epsilon calculation via k-distance graph (capped at 0.75)
@@ -393,7 +392,7 @@ Step 5: PROMPT GENERATION
   └─ identity_anchor_prompt stored in profile JSON and Supabase
 
 Step 6: DATA VISUALIZATION LITHOGRAPHY
-  ├─ t-SNE Dimensionality Reduction: Projects 384D/3072D embeddings into 2D (x, y)
+  ├─ t-SNE Dimensionality Reduction: Projects 384D embeddings into 2D (x, y)
   ├─ Generates Embedding Map: {x, y, cluster_id, status, label, text}
   └─ Saved to local profile JSON for near-instant dashboard rendering
 
@@ -584,7 +583,8 @@ EMERGING INTERESTS (Needs more verification):
 | Python | 3.10+ | Core language |
 | `fastapi` | ≥ 0.111.0 | REST API framework |
 | `uvicorn` | ≥ 0.29.0 | ASGI server |
-| `openai` | ≥ 1.0.0 | Azure embeddings and GPT-4o-mini topic labeling |
+| `openai` | ≥ 1.0.0 | Azure GPT-4o-mini topic labeling (only) |
+| `sentence-transformers` | ≥ 2.5.0 | Direct semantic embedding generation (`all-MiniLM-L6-v2`) |
 | `transformers` | ≥ 4.35.0 | Zero-Shot classifier (`facebook/bart-large-mnli`) |
 | `kneed` | ≥ 0.8.5 | Mathematical detection of knee/elbow points for adaptive epsilon |
 | `scikit-learn` | ≥ 1.3.0 | DBSCAN clustering, t-SNE dimensionality reduction & distance metrics |
@@ -639,11 +639,11 @@ BAC_SUPABASE_KEY=<bac-anon-key>
 # Configurable Thresholds
 MIN_NEW_BEHAVIORS=10
 
-# Azure OpenAI
+# Azure OpenAI (Topic Labeling Only)
 OPENAI_API_KEY=<azure-api-key>
 OPENAI_API_VERSION=2024-02-01
 OPENAI_API_BASE=https://<resource-name>.openai.azure.com/
-OPENAI_EMBEDDING_MODEL=text-embedding-3-large
+# OPENAI_EMBEDDING_MODEL is no longer needed; uses local sentence-transformers
 ```
 
 ---
@@ -667,7 +667,7 @@ python -m spacy download en_core_web_sm
 ```bash
 python generate_test_data.py
 ```
-Creates 3 simulated users (`user_alpha_01`, `user_spartan_02`, `user_chaos_03`) with Azure embeddings seeded into Supabase.
+Creates 3 simulated users (`user_alpha_01`, `user_spartan_02`, `user_chaos_03`) with Sentence-Transformer embeddings seeded into Supabase.
 
 ### Run the Pipeline Directly (CLI)
 ```bash
