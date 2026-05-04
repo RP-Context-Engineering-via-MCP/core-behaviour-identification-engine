@@ -33,11 +33,16 @@ _data_adapter = DataAdapter()
 # Use deployment name 'gpt-4o-mini' as seen in topic_discovery.py
 AZURE_DEPLOYMENT = os.environ.get("OPENAI_CHAT_MODEL", "gpt-4o-mini")
 
-client = AzureOpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY"),
-    api_version=os.environ.get("OPENAI_API_VERSION", "2024-02-01"),
-    azure_endpoint=os.environ.get("OPENAI_API_BASE"),
-)
+def get_openai_client() -> AzureOpenAI:
+    api_key = os.environ.get("OPENAI_API_KEY")
+    api_base = os.environ.get("OPENAI_API_BASE")
+    if not api_key or not api_base:
+        raise HTTPException(status_code=500, detail="Azure OpenAI credentials not configured.")
+    return AzureOpenAI(
+        api_key=api_key,
+        api_version=os.environ.get("OPENAI_API_VERSION", "2024-02-01"),
+        azure_endpoint=api_base,
+    )
 
 
 # ── Request / Response models ──────────────────────────────────────────────────
@@ -96,6 +101,7 @@ async def chat(req: ChatRequest):
     messages.append({"role": "user", "content": req.message})
 
     try:
+        client = get_openai_client()
         response = client.chat.completions.create(
             model=AZURE_DEPLOYMENT,
             messages=messages,
