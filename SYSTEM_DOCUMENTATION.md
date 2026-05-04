@@ -1,9 +1,9 @@
 # Core Behaviour Identification Engine (CBIE) — System Documentation
 
-> **Version:** 2.1  
+> **Version:** 2.2  
 > **Author:** DAYANANDA G.A.C.T  
 > **Project:** Core Behaviour Analysis Component (CBAC) — Research Prototype  
-> **Last Updated:** March 2026
+> **Last Updated:** May 2026
 
 ---
 
@@ -235,11 +235,19 @@ Clusters standard behaviors using **DBSCAN** (Density-Based Spatial Clustering o
 3. **Adaptive Epsilon (k-distance graph):** 
    - Uses the distance to the $k$-th nearest neighbor ($k=min\_samples$) to generate a k-distance plot.
    - Automatically identifies the "elbow" or "knee" point using the `kneed` library.
-   - **Semantic Boundary Cap:** Epsilon is strictly capped at **0.75** (max) and **0.20** (min). This ensures that clusters only form when behaviors are semantically tight (dist ≤ 0.75 ≈ cos sim ≥ 0.72), preventing the formation of overly generic "mega-clusters".
+   - **Semantic Boundary Cap:** Epsilon is strictly capped at **0.75** (max) and **0.55** (min). This ensures that clusters only form when behaviors are semantically tight (dist ≤ 0.75 ≈ cos sim ≥ 0.72), preventing the formation of overly generic "mega-clusters".
 
 > **Why DBSCAN with Adaptive Epsilon?** This method ensures high-precision semantic islands. While HDBSCAN is density-invariant, it often merges distinct but slightly related behavioral groups in sparse datasets. Adaptive DBSCAN maintains strict semantic boundaries, crucial for identifying specific user habits (e.g., "Dog Walking") rather than generic categories.
 
 Behaviors assigned `cluster_id = -1` are classified as **noise** and excluded from the profile.
+
+#### 4.1.4a Reinforcement Count Integration (DBSCAN `sample_weight`)
+
+The BAC database aggregates repeated identical behaviors into a single row by incrementing a `reinforcement_count` column rather than inserting duplicate rows. The CBIE integrates this signal **without virtual row expansion** (which was found to artificially inflate cluster density and produce excessive false-positive confirmations).
+
+**Mechanism:** The `reinforcement_count` is passed as `sample_weight` to `sklearn.cluster.DBSCAN.fit_predict()`. In DBSCAN's density calculation, a point with `sample_weight = W` contributes `W` units toward the `min_samples` threshold. This means a single row with `reinforcement_count = 5` and `min_samples = 2` satisfies the core-point criterion on its own — without needing duplicate data rows.
+
+**Frequency Calculation:** Cluster frequency is computed as the **sum of `reinforcement_count`** across all rows in the cluster, not the raw row count. This ensures the AHP Confirmation Model's frequency factor accurately reflects how many times the BAC observed the behavior.
 
 #### 4.1.5 Dual-Gate Noise Filtering & Semantic Guardrails
 
@@ -292,6 +300,28 @@ $$G = \frac{\sum_{i=1}^{n}(2i - n - 1) \cdot x_i}{n \cdot \sum_{i=1}^{n} x_i}$$
 Where $x_i$ are the **sorted** inter-event times and $n$ is the number of intervals.
 
 > The Gini score is **inverted** in Stage 3: lower Gini (more consistent) → higher contribution to the final score.
+
+#### 4.2.1a Heuristic Consistency for Aggregated Rows
+
+When the BAC aggregates repeated behaviors into a single row (via `reinforcement_count`), only one timestamp exists. The Gini coefficient requires ≥ 2 timestamps, so a **heuristic linear penalty reduction** is applied:
+
+$$\text{HeuristicGini} = \max\left(0.5,\; 1.0 - 0.1 \times (R - 1)\right)$$
+
+Where $R$ = total `reinforcement_count` across the cluster.
+
+| Reinforcement Count | Heuristic Gini | Rationale |
+|:---:|:---:|:---|
+| 1 | `1.0` | No evidence of repetition |
+| 3 | `0.8` | Some proof of repetition |
+| 6+ | `0.5` (floor) | Significant repetition, but capped |
+
+**Justification of constants:**
+
+| Constant | Value | Justification |
+|:---|:---:|:---|
+| **Decay Step** | `0.1` | The AHP consistency weight is `0.35`. Moving from `1.0 → 0.5` over 5 reinforcements gives `0.5 / 5 = 0.1`, producing ~0.035 improvement in the final core score per reinforcement — conservative enough to avoid over-confirmation |
+| **Floor** | `0.5` | The Gini midpoint — the boundary between "moderately consistent" and "inconsistent". We never grant better-than-average consistency purely from repetition count; real multi-timestamp evidence is required for scores below 0.5 |
+| **Saturation at count ≥ 6** | `6` | Aligns with the small-sample statistics convention (n ≥ 5–6 for basic descriptive measures; the Mann-Kendall test in this engine already requires n ≥ 4). Beyond 6, additional repetitions without new timestamps provide diminishing evidence of temporal regularity |
 
 #### 4.2.2 Trend — Mann-Kendall Test
 
@@ -528,6 +558,27 @@ The admin endpoints allow an internal dashboard to discover users, inspect raw b
 
 ---
 
+### 6.6 Chat Demo Endpoint
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/chat` | Gemini-powered conversational demo with optional CBIE context injection. Accepts `user_id`, `message`, and `use_context` flag. When `use_context=true`, the Identity Anchor Prompt is injected as the system message, enabling side-by-side comparison of personalized vs. baseline LLM responses. |
+
+---
+
+### 6.7 Dual-Service Architecture (Full vs. Lightweight API)
+
+The CBIE is deployed as **two independent Docker services** to separate heavy ML processing from lightweight API serving:
+
+| Service | Entry Point | Dockerfile | Port | Image Size | Purpose |
+|:---|:---|:---|:---:|:---:|:---|
+| **CBIE Processor** (Full) | `api.main:app` | `Dockerfile` | 6009 | ~12 GB | Loads BART + spaCy + sentence-transformers. Runs the full ML pipeline. |
+| **CBIE API** (Lightweight) | `api.main_api:app` | `Dockerfile.api` | 6009 | ~150 MB | Serves read-only endpoints only (`/context`, `/profiles`, `/admin` reads, `/chat`). No ML libraries installed. |
+
+**Why two services?** The full ML processor requires ~2.5 GB RAM and takes 30–60 seconds to start. The lightweight API starts instantly and can serve pre-computed profiles with millisecond latency, making it ideal for production deployment behind a load balancer while the processor handles batch jobs separately.
+
+---
+
 ### 6.6 API Design Decisions
 
 | Decision | Rationale |
@@ -601,24 +652,37 @@ EMERGING INTERESTS (Needs more verification):
 ```
 cbie_engine/
 │
-├── .env                              # API keys
-├── requirements.txt                  # Python dependencies
+├── .env                              # API keys (Supabase, Azure, Gemini)
+├── requirements.txt                  # Full ML dependencies
+├── requirements_api.txt              # Lightweight API-only dependencies
+├── Dockerfile                        # Full ML processor image (~12 GB)
+├── Dockerfile.api                    # Lightweight API image (~150 MB)
 │
 ├── pipeline.py                       # Orchestrator & Prompt Gen
-├── topic_discovery.py                # Stage 1: Zero-Shot, HDBSCAN, GPT labeling
+├── data_adapter.py                   # Dual-DB adapter (BAC read / CBIE write)
+├── topic_discovery.py                # Stage 1: Zero-Shot, DBSCAN, GPT labeling
 ├── temporal_analysis.py              # Stage 2: Gini + Mann-Kendall
 ├── confirmation_model.py             # Stage 3: AHP scoring + Vitality Pruning
+├── logger.py                         # Structured JSON logging
 │
 ├── api/                              # FastAPI Microservice
-│   ├── main.py                       # Entry point
+│   ├── main.py                       # Full entry point (loads ML pipeline)
+│   ├── main_api.py                   # Lightweight entry point (read-only, no ML)
+│   ├── dependencies.py               # Pipeline singleton & job store
 │   ├── models.py                     # Pydantic models
 │   └── routers/                      # Route handlers
+│       ├── context.py                # GET /context/{user_id}
+│       ├── profiles.py               # Profile CRUD
+│       ├── pipeline_router.py        # POST /pipeline/run
+│       ├── admin.py                  # Admin endpoints
+│       └── chat.py                   # POST /chat (Gemini demo)
 │
 ├── admin-dashboard/                  # Next.js Admin Panel
 │   ├── src/app                       # Pages & Routing
 │   ├── src/components                # Recharts & UI Components
 │   └── tailwind.config.ts            # Styling configuration
 │
+├── scripts/                          # Data generation & utility scripts
 └── data/
     └── profiles/                     # Local profile & t-SNE json outputs
 ```
@@ -644,6 +708,9 @@ OPENAI_API_KEY=<azure-api-key>
 OPENAI_API_VERSION=2024-02-01
 OPENAI_API_BASE=https://<resource-name>.openai.azure.com/
 # OPENAI_EMBEDDING_MODEL is no longer needed; uses local sentence-transformers
+
+# Gemini API (Chat Demo Endpoint)
+GEMINI_API_KEY=<gemini-api-key>
 ```
 
 ---
@@ -696,6 +763,20 @@ curl http://localhost:6009/pipeline/status/<job_id>
 curl http://localhost:6009/context/user_alpha_01
 ```
 
+### Run via Docker
+
+**Full ML Processor:**
+```bash
+docker build -t cbie-processor .
+docker run -d --name cbie-processor -p 6009:6009 --env-file .env cbie-processor
+```
+
+**Lightweight API Only:**
+```bash
+docker build -f Dockerfile.api -t cbie-api .
+docker run -d --name cbie-api -p 6009:6009 --env-file .env cbie-api
+```
+
 ### Run Unit Tests
 ```bash
 python -m pytest test_models.py -v
@@ -714,6 +795,8 @@ python -m pytest test_models.py -v
 | **t-SNE Embeddings** | Pre-computed 2D projections allow for intuitive visual audit of semantic segmentation in the admin dashboard. |
 | **Profile Scoring Radar** | Uses Recharts to visualize the 5 multi-dimensional scoring axes from the AHP Confirmation Model. |
 | **Real-time Progress** | Background job polling with stage-specific metadata provides transparency for long-running CPU-bound NLP tasks. |
+| **Reinforcement Count via `sample_weight`** | Virtual row expansion (duplicating rows by `reinforcement_count`) was found to artificially inflate cluster density and produce excessive false-positive confirmations. Using DBSCAN's native `sample_weight` parameter respects repetition without data duplication. |
+| **Heuristic Gini Fallback** | When the BAC aggregates repeated behaviors into a single row, timestamps are lost. A linear penalty reduction (capped at the Gini midpoint of 0.5) provides a conservative consistency estimate without granting better-than-average scores from repetition alone. |
 | **AHP Weight Derivation** | Formal multi-criteria framework providing transparent, justifiable, and reproducible weights. |
 | **Zero-Shot NLP Detection** | Understanding synonyms and context dynamically without brittle keyword lists. |
 | **Offline batch processing** | Enables comprehensive full-history analysis without real-time latency constraints. |
