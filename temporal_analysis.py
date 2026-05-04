@@ -29,17 +29,81 @@ class TemporalAnalyzer:
         diffs = [(times[i] - times[i-1]).total_seconds() / (24 * 3600) for i in range(1, len(times))]
         return np.array(diffs)
 
-    def calculate_consistency(self, timestamps: List[str]) -> float:
+    def calculate_consistency(self, timestamps: List[str], reinforcement_counts: List[int] = None) -> float:
         """
         Computes the Consistency Score using the Gini Coefficient of inter-event times.
         A lower Gini implies higher consistency (intervals are similar).
         Returns a score between 0.0 (perfectly consistent) and 1.0 (highly inconsistent).
         If not enough data, returns 1.0 by default.
+
+        reinforcement_counts: Optional list of counts per behaviour row.  When the
+                              BAC aggregates repeated observations into a single row
+                              (incrementing reinforcement_count instead of creating
+                              new rows), we lose the individual timestamps needed
+                              for the Gini calculation.  This parameter enables a
+                              heuristic fallback that partially compensates.
         """
         diffs = self.calculate_inter_event_times(timestamps)
         
         if len(diffs) < 1:
-             return 1.0 # Cannot determine consistency with < 2 events
+             # ──────────────────────────────────────────────────────────────
+             # HEURISTIC CONSISTENCY ADJUSTMENT FOR AGGREGATED ROWS
+             # ──────────────────────────────────────────────────────────────
+             # Problem: The BAC database aggregates repeated identical
+             #   behaviours into a single row and increments
+             #   reinforcement_count rather than inserting new rows.
+             #   With only 1 timestamp we cannot compute inter-event
+             #   intervals, so the Gini coefficient is undefined.
+             #
+             # Solution: Apply a linear penalty reduction based on the
+             #   total reinforcement count across the cluster.
+             #
+             # Justification of chosen constants:
+             #
+             #   DECAY_STEP = 0.1
+             #     The Confirmation Model assigns consistency a weight of
+             #     0.35 (the highest AHP weight).  On the normalised
+             #     [0, 1] scale, moving from 1.0 → 0.5 spans 0.5 units
+             #     over 5 reinforcements (counts 2–6), giving a step of
+             #     0.5 / 5 = 0.1.  This produces a perceptible but
+             #     conservative improvement in the final core score
+             #     (~0.035 per reinforcement), avoiding the over-
+             #     confirmation seen with virtual row expansion.
+             #
+             #   FLOOR = 0.5  (Gini midpoint)
+             #     A Gini of 0.5 is the theoretical boundary between
+             #     "moderately consistent" and "inconsistent" distributions.
+             #     Since we have no actual temporal spread data, capping at
+             #     0.5 means we never grant better-than-average consistency
+             #     purely from repetition count — real multi-timestamp
+             #     evidence is still needed to reach scores below 0.5.
+             #
+             #   FLOOR reached at count ≥ 6
+             #     In small-sample statistics, n ≥ 5–6 observations is the
+             #     commonly accepted minimum for basic descriptive measures
+             #     (e.g., the Mann-Kendall test in this engine requires
+             #     n ≥ 4).  Treating 6 repetitions as the saturation point
+             #     aligns with this convention — beyond 6, additional
+             #     repetitions without new timestamps provide diminishing
+             #     evidence of temporal regularity.
+             # ──────────────────────────────────────────────────────────────
+             DECAY_STEP = 0.1
+             FLOOR = 0.5
+
+             total_reinforcement = sum(reinforcement_counts) if reinforcement_counts else 1
+             if total_reinforcement > 1:
+                 heuristic_score = max(FLOOR, 1.0 - (DECAY_STEP * (total_reinforcement - 1)))
+                 log.info(
+                     "Heuristic consistency applied (insufficient timestamps)",
+                     extra={
+                         "stage": "TEMPORAL_ANALYSIS",
+                         "total_reinforcement": total_reinforcement,
+                         "heuristic_consistency": round(heuristic_score, 3),
+                     },
+                 )
+                 return float(heuristic_score)
+             
+             return 1.0  # Single occurrence, no reinforcement — no evidence of consistency
              
         # Gini computation
         array = np.sort(diffs)

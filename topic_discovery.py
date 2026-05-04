@@ -110,7 +110,8 @@ class TopicDiscoverer:
         if len(final_embeddings) > 0:
             log.info("Starting DBSCAN clustering", extra={"stage": "CLUSTERING", "vectors": len(final_embeddings)})
             polarities = [b.get('polarity', 'NEUTRAL') for b in standard_behaviors]
-            labels = self.cluster_behaviors(final_embeddings, polarities)
+            weights = [b.get('reinforcement_count', 1) for b in standard_behaviors]
+            labels = self.cluster_behaviors(final_embeddings, polarities, weights=weights)
             
             n_clusters = len(set(labels)) - (1 if -1 in labels else 0)
             n_noise = int(np.sum(labels == -1))
@@ -295,10 +296,16 @@ class TopicDiscoverer:
             counts = Counter(texts)
             return counts.most_common(1)[0][0]
 
-    def cluster_behaviors(self, embeddings: np.ndarray, polarities: List[str] = None, min_samples: int = 2, eps_override: float = None) -> np.ndarray:
+    def cluster_behaviors(self, embeddings: np.ndarray, polarities: List[str] = None, weights: List[int] = None, min_samples: int = 2, eps_override: float = None) -> np.ndarray:
         """
         Uses DBSCAN with an adaptive epsilon (calculated via k-distance graph) to find latent topic clusters.
         Applies a 'Polarity Penalty' to prevent POSITIVE and NEGATIVE sentiments from clustering together.
+
+        weights: Optional list of reinforcement counts per behavior. Passed as
+                 sample_weight to sklearn DBSCAN.fit_predict(). A point with
+                 weight W counts as W neighbours for the min_samples density
+                 threshold, allowing a single highly-reinforced row to satisfy
+                 the clustering criterion without duplicating data rows.
         """
         from sklearn.cluster import DBSCAN
         from sklearn.neighbors import NearestNeighbors
@@ -368,10 +375,13 @@ class TopicDiscoverer:
             MIN_EPS = 0.55
             optimal_eps = max(MIN_EPS, min(optimal_eps, MAX_EPS))
 
-        log.info("Running DBSCAN", extra={"stage": "CLUSTERING", "eps": round(float(optimal_eps), 3), "min_samples": min_samples, "n_behaviors": n_behaviors})
+        log.info("Running DBSCAN", extra={"stage": "CLUSTERING", "eps": round(float(optimal_eps), 3), "min_samples": min_samples, "n_behaviors": n_behaviors, "weighted": weights is not None})
         
         clusterer = DBSCAN(eps=optimal_eps, min_samples=min_samples, metric='precomputed')
-        labels = clusterer.fit_predict(dist_matrix)
+        # sample_weight allows DBSCAN to treat a single row with
+        # reinforcement_count=5 as contributing 5 units of density,
+        # so it can meet the min_samples threshold on its own.
+        labels = clusterer.fit_predict(dist_matrix, sample_weight=weights)
         
         # Calculate Silhouette Score (ignoring noise points label=-1)
         from sklearn.metrics import silhouette_score

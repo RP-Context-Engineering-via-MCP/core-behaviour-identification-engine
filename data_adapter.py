@@ -192,6 +192,7 @@ class DataAdapter:
                 "target": record.get("target", ""),
                 "context": record.get("context", "general"),
                 "polarity": record.get("polarity", ""),
+                "reinforcement_count": int(record.get("reinforcement_count") or 1),
                 "scores": {
                     "credibility": float(record.get("credibility") or 0.5),
                     "clarity_score": float(record.get("clarity_score") or 0.5),

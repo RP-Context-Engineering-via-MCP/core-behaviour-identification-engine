@@ -151,10 +151,9 @@ class CBIEPipeline:
             fact_texts = [fb.get('source_text', '') for fb in fact_behaviors]
             fact_embeddings = self.topic_discoverer.generate_embeddings(fact_texts)
             
-            # Cluster with min_samples=1 (every individual fact is important)
-            # Use a slightly tighter epsilon than standard behaviors
             fact_polarities = [str(fb.get('polarity', '') or '') for fb in fact_behaviors]
-            fact_clusters = self.topic_discoverer.cluster_behaviors(fact_embeddings, fact_polarities, min_samples=1, eps_override=0.4)
+            fact_weights = [int(fb.get('reinforcement_count', 1)) for fb in fact_behaviors]
+            fact_clusters = self.topic_discoverer.cluster_behaviors(fact_embeddings, fact_polarities, weights=fact_weights, min_samples=1, eps_override=0.4)
             
             # Group facts by their newly assigned cluster IDs
             fact_groups: Dict[int, List[Dict[str, Any]]] = {}
@@ -174,7 +173,7 @@ class CBIEPipeline:
                     "cluster_id": f"fact_{c_id}",
                     "label": label,
                     "representative_topics": list(set(topics)),
-                    "frequency": len(behaviors),
+                    "frequency": sum(int(b.get('reinforcement_count', 1)) for b in behaviors),
                     "consistency_score": 1.0,  # Facts are inherently consistent
                     "trend_score": 0.0,
                     "core_score": 1.0,
@@ -199,23 +198,30 @@ class CBIEPipeline:
         # 3. Temporal Analysis & Confirmation (Stage 2 & 3)
         log.info("Analyzing temporal consistency and confirming core interests", extra={"user_id": user_id, "stage": "TEMPORAL_ANALYSIS"})
 
-        max_freq = max([len(c) for c in clusters.values()]) if clusters else 0
+        # Frequency is now the SUM of reinforcement_counts across all rows in a
+        # cluster, not the row count.  This reflects the true number of times
+        # the BAC observed the behaviour.
+        max_freq = max([sum(int(b.get('reinforcement_count', 1)) for b in c) for c in clusters.values()]) if clusters else 0
         num_clusters = len(clusters)
 
         for cluster_idx, (cluster_id, cluster_behaviors) in enumerate(clusters.items()):
             if progress_callback:
                 progress_callback("TEMPORAL_ANALYSIS", cluster_idx + 1, num_clusters)
-            freq = len(cluster_behaviors)
             
-            # Extract timestamps and scores
+            # Extract timestamps, reinforcement counts, and scores
             timestamps = [b.get('timestamp') for b in cluster_behaviors if b.get('timestamp')]
+            reinforcements = [int(b.get('reinforcement_count', 1)) for b in cluster_behaviors]
             scores = [b.get('scores', {}).get('clarity_score', 0.5) for b in cluster_behaviors]
             
-            # Compute average credibility for the cluster
-            avg_credibility = sum(scores_obj.get('credibility', 0.5) for scores_obj in [b.get('scores', {}) for b in cluster_behaviors]) / freq
+            # Weighted frequency = total reinforcements across all rows in this cluster
+            freq = sum(reinforcements)
             
-            # Temporal Analysis
-            consistency = self.temporal_analyzer.calculate_consistency(timestamps)
+            # Compute average credibility for the cluster
+            avg_credibility = sum(scores_obj.get('credibility', 0.5) for scores_obj in [b.get('scores', {}) for b in cluster_behaviors]) / len(cluster_behaviors)
+            
+            # Temporal Analysis — pass reinforcement_counts so the Gini heuristic
+            # can adjust for aggregated rows that lack multiple timestamps.
+            consistency = self.temporal_analyzer.calculate_consistency(timestamps, reinforcement_counts=reinforcements)
             trend = self.temporal_analyzer.calculate_trend(scores)
             
             # Confirmation
@@ -285,7 +291,7 @@ class CBIEPipeline:
             interest_profile = {
                 "cluster_id": cluster_id,
                 "representative_topics": representative_topics,
-                "frequency": freq,
+                "frequency": freq,  # Sum of reinforcement_counts, not row count
                 "consistency_score": consistency,
                 "trend_score": trend,
                 "core_score": core_score,
