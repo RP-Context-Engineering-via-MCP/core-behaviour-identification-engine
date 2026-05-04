@@ -12,6 +12,7 @@ env/
 .venv/
 
 # Data & large outputs
+_archive/
 data/
 *.csv
 *.log

@@ -8,6 +8,7 @@ data/
 models_cache/
 .cache/
 __pycache__/
+_archive/
 
 # ── Python build artifacts ────────────────────────────────────────────────────
 *.py[cod]
