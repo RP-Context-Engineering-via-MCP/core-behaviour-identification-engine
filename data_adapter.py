@@ -14,16 +14,21 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def _ms_epoch_to_iso(ms: Any) -> Optional[str]:
+def _ms_epoch_to_iso(ts: Any) -> Optional[str]:
     """
-    Convert a Unix-epoch millisecond bigint (from the BAC DB) to an ISO-8601
-    string that the temporal analyser can sort and compare.
+    Convert a Unix-epoch bigint (seconds or milliseconds) to an ISO-8601 string.
+    Dynamically detects if the timestamp is in seconds (10 digits) or milliseconds (13 digits).
     Returns None if the value is missing or unparseable.
     """
-    if ms is None:
+    if ts is None:
         return None
     try:
-        return datetime.fromtimestamp(int(ms) / 1000, tz=timezone.utc).isoformat()
+        val = int(ts)
+        # If less than 10 billion (10^10), it's likely seconds (valid until year 2286)
+        if val < 10000000000:
+            return datetime.fromtimestamp(val, tz=timezone.utc).isoformat()
+        else:
+            return datetime.fromtimestamp(val / 1000.0, tz=timezone.utc).isoformat()
     except Exception:
         return None
 

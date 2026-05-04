@@ -28,6 +28,19 @@ export function BehaviorPreviewTable({ userId }: { userId: string }) {
         );
     }
 
+    const formatDate = (dateValue?: string | number | null) => {
+        if (!dateValue) return "";
+        let val = Number(dateValue);
+        if (!isNaN(val)) {
+            // If less than 10 billion, it's likely seconds, convert to milliseconds
+            if (val < 10000000000) {
+                val = val * 1000;
+            }
+            return new Date(val).toLocaleDateString();
+        }
+        return new Date(dateValue).toLocaleDateString();
+    };
+
     return (
         <div className="mt-8 flow-root">
             <h3 className="text-base font-semibold leading-6 text-gray-900 mb-4">
@@ -81,7 +94,7 @@ export function BehaviorPreviewTable({ userId }: { userId: string }) {
                                             )}
                                         </td>
                                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                            {beh.created_at ? new Date(beh.created_at).toLocaleDateString() : ""}
+                                            {formatDate(beh.created_at)}
                                         </td>
                                     </tr>
                                 ))}
