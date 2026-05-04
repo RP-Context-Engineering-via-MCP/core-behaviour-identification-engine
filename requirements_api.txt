@@ -1,0 +1,13 @@
+# ─── Lightweight API Service Only ───────────────────────────────────────────
+# These are the ONLY dependencies needed for the read-only API container.
+# No torch, spacy, sentence-transformers, or any ML libraries needed.
+
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.6.0
+supabase>=2.3.4
+python-dotenv>=1.0.0
+openai>=1.0.0
+# data_adapter.py imports these at module level
+numpy>=1.26.2
+pandas>=2.1.3

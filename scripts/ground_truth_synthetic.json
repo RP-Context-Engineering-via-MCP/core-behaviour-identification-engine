@@ -1,0 +1,25 @@
+{
+  "synth_user_chef": {
+    "Stable": ["french pastry", "sushi"],
+    "Emerging": ["ferment"],
+    "Fact": ["nut allergy"],
+    "Contradiction": ["cross-contaminate"]
+  },
+  "synth_user_devops": {
+    "Stable": ["kubernetes", "python", "react", "php", "code review", "morning", "dark theme"],
+    "Emerging": ["webassembly"]
+  },
+  "synth_user_investor": {
+    "Stable": ["dividend", "quarterly earnings", "rebalance", "long-term"],
+    "Emerging": ["esg", "meme coin"]
+  },
+  "synth_user_fitness": {
+    "Stable": ["warmup", "morning workout", "leg day", "macro", "free weight"],
+    "Emerging": ["yoga"],
+    "Fact": ["lactose"]
+  },
+  "synth_user_creative": {
+    "Stable": ["illustration", "drawing tablet", "figure drawing", "ai art"],
+    "Emerging": ["blender"]
+  }
+}

@@ -18,7 +18,9 @@ data/
 *.log
 *.txt
 !requirements.txt
+!requirements_api.txt
 *.json
+!scripts/ground_truth_synthetic.json
 
 # SQL files
 *.sql
