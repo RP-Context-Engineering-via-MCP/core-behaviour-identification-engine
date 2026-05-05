@@ -10,6 +10,7 @@ from data_adapter import DataAdapter
 from topic_discovery import TopicDiscoverer
 from temporal_analysis import TemporalAnalyzer
 from confirmation_model import ConfirmationModel
+from api.prompt_builder import generate_identity_prompt
 
 log = get_logger(__name__)
 
@@ -24,57 +25,6 @@ class CBIEPipeline:
         self.topic_discoverer = TopicDiscoverer()
         self.temporal_analyzer = TemporalAnalyzer()
         self.confirmation_model = ConfirmationModel()
-
-    def generate_identity_prompt(self, profile: Dict[str, Any]) -> str:
-        """
-        Creates a rigid System Prompt string anchored to the user's Core Behaviour Profile.
-        """
-        user_id = profile.get("user_id", "Unknown")
-        interests = profile.get("confirmed_interests", [])
-        
-        facts = [i for i in interests if i.get("status") == "Stable Fact"]
-        stable = [i for i in interests if i.get("status") == "Stable"]
-        emerging = [i for i in interests if i.get("status") == "Emerging"]
-        archived = [i for i in interests if i.get("status") == "ARCHIVED_CORE"]
-        
-        # Extract topics
-        def get_topics(items):
-            res = []
-            for item in items:
-                topics = item.get("representative_topics", [])
-                if topics:
-                    res.append(topics[0])
-            return res
-            
-        fact_topics = get_topics(facts)
-        stable_topics = get_topics(stable)
-        emerging_topics = get_topics(emerging)
-        archived_topics = get_topics(archived)
-        
-        prompt_parts = [f"--- SYSTEM IDENTITY ANCHOR FOR USER: {user_id} ---"]
-        prompt_parts.append("You are speaking with a user who has following core traits and constraints.")
-        
-        if fact_topics:
-            prompt_parts.append(f"\nCRITICAL CONSTRAINTS (Never violate):")
-            for f in fact_topics:
-                prompt_parts.append(f"- {f}")
-                
-        if stable_topics:
-            prompt_parts.append(f"\nVERIFIED STABLE PREFERENCES:")
-            for s in stable_topics:
-                prompt_parts.append(f"- {s}")
-                
-        if emerging_topics:
-            prompt_parts.append(f"\nEMERGING INTERESTS (Needs more verification):")
-            for e in emerging_topics:
-                prompt_parts.append(f"- {e}")
-                
-        if archived_topics:
-            prompt_parts.append(f"\nARCHIVED OUTDATED HABITS (Do not use as active context):")
-            for a in archived_topics:
-                prompt_parts.append(f"- {a}")
-                
-        return "\n".join(prompt_parts)
 
     def process_user(self, user_id: str, progress_callback: Optional[Callable[[str, int, int], None]] = None, force_full_run: bool = False) -> Dict[str, Any]:
         """
@@ -355,7 +305,7 @@ class CBIEPipeline:
         }
         
         # 5. Generate Identity Anchor Prompt
-        prompt_string = self.generate_identity_prompt(final_profile)
+        prompt_string = generate_identity_prompt(final_profile)
         final_profile["identity_anchor_prompt"] = prompt_string
         
         # 6. Save Output

@@ -17,7 +17,6 @@ from fastapi import APIRouter, HTTPException, Depends
 from supabase import Client
 
 from api.models import ContextResponse
-from api.dependencies import get_pipeline
 from data_adapter import DataAdapter
 
 router = APIRouter(prefix="/context", tags=["LLM Context"])
@@ -80,14 +79,14 @@ async def get_context(user_id: str):
     # Build the identity prompt in memory if it was not stored (older records)
     prompt = row.get("identity_anchor_prompt") or ""
     if not prompt and interests:
-        # Regenerate on-the-fly using the pipeline helper
-        pipeline: CBIEPipeline = get_pipeline()
+        # Regenerate on-the-fly using the lightweight prompt builder
+        from api.prompt_builder import generate_identity_prompt
         profile_payload = {
             "user_id": user_id,
             "confirmed_interests": interests,
             "total_raw_behaviors": row.get("total_raw_behaviors", 0),
         }
-        prompt = pipeline.generate_identity_prompt(profile_payload)
+        prompt = generate_identity_prompt(profile_payload)
 
     return ContextResponse(
         user_id=user_id,
